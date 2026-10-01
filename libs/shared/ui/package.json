@@ -6,6 +6,8 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "storybook": "nx storybook @h2-fe/web",
+    "build-storybook": "nx @h2-fe/web:build-storybook"
   },
   "exports": {
     "./package.json": "./package.json",

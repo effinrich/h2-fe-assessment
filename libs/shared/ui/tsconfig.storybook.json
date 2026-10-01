@@ -2,7 +2,6 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "out-tsc/storybook",
-    "lib": ["es2022", "dom"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "jsx": "preserve"
@@ -23,9 +22,8 @@
     "src/**/*.stories.jsx",
     "src/**/*.stories.tsx",
     "src/**/*.stories.mdx",
-    ".storybook-2/*.js",
-    ".storybook-2/*.ts",
-    ".storybook-2/preview.tsx"
+    ".storybook/*.js",
+    ".storybook/*.ts"
   ],
   "references": [
     {
