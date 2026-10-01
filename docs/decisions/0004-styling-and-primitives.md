@@ -1,6 +1,9 @@
 # 0004 — Panda CSS with Ark UI via Park UI
 
-- Status: accepted
+> **Superseded (2026-10-01):** replaced by Chakra UI v3. Panda, Ark (as a direct
+> dependency) and Park UI were removed; the record below is kept as history.
+
+- Status: superseded by Chakra UI v3
 - Date: 2026-10-01
 
 ## Context

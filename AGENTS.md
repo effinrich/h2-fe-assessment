@@ -29,8 +29,8 @@ made during this project's setup.
 
 ## Stack
 
-Vite + React 19 + TypeScript (strict) · TanStack Query · tldraw v5 ·
-Panda CSS + Ark UI via Park UI · Storybook + Chromatic · Vitest
+Vite + React 19 + TypeScript (strict) · Chakra UI v3 · TanStack Query · tldraw v5 ·
+Storybook + Chromatic · Vitest
 
 ## Layout
 
@@ -42,11 +42,9 @@ Panda CSS + Ark UI via Park UI · Storybook + Chromatic · Vitest
 ## Rules that do not bend
 
 1. **Verify every third-party API call against the installed types** before it
-   lands. tldraw, Ark and Park UI are all under-represented in training data
-   relative to React, and this is where models invent plausible method names.
+   lands. tldraw is under-represented in training data relative to React, and
+   this is where models invent plausible method names.
 2. **Spec before code; failing test before implementation.** See
    `docs/specs/README.md`.
 3. **The gate hook is authoritative.** A red gate is not a finishable turn.
 4. **Never guess a CLI flag.** Check `--help` first.
-5. **Generated files stay generated.** `styled-system` is rebuildable from
-   `npm run prepare`; never edit it.

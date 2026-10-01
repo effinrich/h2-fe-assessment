@@ -1,5 +1,8 @@
 {
   "name": "@h2-fe/web",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "scripts": {
+
+  }
 }

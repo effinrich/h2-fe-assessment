@@ -81,11 +81,42 @@
     }
   ],
   "targetDefaults": {
+    "build-storybook": {
+      "options": {
+        "webpackStatsJson": true
+      }
+    },
+    "chromatic": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "npx chromatic --exit-zero-on-changes --storybook-build-dir={projectRoot}/storybook-static --storybook-base-dir={projectRoot} --storybook-config-dir={projectRoot}/.storybook --no-interactive --auto-accept-changes=main",
+            "description": "Chromatic will automatically build Storybook before running."
+          }
+        ]
+      },
+      "dependsOn": [
+        "build-storybook"
+      ],
+      "inputs": [
+        {
+          "externalDependencies": [
+            "chromatic"
+          ]
+        }
+      ]
+    },
     "test": {
       "dependsOn": [
         "^build"
       ]
     }
+  },
+  "test": {
+    "dependsOn": [
+      "^build"
+    ]
   },
   "generators": {
     "@nx/react": {

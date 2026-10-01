@@ -11,21 +11,26 @@ const here = dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
-    
+
     '../src/lib/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
-  addons: [],
+
+
+  addons: [
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-docs')
+  ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {
-      
+
       builder: {
         viteConfigPath: join(here, '..', 'vite.config.mts'),
       },
-      
+
     },
   },
-  
+
 };
 
 

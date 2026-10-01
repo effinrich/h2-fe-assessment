@@ -8,5 +8,7 @@
     "type:app"
   ],
   "// targets": "to see all targets run: nx show project @h2-fe/web --web",
-  "targets": {}
+  "targets": {
+   
+  }
 }

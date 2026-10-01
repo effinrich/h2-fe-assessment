@@ -1,8 +1,6 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
+import { defaultClientConditions, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import pandacss from '@pandacss/vite';
-import * as path from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -15,9 +13,12 @@ export default defineConfig(() => ({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [pandacss(), react()],
+  plugins: [react()],
+  // Workspace libs export their TypeScript source under this condition, so the
+  // app consumes them without a prior lib build. Setting `conditions` replaces
+  // Vite's defaults, hence the spread.
   resolve: {
-    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../styled-system') },
+    conditions: ['@h2-fe/source', ...defaultClientConditions],
   },
   // Uncomment this if you are using workers.
   // worker: {

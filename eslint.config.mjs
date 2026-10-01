@@ -7,11 +7,9 @@ export default [
     ...nx.configs["flat/base"],
     ...nx.configs["flat/typescript"],
     ...nx.configs["flat/javascript"],
-    {
-      "ignores": [
+    {      "ignores": [
         "**/dist",
         "**/out-tsc",
-        "**/styled-system",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"
       ]
@@ -29,13 +27,7 @@ export default [
                 {
                     enforceBuildableLibDependency: true,
                     allow: [
-                        "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$",
-                        // Panda output and Park's packages are external to our
-                        // project graph; Nx mis-classifies the styled-system
-                        // alias as an app, so exempt the generated surface.
-                        "^styled-system/",
-                        "^@ark-ui/",
-                        "^@park-ui/"
+                        "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$"
                     ],
                     depConstraints: [
                         // Layer rules: an app composes features; a feature

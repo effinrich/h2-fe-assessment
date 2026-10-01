@@ -4,8 +4,11 @@ Local rules. The root `AGENTS.md` still applies; this is what is specific here.
 
 ## What this is
 
-A publishable Nx library: Panda recipes plus Ark UI primitives, adopted through
-Park UI. It is the only place design tokens live.
+A publishable Nx library built on Chakra UI v3. It owns the Chakra system
+(`createSystem` over `defaultConfig`, with the `brand` palette), the `UiProvider`
+that apps and Storybook wrap their trees in, and composites over Chakra's
+compound components. It is the only place design tokens live. Verify Chakra APIs
+against `node_modules/@chakra-ui/react/dist/types`; v3 differs heavily from v2.
 
 ## Boundaries
 
@@ -20,21 +23,12 @@ Park UI. It is the only place design tokens live.
 - **Nx behaviour** — ask the graph: `nx show project @h2-fe/ui`,
   `nx show project @h2-fe/ui --json` for inferred targets and tags. Do not read
   `project.json` and infer; it is intentionally sparse.
-- **Ark / Park UI APIs** — the installed types under `node_modules/@ark-ui/react`
-  and `node_modules/@park-ui/*`. Both are under-represented in training data, so
-  verify before use.
-- **Panda** — `styled-system/` is generated. Never edit it; run
-  `npm run prepare` from the repo root, or `panda codegen` from here.
 
 ## Rules
 
 1. **Every component has a story.** `nx g @nx/react:stories --project=@h2-fe/ui`
    generates them for the whole directory. Stories are the test surface: play
    functions assert behaviour, and Chromatic diffs the rest.
-2. **Style with Panda recipes**, not ad-hoc `css()` calls scattered through
-   components. A variant belongs in a recipe, where it is typed.
-3. **Prefer Ark for anything with behaviour** — dialogs, popovers, menus. Do not
-   hand-roll focus management.
-4. **File naming follows the feature-based-architecture skill**: kebab-case, one
+2. **File naming follows the feature-based-architecture skill**: kebab-case, one
    component per file, sibling `types.ts` / `consts.ts` / `hooks.ts` / `utils.ts`.
    Storybook is the one exception allowed beside a component (`ui.stories.tsx`).
