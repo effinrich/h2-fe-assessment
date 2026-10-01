@@ -32,7 +32,17 @@ export default defineConfig(() => ({
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
-      external: ['react','react-dom','react/jsx-runtime']
+      // tldraw and pdfjs are large, and bundling them also defeats module mocks
+      // in tests: a mock cannot reach inside a bundle.
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'tldraw',
+        'pdfjs-dist',
+        'pdf-lib',
+        '@h2-fe/ui',
+      ]
     },
   },
   test: {

@@ -1,16 +1,23 @@
-import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen } from '@testing-library/react'
+import App from './app'
 
-import App from './app';
+// The canvas itself needs a real browser (canvas, ResizeObserver), so the app
+// spec checks composition: the surface mounts and the empty state is offered.
+// vi.mock is hoisted above the imports at runtime.
+vi.mock('tldraw', () => ({
+  Tldraw: () => <div data-testid="tldraw" />,
+  AssetRecordType: { create: vi.fn() },
+}))
 
 describe('App', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(<BrowserRouter><App /></BrowserRouter>);
-    expect(baseElement).toBeTruthy();
-  });
+  it('mounts the document canvas', () => {
+    render(<App />)
+    expect(screen.getByTestId('tldraw')).toBeTruthy()
+  })
 
-  it('should have a greeting as the title', () => {
-    const { getAllByText } = render(<BrowserRouter><App /></BrowserRouter>);
-    expect(getAllByText(new RegExp('Welcome @h2-fe/web', 'gi')).length > 0).toBeTruthy();
-  });
-});
+  it('offers a way to get a document in before one is loaded', () => {
+    render(<App />)
+    expect(screen.getByRole('button', { name: /open pdf/i })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /use an example/i })).toBeTruthy()
+  })
+})
