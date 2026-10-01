@@ -1,6 +1,8 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import pandacss from '@pandacss/vite';
+import * as path from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -13,7 +15,10 @@ export default defineConfig(() => ({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [react()],
+  plugins: [pandacss(), react()],
+  resolve: {
+    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../styled-system') },
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],

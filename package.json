@@ -3,18 +3,19 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "storybook": "nx run @h2-fe/ui:storybook",
-    "build-storybook": "nx run @h2-fe/ui:build-storybook"
+    "prepare": "cd libs/shared/ui && panda codegen",
+    "start": "nx serve web",
+    "build": "nx build web",
+    "test": "nx run-many -t test",
+    "storybook": "nx storybook @h2-fe/ui",
+    "gate": "nx affected -t lint,typecheck,test,build-storybook"
   },
   "private": true,
   "dependencies": {
+    "@ark-ui/react": "^5.39.2",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
-    "@storybook/addon-a11y": "^10.6.1",
-    "@storybook/addon-docs": "^10.6.1",
-    "@storybook/addon-links": "^10.6.1",
-    "@storybook/addon-themes": "^10.6.1",
-    "next-themes": "^0.4.6",
+    "@tanstack/react-query": "^5.104.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "6.30.3"
@@ -35,6 +36,9 @@
     "@nx/web": "22.7.12",
     "@nx/workspace": "22.7.12",
     "@pandacss/dev": "^2.0.1",
+    "@pandacss/preset-base": "^2.0.1",
+    "@pandacss/preset-panda": "^2.0.1",
+    "@pandacss/vite": "^2.0.1",
     "@storybook/react-vite": "^10.1.0",
     "@swc-node/register": "~1.11.1",
     "@swc/cli": "~0.8.0",
@@ -73,15 +77,18 @@
   },
   "workspaces": [
     "apps/*",
-    "libs/shared/*"
+    "libs/shared/*",
+    "libs/web/features/*",
+    "libs/web/**"
   ],
   "allowScripts": {
     "@nx/oxlint": true,
     "@nx/vite": true,
-    "fsevents@2.3.3": true,
+    "@parcel/watcher@2.5.6": true,
     "esbuild": true,
     "nx": true,
-    "@swc/core": true
+    "@swc/core": true,
+    "fsevents": true
   },
   "nx": {
     "includedScripts": [],

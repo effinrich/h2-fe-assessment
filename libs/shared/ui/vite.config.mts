@@ -2,12 +2,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
+import pandacss from '@pandacss/vite';
 import * as path from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/libs/shared/ui',
-  plugins: [react(), dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })],
+  // pandacss() must come before the framework plugin (Panda docs, "Using Vite").
+  // Storybook inherits this config through builder.viteConfigPath in
+  // .storybook/main.ts, so stories get the same generated CSS with no viteFinal.
+  plugins: [pandacss(), react(), dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })],
+  // Park UI components import `styled-system/...` by package name. Panda lives
+  // at the workspace root now, so the alias points up to the shared output.
+  resolve: {
+    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../styled-system') },
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],

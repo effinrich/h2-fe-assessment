@@ -1,9 +1,13 @@
 
 import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 
 import type { StorybookConfig } from '@storybook/react-vite';
 
+// Storybook resolves viteConfigPath against its own working directory, so a
+// bare 'vite.config.mts' resolves to the workspace root and fails with
+// UNRESOLVED_ENTRY. Nx generates the relative form; resolve it from here instead.
+const here = dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
@@ -22,7 +26,7 @@ const config: StorybookConfig = {
     options: {
 
       builder: {
-        viteConfigPath: 'vite.config.mts',
+        viteConfigPath: join(here, '..', 'vite.config.mts'),
       },
 
     },
