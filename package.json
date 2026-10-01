@@ -2,7 +2,10 @@
   "name": "@h2-fe/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+   "storybook": "nx run @h2-fe/ui:storybook",
+   "build-storybook": "nx run @h2-fe/ui:build-storybook"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "11.14.0",

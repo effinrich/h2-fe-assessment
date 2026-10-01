@@ -7,7 +7,7 @@
   "// targets": "to see all targets run: nx show project @h2-fe/ui --web",
   "targets": {
     "storybook": {
-      "executor": "@nrwl/storybook:storybook",
+      "executor": "@nx/storybook:storybook",
       "options": {
         "uiFramework": "@storybook/react",
         "port": 4400,
@@ -22,21 +22,15 @@
       }
     },
     "build-storybook": {
-      "executor": "@nrwl/storybook:build",
+      "executor": "@nx/storybook:build",
+      "outputs": ["{options.outputDir}"],
       "options": {
-        "uiFramework": "@storybook/react",
-        "outputPath": "dist/libs/shared/ui/storybook",
-        "config": {
-          "configFolder": "libs/shared/ui/.storybook"
-        }
+        "framework": "@storybook/react-vite",
+        "outputDir": "dist/storybook/shared-ui",
+        "configDir": "libs/shared/ui/.storybook",
+        "webpackStatsJson": true
       },
       "configurations": {
-        "production": {
-          "mode": "production"
-        },
-        "development": {
-          "mode": "development"
-        },
         "ci": {
           "quiet": true
         }
