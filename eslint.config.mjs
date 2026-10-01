@@ -29,7 +29,13 @@ export default [
                 {
                     enforceBuildableLibDependency: true,
                     allow: [
-                        "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$"
+                        "^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$",
+                        // Panda output and Park's packages are external to our
+                        // project graph; Nx mis-classifies the styled-system
+                        // alias as an app, so exempt the generated surface.
+                        "^styled-system/",
+                        "^@ark-ui/",
+                        "^@park-ui/"
                     ],
                     depConstraints: [
                         // Layer rules: an app composes features; a feature
