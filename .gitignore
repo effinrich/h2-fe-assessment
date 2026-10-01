@@ -49,3 +49,6 @@ vitest.config.*.timestamp*
 # Exercise materials — supplied by H2, not our work, not part of the submission
 H2 FE 2026/
 H2 FE 2026.zip
+
+
+storybook-static
