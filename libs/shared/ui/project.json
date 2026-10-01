@@ -5,5 +5,42 @@
   "projectType": "library",
   "tags": [],
   "// targets": "to see all targets run: nx show project @h2-fe/ui --web",
-  "targets": {}
+  "targets": {
+    "storybook": {
+      "executor": "@nrwl/storybook:storybook",
+      "options": {
+        "uiFramework": "@storybook/react",
+        "port": 4400,
+        "config": {
+          "configFolder": "libs/shared/ui/.storybook"
+        }
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@nrwl/storybook:build",
+      "options": {
+        "uiFramework": "@storybook/react",
+        "outputPath": "dist/libs/shared/ui/storybook",
+        "config": {
+          "configFolder": "libs/shared/ui/.storybook"
+        }
+      },
+      "configurations": {
+        "production": {
+          "mode": "production"
+        },
+        "development": {
+          "mode": "development"
+        },
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  }
 }
