@@ -18,7 +18,7 @@ export default defineConfig(() => ({
   // app consumes them without a prior lib build. Setting `conditions` replaces
   // Vite's defaults, hence the spread.
   resolve: {
-    conditions: ['@h2-fe/source', ...defaultClientConditions],
+    conditions: [ ...defaultClientConditions],
   },
   // Uncomment this if you are using workers.
   // worker: {
