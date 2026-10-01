@@ -13,9 +13,9 @@ export default defineConfig(() => ({
   // .storybook/main.ts, so stories get the same generated CSS with no viteFinal.
   plugins: [pandacss(), react(), dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })],
   // Park UI components import `styled-system/...` by package name. Panda lives
-  // at the workspace root now, so the alias points up to the shared output.
+  // at the workspace root, three levels above this lib's directory.
   resolve: {
-    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../styled-system') },
+    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../../styled-system') },
   },
   // Uncomment this if you are using workers.
   // worker: {

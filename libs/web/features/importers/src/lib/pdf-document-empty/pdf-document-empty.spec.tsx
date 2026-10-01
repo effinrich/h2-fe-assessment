@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { PdfDocumentEmpty } from './pdf-document-empty'
 
@@ -17,14 +17,14 @@ describe('PdfDocumentEmpty', () => {
   it('calls onOpenPdf when the open action is chosen', () => {
     const onOpenPdf = vi.fn()
     render(<PdfDocumentEmpty onOpenPdf={onOpenPdf} onUseExample={vi.fn()} />)
-    screen.getByRole('button', { name: /open pdf/i }).click()
+    fireEvent.click(screen.getByRole('button', { name: /open pdf/i }))
     expect(onOpenPdf).toHaveBeenCalledTimes(1)
   })
 
   it('calls onUseExample when the example action is chosen', () => {
     const onUseExample = vi.fn()
     render(<PdfDocumentEmpty onOpenPdf={vi.fn()} onUseExample={onUseExample} />)
-    screen.getByRole('button', { name: /use an example/i }).click()
+    fireEvent.click(screen.getByRole('button', { name: /use an example/i }))
     expect(onUseExample).toHaveBeenCalledTimes(1)
   })
 })
