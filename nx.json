@@ -111,6 +111,12 @@
       "dependsOn": [
         "^build"
       ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "build",
+        "^build"
+      ]
     }
   },
   "test": {

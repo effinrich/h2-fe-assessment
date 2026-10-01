@@ -16,9 +16,12 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // jsdom has no ResizeObserver or Element.scrollTo; Zag's positioning and listbox scrolling call both.
+// The stubs are deliberately empty: there is nothing to observe in jsdom.
+/* eslint-disable @typescript-eslint/no-empty-function */
 globalThis.ResizeObserver ??= class {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
 Element.prototype.scrollTo ??= function scrollTo() {};
+/* eslint-enable @typescript-eslint/no-empty-function */
