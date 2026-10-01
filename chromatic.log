@@ -1,0 +1,84 @@
+16:48:26.370 Chromatic CLI v18.10.1
+             https://www.chromatic.com/docs/cli 
+16:48:26.374 Authenticating with Chromatic 
+16:48:26.374     → Connecting to https://index.chromatic.com
+16:48:26.636 Authenticated with Chromatic
+16:48:26.637     → Using project token '****************6ce5'
+16:48:26.637 Retrieving git information
+16:48:26.637 execGitCommand: git --version
+16:48:26.916 execGitCommand result: 'git version 2.55.0.windows.5'
+16:48:26.916 execGitCommand: git --no-pager log -n 1 --format="%H ## %ct ## %ae ## %an"
+16:48:27.072 execGitCommand result: '1812eeec65874942cbf82e42b4c47dcbcfa38ce8 ## 1790886410 ## effinrich@pm.me ## Rich Tillman'
+16:48:27.073 execGitCommand: git branch --show-current
+16:48:27.218 execGitCommand result: 'config-storybook'
+16:48:27.402 execGitCommand: git --no-pager log -n 1 --skip=1 --format="%H"
+16:48:27.529 execGitCommand result: 'fa4a2a3e73956c1fe37f64a4667a25028ce6efda'
+16:48:27.530 git info: {"commit":{"commit":"1812eeec65874942cbf82e42b4c47dcbcfa38ce8","committedAt":1790886410000,"committerEmail":"effinrich@pm.me","committerName":"Rich Tillman"},"branch":"config-storybook","fromCI":false}
+16:48:27.530 execGitCommand: git config user.email
+16:48:27.773 execGitCommand result: 'effinrich@pm.me'
+16:48:27.773 execGitCommand: git diff --name-only --no-relative --diff-filter=d --cached
+16:48:27.780 execGitCommand: git diff --name-only --no-relative --diff-filter=d
+16:48:27.784 execGitCommand: git ls-files --others --exclude-standard
+16:48:28.050 execGitCommand result: 'apps/web/project.json
+             apps/web/vite.config.mts
+             libs/shared/ui/.storybook/main.ts
+             libs/shared/ui/package.json
+             libs/shared/ui/project.json
+             libs/shared/ui/tsconfig.spec.json
+             libs/web/features/importers/package.json
+             package.json
+             tsconfig.base.json'
+16:48:28.073 execGitCommand result: 'build-storybook.log
+             chromatic.log'
+16:48:28.101 execGitCommand result: ''
+16:48:28.101 execGitCommand: git hash-object --stdin-paths
+16:48:28.226 execGitCommand result: 'b97c2f22ab6ac51befdb9e74180bdaa3e19a0372
+             54ce1e0f6e58bbbc91d618951a1f8eb9c01356ad
+             cde8176df20a45f1f1c94b3a45c15ce4c2cb5fcb
+             75f7665935821d3a98fe540eba3d80b97935786c
+             ec8e485efae52409140e1aa0b638982cd904d1f6
+             751a7a72fb56e625a85a1b3ea0532a225f6e88a5
+             954cc666cb2ab49cf55416ce9baa3c1f9c6b0351
+             a727fc7d8495b56724416da6cb168833b8b6abbb
+             ececb90926725357f291b455e48e480f6f8012da
+             48882da104a70b583e107710556480af7a97991a
+             e09368ad75fed1915a6cdd585e79dbb355f96e50'
+16:48:28.227 execGitCommand: git hash-object --stdin
+16:48:28.363 execGitCommand result: '146972b2827b231f540c50226537a52e30847119'
+16:48:28.364 execGitCommand: git rev-parse --show-toplevel
+16:48:28.562 execGitCommand result: 'D:/documents-from-c/GitHub/h2-fe-assessment'
+16:48:28.563 execGitCommandOneLine: git log --reverse --format=%cd --date=iso
+16:48:28.681 execGitCommandOneLine: git log --follow --reverse --format=%cd --date=iso -- .storybook
+16:48:28.843 execGitCommandCountLines: git shortlog -sn --all --since="6 months ago"
+16:48:28.971 execGitCommandCountLines: git ls-files -- "*page*.js" "*page*.jsx" "*page*.ts" "*page*.tsx" "*Page*.js" "*Page*.jsx" "*Page*.ts" "*Page*.tsx" "*screen*.js" "*screen*.jsx" "*screen*.ts" "*screen*.tsx" "*Screen*.js" "*Screen*.jsx" "*Screen*.ts" "*Screen*.tsx"
+16:48:29.086 execGitCommand: git config --get remote.origin.url
+16:48:29.206 execGitCommand result: 'https://github.com/effinrich/h2-fe-assessment.git'
+16:48:29.206 execGitCommandOneLine: git rev-parse --is-shallow-repository
+16:48:29.209 execGitCommandOneLine: git config remote.origin.partialclonefilter
+16:48:29.366 Git clone type: {"cloneDepth":"full","cloneFilter":"full","shallowBoundaryCommitCount":0,"firstShallowBoundaryCommits":[]}
+16:48:29.475 App firstBuild: %o, lastBuild: %o null null
+16:48:29.475 App has no builds, returning []
+16:48:29.475 Found parentCommits:
+16:48:29.612 Retrieved git information
+16:48:29.612     → Commit '1812eee' on branch 'config-storybook'; no ancestor found
+16:48:29.613 Collecting Storybook metadata
+16:48:29.616 {"storybookV6error":{"code":"MODULE_NOT_FOUND","requireStack":["D:\\documents-from-c\\GitHub\\h2-fe-assessment\\node_modules\\chromatic\\dist\\projectFiles-DTNAd5hX.cjs","D:\\documents-from-c\\GitHub\\h2-fe-assessment\\node_modules\\chromatic\\dist\\node-src-DPVizTG8.cjs","D:\\documents-from-c\\GitHub\\h2-fe-assessment\\node_modules\\chromatic\\dist\\main-BaA7VWtU.cjs","D:\\documents-from-c\\GitHub\\h2-fe-assessment\\node_modules\\chromatic\\dist\\bin.cjs"]}}
+16:48:29.617 {"storybookV7error":{"errno":-4058,"code":"ENOENT","syscall":"scandir","path":"D:\\documents-from-c\\GitHub\\h2-fe-assessment\\.storybook"}}
+16:48:29.619 [{"status":"fulfilled","value":{"version":"10.6.1"}},{"status":"fulfilled","value":{"builder":{"name":"unknown","packageVersion":"0"}}},{"status":"fulfilled","value":{}}]
+16:48:29.620 Collected Storybook metadata
+16:48:29.621     → Build metadata gathered
+16:48:29.621 Initializing build
+16:48:29.622 Got environment:
+             {}
+16:48:30.147 [analytics] initializing Index analytics client
+16:48:30.147 Initialized build
+16:48:30.148     → Build 9 initialized
+16:48:30.148 Building your Storybook
+16:48:30.177     → Running command: npm run build-storybook -- --output-dir=C:\Users\richt\AppData\Local\Temp\chromatic--1101264-ZL0mrNgm3wGn --stats-json=C:\Users\richt\AppData\Local\Temp\chromatic--1101264-ZL0mrNgm3wGn
+16:48:30.178 Running build command: npm run build-storybook -- --output-dir=C:\Users\richt\AppData\Local\Temp\chromatic--1101264-ZL0mrNgm3wGn --stats-json=C:\Users\richt\AppData\Local\Temp\chromatic--1101264-ZL0mrNgm3wGn
+16:48:30.178 Runtime metadata: {
+               "nodePlatform": "win32",
+               "nodeVersion": "24.21.0",
+               "packageManager": "npm",
+               "packageManagerVersion": "12.2.0"
+             }

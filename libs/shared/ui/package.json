@@ -6,13 +6,11 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "storybook": "nx storybook @h2-fe/web",
-    "build-storybook": "nx @h2-fe/web:build-storybook"
+
   },
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "@h2-fe/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
