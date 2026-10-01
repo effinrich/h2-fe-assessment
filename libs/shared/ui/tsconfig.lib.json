@@ -8,9 +8,8 @@
       "@nx/react/typings/image.d.ts",
       "vite/client"
     ],
-    "jsxImportSource": "@emotion/react",
-    "rootDir": "src",
     "jsx": "react-jsx",
+    "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
   },
   "exclude": [
