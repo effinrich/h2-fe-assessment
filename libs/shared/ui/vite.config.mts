@@ -12,6 +12,11 @@ export default defineConfig(() => ({
   // Storybook inherits this config through builder.viteConfigPath in
   // .storybook/main.ts, so stories get the same generated CSS with no viteFinal.
   plugins: [pandacss(), react(), dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })],
+  // Park UI components import `styled-system/...` by package name. Panda lives
+  // at the workspace root now, so the alias points up to the shared output.
+  resolve: {
+    alias: { 'styled-system': path.resolve(import.meta.dirname, '../../styled-system') },
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],

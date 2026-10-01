@@ -11,7 +11,6 @@ export default [
       "ignores": [
         "**/dist",
         "**/out-tsc",
-        // Panda output: generated, gitignored, and never ours to lint.
         "**/styled-system",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"

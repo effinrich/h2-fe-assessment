@@ -8,6 +8,9 @@
     },
     {
       "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./libs/web/features/importers"
     }
   ],
   "ts-node": {
