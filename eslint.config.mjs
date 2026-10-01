@@ -7,11 +7,9 @@ export default [
     ...nx.configs["flat/base"],
     ...nx.configs["flat/typescript"],
     ...nx.configs["flat/javascript"],
-    {
-      "ignores": [
+    {      "ignores": [
         "**/dist",
         "**/out-tsc",
-        "**/styled-system",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"
       ]

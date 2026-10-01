@@ -1,7 +1,7 @@
 // Uncomment this line to use CSS modules
 // import styles from './app.module.css';
 import NxWelcome from "./nx-welcome";
-
+import { Button } from '@h2-fe/ui';
 import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
@@ -16,6 +16,7 @@ export function App() {
     <hr/>
     <br/>
     <div role="navigation">
+      <Button>Click me</Button>
       <ul>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/page-2">Page 2</Link></li>

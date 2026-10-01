@@ -21,6 +21,5 @@ Output one table: `symbol | file:line of the type | signature | matches usage | 
   similar-looking API in another library.
 - If the package is not installed, report that and stop.
 
-Pay particular attention to `tldraw`, `@ark-ui/react`, `@park-ui/*` and Nx. These
-are the libraries with the weakest model familiarity in this repo, so they are
+Pay particular attention to `tldraw` and Nx. These are the libraries with the weakest model familiarity in this repo, so they are
 where invention is likeliest.

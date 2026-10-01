@@ -1,0 +1,11 @@
+{
+  "name": "test",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/test/src",
+  "projectType": "library",
+  "tags": [
+    "scope:ui"
+  ],
+  "// targets": "to see all targets run: nx show project test --web",
+  "targets": {}
+}

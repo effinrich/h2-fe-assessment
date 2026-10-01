@@ -1,7 +1,7 @@
 {
   "name": "shared-ui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/ui2/src",
+  "sourceRoot": "libs/shared/ui/src",
   "projectType": "library",
   "tags": [
     "scope:shared",
@@ -14,7 +14,7 @@
         "uiFramework": "@storybook/react",
         "port": 4400,
         "config": {
-          "configFolder": "libs/shared/ui2/.storybook"
+          "configFolder": "libs/shared/ui/.storybook"
         }
       },
       "configurations": {
@@ -31,7 +31,7 @@
       "options": {
         "framework": "@storybook/react-vite",
         "outputDir": "dist/storybook/shared-ui",
-        "configDir": "libs/shared/ui2/.storybook",
+        "configDir": "libs/shared/ui/.storybook",
         "webpackStatsJson": true
       },
       "configurations": {

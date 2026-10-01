@@ -1,1 +1,23 @@
-{"name":"@h2-fe/ui","version":"0.0.1","type":"module","main":"./dist/index.js","module":"./dist/index.js","types":"./dist/index.d.ts","scripts":{"build-storybook":"nx @h2-fe/ui:build-storybook","prepare":"panda codegen"},"exports":{"./package.json":"./package.json",".":{"types":"./dist/index.d.ts","import":"./dist/index.js","default":"./dist/index.js"}},"files":["dist","!**/*.tsbuildinfo"]}
+{
+  "name": "@h2-fe/ui",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@h2-fe/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ]
+}

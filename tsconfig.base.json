@@ -1,10 +1,5 @@
 {
   "compilerOptions": {
-    "paths": {
-      "styled-system/*": [
-        "./styled-system/*"
-      ]
-    },
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,

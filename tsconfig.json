@@ -7,10 +7,13 @@
       "path": "./apps/web"
     },
     {
-      "path": "./libs\\shared\\ui2"
+      "path": "./libs/web/features/importers"
     },
     {
-      "path": "./libs/web/features/importers"
+      "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./libs/shared/test"
     }
   ],
   "ts-node": {
