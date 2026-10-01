@@ -1,10 +1,12 @@
 {
-  "name": "@h2-fe/ui",
+  "name": "shared-ui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/ui/src",
+  "sourceRoot": "libs/shared/ui2/src",
   "projectType": "library",
-  "tags": ["scope:shared", "type:ui"],
-  "// targets": "to see all targets run: nx show project @h2-fe/ui --web",
+  "tags": [
+    "scope:shared",
+    "type:ui"
+  ],
   "targets": {
     "storybook": {
       "executor": "@nx/storybook:storybook",
@@ -12,7 +14,7 @@
         "uiFramework": "@storybook/react",
         "port": 4400,
         "config": {
-          "configFolder": "libs/shared/ui/.storybook"
+          "configFolder": "libs/shared/ui2/.storybook"
         }
       },
       "configurations": {
@@ -29,7 +31,7 @@
       "options": {
         "framework": "@storybook/react-vite",
         "outputDir": "dist/storybook/shared-ui",
-        "configDir": "libs/shared/ui/.storybook",
+        "configDir": "libs/shared/ui2/.storybook",
         "webpackStatsJson": true
       },
       "configurations": {

@@ -7,7 +7,7 @@
       "path": "./apps/web"
     },
     {
-      "path": "./libs/shared/ui"
+      "path": "./libs\\shared\\ui2"
     },
     {
       "path": "./libs/web/features/importers"
