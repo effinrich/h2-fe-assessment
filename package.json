@@ -6,8 +6,8 @@
     "start": "nx serve web",
     "build": "nx build web",
     "test": "nx run-many -t test",
-    "storybook2": "nx storybook @h2-fe/ui",
-    "build-storybook2": "nx @h2-fe/ui:build-storybook",
+    "storybook": "nx storybook @h2-fe/ui",
+    "build-storybook": "nx @h2-fe/ui:build-storybook",
     "gate": "nx affected -t lint,typecheck,test,build-storybook"
   },
   "private": true,

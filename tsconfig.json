@@ -11,9 +11,6 @@
     },
     {
       "path": "./libs/shared/ui"
-    },
-    {
-      "path": "./libs/shared/test"
     }
   ],
   "ts-node": {
