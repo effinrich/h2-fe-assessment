@@ -5,15 +5,22 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "oxfmt": "^0.71.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "6.30.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@emotion/babel-plugin": "11.13.5",
     "@eslint/js": "^9.8.0",
     "@nx/eslint": "22.7.12",
     "@nx/eslint-plugin": "22.7.12",
     "@nx/js": "22.7.12",
+    "@nx/oxlint": "^23.2.1",
     "@nx/react": "22.7.12",
     "@nx/vite": "22.7.12",
     "@nx/vitest": "22.7.12",
@@ -31,6 +38,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "~4.1.0",
     "@vitest/ui": "~4.1.0",
+    "ajv": "^8.0.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-import": "2.31.0",
@@ -40,18 +48,37 @@
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "nx": "22.7.12",
+    "oxlint": "^1.75.0",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.40.0",
+    "verdaccio": "^6.3.2",
     "vite": "^8.0.0",
+    "vite-plugin-dts": "~4.5.0",
     "vitest": "~4.1.0"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "libs/shared/*"
   ],
   "allowScripts": {
+    "@nx/oxlint": true,
+    "@nx/vite": true,
     "nx@22.7.12": true,
     "@swc/core@1.15.47": true,
     "fsevents@2.3.3": true
+  },
+  "nx": {
+    "includedScripts": [],
+    "targets": {
+      "local-registry": {
+        "executor": "@nx/js:verdaccio",
+        "options": {
+          "port": 4873,
+          "config": ".verdaccio/config.yml",
+          "storage": "tmp/local-registry/storage"
+        }
+      }
+    }
   }
 }
