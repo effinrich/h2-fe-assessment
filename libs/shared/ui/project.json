@@ -23,7 +23,9 @@
     },
     "build-storybook": {
       "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "outputs": [
+        "{options.outputDir}"
+      ],
       "options": {
         "framework": "@storybook/react-vite",
         "outputDir": "dist/storybook/shared-ui",
@@ -33,6 +35,18 @@
       "configurations": {
         "ci": {
           "quiet": true
+        }
+      }
+    },
+    "targets": {
+      "chromatic": {
+        "metadata": {
+          "projectId": "112233445566778899"
+        },
+        "options": {
+          "args": [
+            "--project-token=$CHROMATIC_PROJECT_TOKEN"
+          ]
         }
       }
     }

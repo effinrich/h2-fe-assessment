@@ -6,7 +6,8 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build-storybook": "nx @h2-fe/ui:build-storybook"
+    "build-storybook": "nx @h2-fe/ui:build-storybook",
+    "prepare": "panda codegen"
   },
   "exports": {
     "./package.json": "./package.json",
