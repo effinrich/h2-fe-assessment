@@ -54,3 +54,5 @@ H2 FE 2026.zip
 storybook-static
 
 .nx/self-healing
+# Panda output (the design system is Chakra now)
+styled-system

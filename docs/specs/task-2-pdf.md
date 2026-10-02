@@ -54,8 +54,8 @@ symptom would be the wrong trade.
 Falsifiable, each with the test that proves it. Test-first: the test is written
 and committed failing before the code exists.
 
-- [ ] **Given no document, the canvas offers "Open PDF" and "Use an example".**
-      — `pdf-document-empty.spec.tsx`
+- [x] **Given no document, the canvas offers "Open PDF" and "Use an example".**
+      — `pdf-document-empty.spec.tsx` (red `edf477a`, green `ac2b31d`)
 - [ ] **Choosing a file renders its first page inside a shape on the canvas.**
       — `pdf-document-render.spec.tsx`
 - [ ] **The renderer element is mounted exactly once across pan, zoom, resize and
