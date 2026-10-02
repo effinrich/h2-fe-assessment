@@ -6,7 +6,7 @@ block only.
 
 ## Nx: never infer, always ask the graph
 
-**A config file is not evidence.** Nx 22 infers targets and tags from plugins and
+**A config file is not evidence.** Nx infers targets and tags from plugins and
 `package.json`, so a sparse `project.json` says nothing about what a project can
 do. Reading `"targets": {}` and concluding "no build target" is a real mistake
 made during this project's setup.
@@ -19,10 +19,13 @@ made during this project's setup.
 
 ## Workspace
 
-- **Nx 22 + bun.** Prefer `bunx nx` over a global CLI.
+- **Nx 23 + bun.** Prefer `bunx nx` over a global CLI. `nx` and every `@nx/*`
+  stay on one exact version; mixing majors crashes every plugin
+  (`The "path" argument must be of type string`).
 - **Install at the root.** Every dependency goes in the root `package.json`
   (`bun install` from the repo root, no `-w`). Workspace `package.json` files
-  list no dependencies.
+  list no dependencies and no proxy scripts. The root `package.json` has no
+  `nx` key.
 - **No manual linking.** Nx infers project edges from imports and bun workspaces
   resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
   Tags restrict imports; they don't link.
@@ -30,8 +33,18 @@ made during this project's setup.
   never enters the project graph, so `nx affected` skips it and tags never apply.
   `nx g @nx/react:lib <name> --directory=libs/<scope>/<name> --tags=scope:<scope>,type:<type>`
 - **Tags are mandatory** on every project, and `@nx/enforce-module-boundaries`
-  enforces them. An illegal import fails lint before tests run.
-- `nx affected` over `--all` on any branch.
+  in the root `.oxlintrc.json` enforces them. An illegal import fails lint
+  before tests run.
+- `nx affected` over `--all` on any branch. `bun run gate` =
+  `nx affected -t lint,oxfmt,typecheck,test,build,build-storybook`.
+- **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
+  inferred target (`args: ["--type-aware"]` in `project.json`); never write
+  `@nx/oxlint:lint`. Two plugins must not claim the same target name.
+- **oxfmt** formats via `oxfmt` / `oxfmt:fix` (nx.json `targetDefaults`); root
+  scripts mirror `lint` / `lint:fix`.
+- LF line endings (`.gitattributes`). Every Action in every workflow is pinned
+  to a full commit SHA with a `# vX.Y.Z` comment. `ci.yml` runs `bun run gate`
+  after `nrwl/nx-set-shas`.
 
 ## Stack
 
@@ -40,9 +53,9 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 
 ## Layout
 
-- `libs/shared/ui` — the design system. Every `type:ui` component has a story.
-  Public API is the `src/index.ts` barrel, consumed as named imports from
-  `@h2-fe/ui`. Simple Chakra primitives are re-exported unchanged
+- `libs/shared/ui` — the design system. Every `type:ui` component has a story;
+  its play tests are the component tests (no Vitest unit tests here). Public API
+  is the `src/index.ts` barrel, consumed as named imports from `@h2-fe/ui`. Simple Chakra primitives are re-exported unchanged
   (`src/lib/primitives/`); compound components get thin wrappers, one folder each.
 - `libs/<scope>/features/<name>` — feature libs; inside them, the
   feature-based-architecture skill governs the file layout.
@@ -57,3 +70,5 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
    `docs/specs/README.md`.
 3. **The gate hook is authoritative.** A red gate is not a finishable turn.
 4. **Never guess a CLI flag.** Check `--help` first.
+5. **Be terse.** The user is a long-time Nx user; don't over-explain. Re-read a
+   file before editing it — never overwrite the user's concurrent edits.

@@ -58,3 +58,4 @@ storybook-static
 styled-system
 
 .nx/migrate-runs
+/.cursor/hooks/state
