@@ -73,7 +73,6 @@
       "options": {
         "serveStorybookTargetName": "storybook",
         "buildStorybookTargetName": "build-storybook",
-        "testStorybookTargetName": "test-storybook",
         "staticStorybookTargetName": "static-storybook",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
@@ -84,7 +83,13 @@
     "build-storybook": {
       "options": {
         "webpackStatsJson": true
-      }
+      },
+      "inputs": [
+        "production",
+        "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
     },
     "chromatic": {
       "executor": "nx:run-commands",
