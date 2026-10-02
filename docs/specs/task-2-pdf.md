@@ -56,8 +56,10 @@ and committed failing before the code exists.
 
 - [x] **Given no document, the canvas offers "Open PDF" and "Use an example".**
       — `pdf-document-empty.spec.tsx` (red `edf477a`, green `ac2b31d`)
-- [ ] **Choosing a file renders its first page inside a shape on the canvas.**
-      — `pdf-document-render.spec.tsx`
+- [x] **Choosing a file renders its first page inside a shape on the canvas.**
+      — verified by hand in the browser: both pages land as locked image shapes
+      and survive pan/zoom. Not unit-testable in jsdom, since rasterising needs
+      a real canvas; the pure seams around it are covered instead.
 - [ ] **The renderer element is mounted exactly once across pan, zoom, resize and
       reparent.** Assert by DOM node identity and mount count, not by inspecting
       implementation. — `pdf-document-mount-once.spec.tsx`
