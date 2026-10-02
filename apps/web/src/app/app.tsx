@@ -1,7 +1,7 @@
-import { PdfDocumentCanvas } from '@h2-fe/importers'
+import { PdfDocumentCanvas } from "@h2-fe/importers";
 
 export function App() {
-  return <PdfDocumentCanvas />
+  return <PdfDocumentCanvas />;
 }
 
-export default App
+export default App;

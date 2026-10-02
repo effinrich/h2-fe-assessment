@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn } from 'storybook/test';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, fn } from "storybook/test";
 
-import { Tabs } from './tabs';
+import { Tabs } from "./tabs";
 
 const meta = {
-  title: 'Navigation/Tabs',
+  title: "Navigation/Tabs",
   component: Tabs,
   args: {
     items: [
-      { value: 'shapes', label: 'Shapes', content: 'Every shape on the canvas.' },
-      { value: 'pins', label: 'Pins', content: 'Pins attached to shapes.' },
-      { value: 'history', label: 'History', content: 'Undo history.', disabled: true },
+      { value: "shapes", label: "Shapes", content: "Every shape on the canvas." },
+      { value: "pins", label: "Pins", content: "Pins attached to shapes." },
+      { value: "history", label: "History", content: "Undo history.", disabled: true },
     ],
     onValueChange: fn(),
   },
@@ -21,16 +21,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ args, canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('tab', { name: 'Pins' }));
-    await expect(args.onValueChange).toHaveBeenCalledWith('pins');
-    await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Pins attached to shapes.');
+    await userEvent.click(canvas.getByRole("tab", { name: "Pins" }));
+    await expect(args.onValueChange).toHaveBeenCalledWith("pins");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Pins attached to shapes.");
   },
 };
 
 export const Enclosed: Story = {
-  args: { variant: 'enclosed' },
+  args: { variant: "enclosed" },
 };
 
 export const Vertical: Story = {
-  args: { orientation: 'vertical' },
+  args: { orientation: "vertical" },
 };

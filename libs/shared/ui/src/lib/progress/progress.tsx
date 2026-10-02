@@ -1,7 +1,7 @@
-import { HStack, Progress as ChakraProgress } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { HStack, Progress as ChakraProgress } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
-export interface ProgressProps extends Omit<ChakraProgress.RootProps, 'children'> {
+export interface ProgressProps extends Omit<ChakraProgress.RootProps, "children"> {
   label?: ReactNode;
   /** Shows the percentage next to the label. */
   showValueText?: boolean;

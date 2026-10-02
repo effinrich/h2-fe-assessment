@@ -1,12 +1,12 @@
-import { Button, Stack } from '@chakra-ui/react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button, Stack } from "@chakra-ui/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Alert } from './alert';
+import { Alert } from "./alert";
 
 const meta = {
-  title: 'Feedback/Alert',
+  title: "Feedback/Alert",
   component: Alert,
-  args: { title: 'Import finished', children: '42 shapes were added to the canvas.' },
+  args: { title: "Import finished", children: "42 shapes were added to the canvas." },
 } satisfies Meta<typeof Alert>;
 
 export default meta;
@@ -26,14 +26,14 @@ export const Statuses: Story = {
 };
 
 export const TitleOnly: Story = {
-  args: { children: undefined, status: 'warning', title: 'Unsaved changes' },
+  args: { children: undefined, status: "warning", title: "Unsaved changes" },
 };
 
 export const WithAction: Story = {
   args: {
-    status: 'error',
-    title: 'Import failed',
-    children: 'The file could not be parsed.',
+    status: "error",
+    title: "Import failed",
+    children: "The file could not be parsed.",
     action: (
       <Button size="sm" variant="outline" alignSelf="center">
         Retry

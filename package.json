@@ -1,18 +1,26 @@
 {
   "name": "@h2-fe/source",
   "version": "0.0.0",
+  "private": true,
   "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "libs/shared/*",
+    "libs/web/features/*",
+    "libs/web/**"
+  ],
   "scripts": {
     "start": "nx serve web",
     "build": "nx build web",
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
+    "oxfmt": "nx run-many -t oxfmt",
+    "oxfmt:fix": "nx run-many -t oxfmt:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
     "gate": "nx affected -t lint,typecheck,test,build-storybook"
   },
-  "private": true,
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
     "@chromatic-com/storybook": "^5.4.0",
@@ -29,23 +37,19 @@
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
-    "@eslint/js": "^9.8.0",
-    "@nx/eslint": "22.7.12",
-    "@nx/eslint-plugin": "22.7.12",
-    "@nx/js": "22.7.12",
-    "@nx/oxlint": "^23.2.1",
-    "@nx/react": "22.7.12",
-    "@nx/storybook": "^22.7.12",
-    "@nx/vite": "22.7.12",
-    "@nx/vitest": "22.7.12",
-    "@nx/web": "22.7.12",
-    "@nx/workspace": "22.7.12",
+    "@nx/js": "23.2.1",
+    "@nx/oxlint": "23.2.1",
+    "@nx/react": "23.2.1",
+    "@nx/storybook": "23.2.1",
+    "@nx/vite": "23.2.1",
+    "@nx/vitest": "23.2.1",
+    "@nx/web": "23.2.1",
+    "@nx/workspace": "23.2.1",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/react-vite": "10.6.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
-    "@testing-library/user-event": "^14.6.7",
     "@types/node": "20.19.9",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
@@ -56,7 +60,7 @@
     "chromatic": "^18.10.1",
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
-    "nx": "22.7.12",
+    "nx": "23.2.1",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.75.0",
     "oxlint-tsgolint": "^7.0.2003",
@@ -70,12 +74,6 @@
     "vite-plugin-dts": "~4.5.0",
     "vitest": "~4.1.0"
   },
-  "workspaces": [
-    "apps/*",
-    "libs/shared/*",
-    "libs/web/features/*",
-    "libs/web/**"
-  ],
   "allowScripts": {
     "@nx/oxlint": true,
     "@nx/vite": true,
@@ -84,18 +82,5 @@
     "nx": true,
     "@swc/core": true,
     "fsevents": true
-  },
-  "nx": {
-    "includedScripts": [],
-    "targets": {
-      "local-registry": {
-        "executor": "@nx/js:verdaccio",
-        "options": {
-          "port": 4873,
-          "config": ".verdaccio/config.yml",
-          "storage": "tmp/local-registry/storage"
-        }
-      }
-    }
   }
 }

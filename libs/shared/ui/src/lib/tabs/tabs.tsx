@@ -1,5 +1,5 @@
-import { Tabs as ChakraTabs } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { Tabs as ChakraTabs } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 export interface TabsItemData {
   value: string;
@@ -8,7 +8,7 @@ export interface TabsItemData {
   disabled?: boolean;
 }
 
-export interface TabsProps extends Omit<ChakraTabs.RootProps, 'children' | 'onValueChange'> {
+export interface TabsProps extends Omit<ChakraTabs.RootProps, "children" | "onValueChange"> {
   items: TabsItemData[];
   onValueChange?: (value: string) => void;
 }

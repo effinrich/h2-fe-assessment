@@ -23,7 +23,7 @@ made during this project's setup.
 - **Install at the root.** Every dependency goes in the root `package.json`
   (`bun install` from the repo root, no `-w`). Workspace `package.json` files
   list no dependencies.
-- **No manual linking.** Nx infers project edges from imports and npm workspaces
+- **No manual linking.** Nx infers project edges from imports and bun workspaces
   resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
   Tags restrict imports; they don't link.
 - **Generators only.** Never hand-create a project folder. A hand-made folder

@@ -1,14 +1,14 @@
-import { Button, Wrap } from '@chakra-ui/react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, screen } from 'storybook/test';
+import { Button, Wrap } from "@chakra-ui/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, screen } from "storybook/test";
 
-import { toaster } from './consts';
-import { Toaster } from './toaster';
+import { toaster } from "./consts";
+import { Toaster } from "./toaster";
 
 // The Storybook decorator's UiProvider already mounts <Toaster />, so these
 // stories only push toasts into the shared store.
 const meta = {
-  title: 'Feedback/Toaster',
+  title: "Feedback/Toaster",
   component: Toaster,
 } satisfies Meta<typeof Toaster>;
 
@@ -18,21 +18,48 @@ type Story = StoryObj<typeof meta>;
 export const Types: Story = {
   render: () => (
     <Wrap gap="3">
-      <Button onClick={() => toaster.create({ title: 'Saved', description: 'Your board is up to date.', type: 'success' })}>
+      <Button
+        onClick={() =>
+          toaster.create({
+            title: "Saved",
+            description: "Your board is up to date.",
+            type: "success",
+          })
+        }
+      >
         Success
       </Button>
-      <Button onClick={() => toaster.create({ title: 'Upload failed', description: 'The PDF is over 20 MB.', type: 'error', closable: true })}>
+      <Button
+        onClick={() =>
+          toaster.create({
+            title: "Upload failed",
+            description: "The PDF is over 20 MB.",
+            type: "error",
+            closable: true,
+          })
+        }
+      >
         Error
       </Button>
-      <Button onClick={() => toaster.create({ title: 'Heads up', description: 'Pins follow moved shapes.', type: 'info' })}>
+      <Button
+        onClick={() =>
+          toaster.create({
+            title: "Heads up",
+            description: "Pins follow moved shapes.",
+            type: "info",
+          })
+        }
+      >
         Info
       </Button>
-      <Button onClick={() => toaster.create({ title: 'Importing…', type: 'loading' })}>Loading</Button>
+      <Button onClick={() => toaster.create({ title: "Importing…", type: "loading" })}>
+        Loading
+      </Button>
     </Wrap>
   ),
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Success' }));
-    await expect(await screen.findByText('Your board is up to date.')).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Success" }));
+    await expect(await screen.findByText("Your board is up to date.")).toBeInTheDocument();
   },
 };
 
@@ -41,9 +68,12 @@ export const WithAction: Story = {
     <Button
       onClick={() =>
         toaster.create({
-          title: 'Shape deleted',
-          type: 'info',
-          action: { label: 'Undo', onClick: () => toaster.create({ title: 'Restored', type: 'success' }) },
+          title: "Shape deleted",
+          type: "info",
+          action: {
+            label: "Undo",
+            onClick: () => toaster.create({ title: "Restored", type: "success" }),
+          },
         })
       }
     >

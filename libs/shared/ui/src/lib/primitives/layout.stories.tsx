@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { ReactNode } from "react";
 
 import {
   Box,
@@ -13,10 +13,10 @@ import {
   SimpleGrid,
   Stack,
   VStack,
-} from './layout';
+} from "./layout";
 
 const meta = {
-  title: 'Primitives/Layout',
+  title: "Primitives/Layout",
 } satisfies Meta;
 
 export default meta;
@@ -62,7 +62,7 @@ export const FlexRow: Story = {
 export const Grids: Story = {
   render: () => (
     <Stack gap="6">
-      <Grid templateColumns={{ base: '1fr', md: '200px 1fr' }} gap="3">
+      <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap="3">
         <GridItem>
           <Tile>Sidebar</Tile>
         </GridItem>

@@ -1,13 +1,16 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
-import * as path from 'path';
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+import dts from "vite-plugin-dts"
+import * as path from "path"
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../../../node_modules/.vite/libs/web/features/importers',
-  plugins: [react(), dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })],
+  cacheDir: "../../../../node_modules/.vite/libs/web/features/importers",
+  plugins: [
+    react(),
+    dts({ entryRoot: "src", tsconfigPath: path.join(import.meta.dirname, "tsconfig.lib.json") }),
+  ],
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],
@@ -15,7 +18,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vite.dev/guide/build.html#library-mode
   build: {
-    outDir: './dist',
+    outDir: "./dist",
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -23,39 +26,39 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
-      name: '@h2-fe/importers',
-      fileName: 'index',
+      entry: "src/index.ts",
+      name: "@h2-fe/importers",
+      fileName: "index",
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
-      formats: ['es' as const]
+      formats: ["es" as const],
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
       // tldraw and pdfjs are large, and bundling them also defeats module mocks
       // in tests: a mock cannot reach inside a bundle.
       external: [
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        'tldraw',
-        'pdfjs-dist',
-        'pdf-lib',
-        '@h2-fe/ui',
-      ]
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "tldraw",
+        "pdfjs-dist",
+        "pdf-lib",
+        "@h2-fe/ui",
+      ],
     },
   },
   test: {
-    name: '@h2-fe/importers',
+    name: "@h2-fe/importers",
     watch: false,
     globals: true,
-    environment: 'jsdom',
-    setupFiles: ['src/test-setup.ts'],
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
+    environment: "jsdom",
+    setupFiles: ["src/test-setup.ts"],
+    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    reporters: ["default"],
     coverage: {
-      reportsDirectory: './test-output/vitest/coverage',
-      provider: 'v8' as const,
-    }
+      reportsDirectory: "./test-output/vitest/coverage",
+      provider: "v8" as const,
+    },
   },
-}));
+}))

@@ -1,13 +1,13 @@
-import { HStack } from '@chakra-ui/react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn } from 'storybook/test';
+import { HStack } from "@chakra-ui/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, fn } from "storybook/test";
 
-import { Button } from './button';
+import { Button } from "./button";
 
 const meta = {
-  title: 'Buttons/Button',
+  title: "Buttons/Button",
   component: Button,
-  args: { children: 'Save shape', onClick: fn() },
+  args: { children: "Save shape", onClick: fn() },
 } satisfies Meta<typeof Button>;
 
 export default meta;
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ args, canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Save shape' }));
+    await userEvent.click(canvas.getByRole("button", { name: "Save shape" }));
     await expect(args.onClick).toHaveBeenCalled();
   },
 };
@@ -40,9 +40,9 @@ export const Variants: Story = {
 };
 
 export const Loading: Story = {
-  args: { loading: true, loadingText: 'Saving' },
+  args: { loading: true, loadingText: "Saving" },
 };
 
 export const Danger: Story = {
-  args: { colorPalette: 'red', children: 'Delete shape' },
+  args: { colorPalette: "red", children: "Delete shape" },
 };

@@ -1,5 +1,5 @@
-import { CloseButton, Drawer as ChakraDrawer, Portal } from '@chakra-ui/react';
-import type { ReactElement, ReactNode } from 'react';
+import { CloseButton, Drawer as ChakraDrawer, Portal } from "@chakra-ui/react";
+import type { ReactElement, ReactNode } from "react";
 
 export interface DrawerProps {
   title: ReactNode;
@@ -10,8 +10,8 @@ export interface DrawerProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  placement?: ChakraDrawer.RootProps['placement'];
-  size?: ChakraDrawer.RootProps['size'];
+  placement?: ChakraDrawer.RootProps["placement"];
+  size?: ChakraDrawer.RootProps["size"];
   closeLabel?: string;
 }
 
@@ -23,9 +23,9 @@ export function Drawer({
   open,
   defaultOpen,
   onOpenChange,
-  placement = 'end',
+  placement = "end",
   size,
-  closeLabel = 'Close',
+  closeLabel = "Close",
 }: DrawerProps) {
   return (
     <ChakraDrawer.Root

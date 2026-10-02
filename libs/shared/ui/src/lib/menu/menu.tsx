@@ -1,5 +1,5 @@
-import { Menu as ChakraMenu, Portal } from '@chakra-ui/react';
-import type { ReactElement, ReactNode } from 'react';
+import { Menu as ChakraMenu, Portal } from "@chakra-ui/react";
+import type { ReactElement, ReactNode } from "react";
 
 export interface MenuOption {
   value: string;
@@ -11,7 +11,7 @@ export interface MenuOption {
   danger?: boolean;
 }
 
-export interface MenuProps extends Omit<ChakraMenu.RootProps, 'children' | 'onSelect'> {
+export interface MenuProps extends Omit<ChakraMenu.RootProps, "children" | "onSelect"> {
   /** A single button element that opens the menu. */
   trigger: ReactElement;
   items: MenuOption[];
@@ -30,11 +30,13 @@ export function Menu({ trigger, items, onSelect, ...rootProps }: MenuProps) {
                 key={item.value}
                 value={item.value}
                 disabled={item.disabled}
-                color={item.danger ? 'fg.error' : undefined}
-                _hover={item.danger ? { bg: 'bg.error', color: 'fg.error' } : undefined}
+                color={item.danger ? "fg.error" : undefined}
+                _hover={item.danger ? { bg: "bg.error", color: "fg.error" } : undefined}
               >
                 {item.label}
-                {item.command ? <ChakraMenu.ItemCommand>{item.command}</ChakraMenu.ItemCommand> : null}
+                {item.command ? (
+                  <ChakraMenu.ItemCommand>{item.command}</ChakraMenu.ItemCommand>
+                ) : null}
               </ChakraMenu.Item>
             ))}
           </ChakraMenu.Content>

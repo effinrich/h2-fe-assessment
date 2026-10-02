@@ -1,8 +1,8 @@
-import { Badge, HStack, Stat as ChakraStat } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { Badge, HStack, Stat as ChakraStat } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 export interface StatTrend {
-  direction: 'up' | 'down';
+  direction: "up" | "down";
   value: ReactNode;
 }
 
@@ -25,8 +25,8 @@ export function Stat({ label, value, unit, helpText, trend, ...rootProps }: Stat
           {unit ? <ChakraStat.ValueUnit>{unit}</ChakraStat.ValueUnit> : null}
         </ChakraStat.ValueText>
         {trend ? (
-          <Badge colorPalette={trend.direction === 'up' ? 'green' : 'red'} gap="0">
-            {trend.direction === 'up' ? <ChakraStat.UpIndicator /> : <ChakraStat.DownIndicator />}
+          <Badge colorPalette={trend.direction === "up" ? "green" : "red"} gap="0">
+            {trend.direction === "up" ? <ChakraStat.UpIndicator /> : <ChakraStat.DownIndicator />}
             {trend.value}
           </Badge>
         ) : null}

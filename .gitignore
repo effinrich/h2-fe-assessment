@@ -56,3 +56,5 @@ storybook-static
 .nx/self-healing
 # Panda output (the design system is Chakra now)
 styled-system
+
+.nx/migrate-runs

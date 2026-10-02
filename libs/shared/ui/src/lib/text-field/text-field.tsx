@@ -1,5 +1,5 @@
-import { Field, Input, type InputProps } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { Field, Input, type InputProps } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 export interface TextFieldProps extends InputProps {
   label: ReactNode;
@@ -18,7 +18,12 @@ export function TextField({
   ...inputProps
 }: TextFieldProps) {
   return (
-    <Field.Root invalid={Boolean(errorText)} required={required} disabled={disabled} readOnly={readOnly}>
+    <Field.Root
+      invalid={Boolean(errorText)}
+      required={required}
+      disabled={disabled}
+      readOnly={readOnly}
+    >
       <Field.Label>
         {label}
         <Field.RequiredIndicator />

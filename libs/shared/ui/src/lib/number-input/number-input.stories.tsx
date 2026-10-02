@@ -1,12 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn } from 'storybook/test';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, fn } from "storybook/test";
 
-import { NumberInput } from './number-input';
+import { NumberInput } from "./number-input";
 
 const meta = {
-  title: 'Forms/NumberInput',
+  title: "Forms/NumberInput",
   component: NumberInput,
-  args: { label: 'Stroke width', defaultValue: '2', min: 0, max: 10, width: '40', onValueChange: fn() },
+  args: {
+    label: "Stroke width",
+    defaultValue: "2",
+    min: 0,
+    max: 10,
+    width: "40",
+    onValueChange: fn(),
+  },
 } satisfies Meta<typeof NumberInput>;
 
 export default meta;
@@ -14,10 +21,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ args, canvas, userEvent }) => {
-    const input = canvas.getByRole('spinbutton', { name: 'Stroke width' });
+    const input = canvas.getByRole("spinbutton", { name: "Stroke width" });
     await userEvent.clear(input);
-    await userEvent.type(input, '5');
-    await expect(args.onValueChange).toHaveBeenLastCalledWith(5, '5');
+    await userEvent.type(input, "5");
+    await expect(args.onValueChange).toHaveBeenLastCalledWith(5, "5");
   },
 };
 

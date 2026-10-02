@@ -1,13 +1,13 @@
-import { HStack } from '@chakra-ui/react';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { HStack } from "@chakra-ui/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 
-import { Avatar } from './avatar';
+import { Avatar } from "./avatar";
 
 const meta = {
-  title: 'Data display/Avatar',
+  title: "Data display/Avatar",
   component: Avatar,
-  args: { name: 'Ada Lovelace' },
+  args: { name: "Ada Lovelace" },
 } satisfies Meta<typeof Avatar>;
 
 export default meta;
@@ -15,12 +15,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Initials: Story = {
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('AL')).toBeVisible();
+    await expect(canvas.getByText("AL")).toBeVisible();
   },
 };
 
 export const WithImage: Story = {
-  args: { src: 'https://i.pravatar.cc/120?img=47' },
+  args: { src: "https://i.pravatar.cc/120?img=47" },
 };
 
 export const Sizes: Story = {
@@ -36,5 +36,5 @@ export const Sizes: Story = {
 };
 
 export const Colored: Story = {
-  args: { colorPalette: 'teal', variant: 'solid' },
+  args: { colorPalette: "teal", variant: "solid" },
 };

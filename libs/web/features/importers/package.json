@@ -17,6 +17,17 @@
     "tags": [
       "scope:web",
       "type:feature"
-    ]
+    ],
+    "targets": {
+      "lint": {
+        "options": {
+          "args": [
+            "--type-aware"
+          ]
+        }
+      },
+      "oxfmt": {},
+      "oxfmt:fix": {}
+    }
   }
 }

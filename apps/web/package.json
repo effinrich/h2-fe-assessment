@@ -3,12 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "lint": "nx run -t lint",
-    "lint:fix": "nx run -t lint:fix",
-    "test": "nx run -t test",
-    "build": "nx run -t build"
+    "lint": "oxlint src .storybook",
+    "lint:fix": "oxlint src .storybook --fix"
   },
-  "dependencies": {
-    "@h2-fe/shared-ui": "workspace:*"
+  "nx": {
+    "includedScripts": []
   }
 }

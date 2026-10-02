@@ -2,10 +2,7 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "analytics": false,
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/.oxlintrc.json",
@@ -34,7 +31,7 @@
       }
     },
     {
-      "plugin": "@nx/eslint/plugin",
+      "plugin": "@nx/oxlint",
       "options": {
         "targetName": "lint"
       }
@@ -59,12 +56,6 @@
         "testTargetName": "test",
         "ciTargetName": "test-ci",
         "testMode": "watch"
-      }
-    },
-    {
-      "plugin": "@nx/oxlint",
-      "options": {
-        "targetName": "oxlint"
       }
     },
     {
@@ -100,33 +91,40 @@
           }
         ]
       },
-      "dependsOn": [
-        "build-storybook"
-      ],
+      "dependsOn": ["build-storybook"],
       "inputs": [
         {
-          "externalDependencies": [
-            "chromatic"
-          ]
+          "externalDependencies": ["chromatic"]
         }
       ]
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": [
-        "build",
-        "^build"
+      "dependsOn": ["build", "^build"]
+    },
+    "oxfmt": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --check .",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.oxfmtrc.json",
+        { "externalDependencies": ["oxfmt"] }
       ]
+    },
+    "oxfmt:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --write .",
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
     }
-  },
-  "test": {
-    "dependsOn": [
-      "^build"
-    ]
   },
   "generators": {
     "@nx/react": {

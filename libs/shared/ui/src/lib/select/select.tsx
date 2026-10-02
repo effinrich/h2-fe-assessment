@@ -1,5 +1,5 @@
-import { createListCollection, Portal, Select as ChakraSelect } from '@chakra-ui/react';
-import { type ReactNode, useMemo } from 'react';
+import { createListCollection, Portal, Select as ChakraSelect } from "@chakra-ui/react";
+import { type ReactNode, useMemo } from "react";
 
 export interface SelectOption {
   value: string;
@@ -7,8 +7,10 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-export interface SelectProps
-  extends Omit<ChakraSelect.RootProps<SelectOption>, 'collection' | 'children' | 'onValueChange'> {
+export interface SelectProps extends Omit<
+  ChakraSelect.RootProps<SelectOption>,
+  "collection" | "children" | "onValueChange"
+> {
   items: SelectOption[];
   label?: ReactNode;
   placeholder?: string;
@@ -16,7 +18,14 @@ export interface SelectProps
   onValueChange?: (value: string[]) => void;
 }
 
-export function Select({ items, label, placeholder, onValueChange, positioning, ...rootProps }: SelectProps) {
+export function Select({
+  items,
+  label,
+  placeholder,
+  onValueChange,
+  positioning,
+  ...rootProps
+}: SelectProps) {
   const collection = useMemo(() => createListCollection({ items }), [items]);
 
   return (

@@ -1,5 +1,5 @@
-import { Tag as ChakraTag } from '@chakra-ui/react';
-import type { ReactNode } from 'react';
+import { Tag as ChakraTag } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 
 export interface TagProps extends ChakraTag.RootProps {
   startElement?: ReactNode;
@@ -9,7 +9,14 @@ export interface TagProps extends ChakraTag.RootProps {
   closeLabel?: string;
 }
 
-export function Tag({ startElement, endElement, onClose, closeLabel = 'Remove', children, ...rootProps }: TagProps) {
+export function Tag({
+  startElement,
+  endElement,
+  onClose,
+  closeLabel = "Remove",
+  children,
+  ...rootProps
+}: TagProps) {
   return (
     <ChakraTag.Root {...rootProps}>
       {startElement ? <ChakraTag.StartElement>{startElement}</ChakraTag.StartElement> : null}

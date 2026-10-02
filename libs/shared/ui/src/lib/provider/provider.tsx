@@ -1,9 +1,9 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import { ThemeProvider } from 'next-themes';
-import type { ReactNode } from 'react';
+import { ChakraProvider } from "@chakra-ui/react";
+import { ThemeProvider } from "next-themes";
+import type { ReactNode } from "react";
 
-import { system } from '../theme/system';
-import { Toaster } from '../toaster/toaster';
+import { system } from "../theme/system";
+import { Toaster } from "../toaster/toaster";
 
 export interface UiProviderProps {
   children: ReactNode;
