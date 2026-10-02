@@ -19,9 +19,9 @@ made during this project's setup.
 
 ## Workspace
 
-- **Nx 22 + npm.** Prefer `npx nx` over a global CLI.
+- **Nx 22 + bun.** Prefer `bunx nx` over a global CLI.
 - **Install at the root.** Every dependency goes in the root `package.json`
-  (`npm install` from the repo root, no `-w`). Workspace `package.json` files
+  (`bun install` from the repo root, no `-w`). Workspace `package.json` files
   list no dependencies.
 - **No manual linking.** Nx infers project edges from imports and npm workspaces
   resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.

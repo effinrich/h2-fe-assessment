@@ -5,7 +5,7 @@
     "source.format.oxc": "always", // run formatter first
     "source.fixAll.oxc": "always" // run lint fixes after
   },
-  "npm.packageManager": "bun",
+  "bun.packageManager": "bun",
   "oxc.configPath": ".oxlintrc.json",
   "oxc.fmt.configPath": ".oxfmtrc.json",
   "oxc.fixKind": "safe_fix_or_suggestion",

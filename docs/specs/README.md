@@ -16,7 +16,7 @@ any code — and no criterion is finished until a test fails without the change.
    match finished code.
 4. **Implement until green.** No criterion is touched out of order.
 5. **Refactor with tests green.**
-6. **Run the gates** (`npm run gate`). The `Stop` hook runs them anyway, so a red
+6. **Run the gates** (`bun run gate`). The `Stop` hook runs them anyway, so a red
    gate is not a finishable turn.
 7. **Tick the criterion in the spec** and move to the next one.
 

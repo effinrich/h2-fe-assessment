@@ -8,6 +8,18 @@
     "type:ui"
   ],
   "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "args": ["--type-aware"]
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "args": ["--type-aware", "--fix"]
+      }
+    },
    "storybook": {
       "configurations": {
         "ci": {

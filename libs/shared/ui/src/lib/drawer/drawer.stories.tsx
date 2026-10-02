@@ -12,6 +12,12 @@ const meta = {
     children: <Text>Every shape on the canvas, top to bottom.</Text>,
     trigger: <Button variant="outline">Open drawer</Button>,
   },
+  parameters: {
+    a11y: {
+      // axe always reports aria-controls on an aria-haspopup trigger as "needs review", whether or not the id resolves.
+      config: { checks: [{ id: 'aria-valid-attr-value', options: ['aria-controls'] }] },
+    },
+  },
 } satisfies Meta<typeof Drawer>;
 
 export default meta;

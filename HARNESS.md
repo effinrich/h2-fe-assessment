@@ -39,7 +39,7 @@ answer twice at double cost. Model diversity only pays when the checks differ.
 ## Gates
 
 ```
-npm run gate   →   nx affected -t lint,typecheck,test,build-storybook
+bun run gate   →   nx affected -t lint,typecheck,test,build-storybook
 ```
 
 Wired to a `Stop` hook (`.commandcode/settings.json`), so failures reach the

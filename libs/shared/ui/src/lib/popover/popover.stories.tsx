@@ -16,6 +16,12 @@ const meta = {
     title: 'Rectangle',
     children: <Text textStyle="sm">120 × 80 px, 3 pins attached.</Text>,
   },
+  parameters: {
+    a11y: {
+      // axe always reports aria-controls on an aria-haspopup trigger as "needs review", whether or not the id resolves.
+      config: { checks: [{ id: 'aria-valid-attr-value', options: ['aria-controls'] }] },
+    },
+  },
 } satisfies Meta<typeof Popover>;
 
 export default meta;

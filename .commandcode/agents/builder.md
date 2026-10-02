@@ -23,7 +23,7 @@ Rules:
 - **Verify third-party APIs against installed types** before you commit to them.
   tldraw, Ark and Park UI are all under-represented in training data, and this is
   where invented method names come from.
-- **Run the gates** (`npm run gate`) before you report done. A red gate is not a
+- **Run the gates** (`bun run gate`) before you report done. A red gate is not a
   finishable turn.
 - Work only inside the spec's scope. If you find something else that needs doing,
   report it rather than doing it.

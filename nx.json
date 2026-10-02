@@ -8,8 +8,7 @@
     ],
     "production": [
       "default",
-      "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/eslint.config.mjs",
+      "!{projectRoot}/.oxlintrc.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/src/test-setup.[jt]s",
@@ -91,7 +90,7 @@
       "options": {
         "commands": [
           {
-            "command": "npx chromatic --exit-zero-on-changes --storybook-build-dir={projectRoot}/storybook-static --storybook-base-dir={projectRoot} --storybook-config-dir={projectRoot}/.storybook --no-interactive --auto-accept-changes=main",
+            "command": "bunx chromatic --exit-zero-on-changes --storybook-build-dir={projectRoot}/storybook-static --storybook-base-dir={projectRoot} --storybook-config-dir={projectRoot}/.storybook --no-interactive --auto-accept-changes=main",
             "description": "Chromatic will automatically build Storybook before running."
           }
         ]
@@ -129,7 +128,7 @@
       "application": {
         "babel": true,
         "style": "css",
-        "linter": "eslint",
+        "linter": "oxlint",
         "bundler": "vite"
       },
       "component": {
@@ -137,14 +136,14 @@
       },
       "library": {
         "style": "css",
-        "linter": "eslint",
+        "linter": "oxlint",
         "unitTestRunner": "vitest"
       }
     }
   },
   "release": {
     "version": {
-      "preVersionCommand": "npx nx run-many -t build"
+      "preVersionCommand": "bunx nx run-many -t build"
     }
   }
 }
