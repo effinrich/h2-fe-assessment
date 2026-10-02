@@ -19,7 +19,7 @@
     "oxfmt:fix": "nx run-many -t oxfmt:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
-    "gate": "nx affected -t lint,typecheck,test,build-storybook"
+    "gate": "nx affected -t lint,oxfmt,typecheck,test,build-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
