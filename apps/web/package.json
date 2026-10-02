@@ -1,12 +1,5 @@
 {
   "name": "@h2-fe/web",
   "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "lint": "oxlint src .storybook",
-    "lint:fix": "oxlint src .storybook --fix"
-  },
-  "nx": {
-    "includedScripts": []
-  }
+  "private": true
 }
