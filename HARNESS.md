@@ -26,12 +26,12 @@ spec → failing test → build → gates (hook) → verifier → scope-guard �
 
 ## Agents
 
-| Agent | Asks |
-|---|---|
-| `builder` | one scoped unit, test-first |
-| `verifier` | is every API real? |
-| `scope-guard` | is this in scope? |
-| `ux-critic` | is this better than the demo? |
+| Agent         | Asks                          |
+| ------------- | ----------------------------- |
+| `builder`     | one scoped unit, test-first   |
+| `verifier`    | is every API real?            |
+| `scope-guard` | is this in scope?             |
+| `ux-critic`   | is this better than the demo? |
 
 Each asks a **different** question. Two agents running one checklist is one
 answer twice at double cost. Model diversity only pays when the checks differ.

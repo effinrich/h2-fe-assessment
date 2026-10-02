@@ -33,20 +33,20 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: ['react'],
-      output: { manualChunks: { vendor: ['react', 'react-dom'] } },
-    },
-  },
-});
+      output: { manualChunks: { vendor: ['react', 'react-dom'] } }
+    }
+  }
+})
 
 // ✅ AFTER (Vite 8)
 export default defineConfig({
   build: {
     rolldownOptions: {
       external: ['react'],
-      output: { manualChunks: { vendor: ['react', 'react-dom'] } },
-    },
-  },
-});
+      output: { manualChunks: { vendor: ['react', 'react-dom'] } }
+    }
+  }
+})
 ```
 
 **Action Items**:
@@ -61,24 +61,24 @@ export default defineConfig({
 
 ```typescript
 // ❌ BEFORE (Vite 7, plugin-react v4)
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [
     react({
       babel: {
-        plugins: ['babel-plugin-styled-components'],
-      },
-    }),
-  ],
-});
+        plugins: ['babel-plugin-styled-components']
+      }
+    })
+  ]
+})
 
 // ✅ AFTER (Vite 8, plugin-react v6)
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  plugins: [react()],
-});
+  plugins: [react()]
+})
 ```
 
 **Action Items**:
@@ -138,8 +138,8 @@ If a project depends on a Babel plugin that has no Oxc equivalent, pin that proj
 {
   "devDependencies": {
     "vite": "^7.1.0",
-    "@vitejs/plugin-react": "^4.3.0",
-  },
+    "@vitejs/plugin-react": "^4.3.0"
+  }
 }
 ```
 

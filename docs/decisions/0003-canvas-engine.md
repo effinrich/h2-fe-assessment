@@ -17,7 +17,7 @@ Deviating from an explicit instruction is the cheapest available way to lose
 points, and the demos we are asked to beat are tldraw demos. The engineering
 being demonstrated — custom `ShapeUtil` subclasses, bindings between shapes,
 app-owned DOM, export pipelines — is what transfers; a three.js rewrite would
-demonstrate *different* work, not better work.
+demonstrate _different_ work, not better work.
 
 ## Consequences
 

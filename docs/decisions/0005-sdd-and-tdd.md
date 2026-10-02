@@ -20,7 +20,7 @@ to be mechanical.
   in falsifiable form, written before code. `scope-guard` checks the diff against
   it. A criterion cannot be marked done without a test that fails without the
   change.
-- **TDD.** Red → green → refactor per criterion. The failing test is *evidence*,
+- **TDD.** Red → green → refactor per criterion. The failing test is _evidence_,
   not ceremony: it appears in the commit so the record shows the test came first
   rather than being back-filled.
 - **Enforcement.** A `Stop` hook runs the gates at end of turn and blocks the

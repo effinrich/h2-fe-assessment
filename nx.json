@@ -111,11 +111,7 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": [
-        "default",
-        "{workspaceRoot}/.oxfmtrc.json",
-        { "externalDependencies": ["oxfmt"] }
-      ]
+      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json", { "externalDependencies": ["oxfmt"] }]
     },
     "oxfmt:fix": {
       "executor": "nx:run-commands",

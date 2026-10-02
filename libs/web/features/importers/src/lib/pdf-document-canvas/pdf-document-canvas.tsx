@@ -29,22 +29,22 @@ export function PdfDocumentCanvas() {
         setIsBusy(false)
       }
     },
-    [editor, isBusy],
+    [editor, isBusy]
   )
 
   const onOpenPdf = useCallback(() => inputRef.current?.click(), [])
   const onUseExample = useCallback(() => place(createExamplePdf), [place])
 
   return (
-    <div style={{ position: "absolute", inset: 0 }}>
+    <div style={{ position: 'absolute', inset: 0 }}>
       <Tldraw onMount={handleMount} />
 
       <input
         accept="application/pdf"
         hidden
-        onChange={(event) => {
+        onChange={event => {
           const file = event.target.files?.[0]
-          event.target.value = ""
+          event.target.value = ''
           if (file) void place(async () => file)
         }}
         ref={inputRef}
@@ -52,13 +52,7 @@ export function PdfDocumentCanvas() {
       />
 
       {!hasDocument ? (
-        <Flex
-          align="center"
-          inset="0"
-          justify="center"
-          pointerEvents="none"
-          position="absolute"
-        >
+        <Flex align="center" inset="0" justify="center" pointerEvents="none" position="absolute">
           <Box
             bg="bg.panel"
             borderColor="border"
@@ -69,11 +63,7 @@ export function PdfDocumentCanvas() {
             p="8"
             pointerEvents="auto"
           >
-            <PdfDocumentEmpty
-              isBusy={isBusy}
-              onOpenPdf={onOpenPdf}
-              onUseExample={onUseExample}
-            />
+            <PdfDocumentEmpty isBusy={isBusy} onOpenPdf={onOpenPdf} onUseExample={onUseExample} />
           </Box>
         </Flex>
       ) : null}

@@ -59,3 +59,36 @@ styled-system
 
 .nx/migrate-runs
 /.cursor/hooks/state
+
+# tokenade — per-project cache / scaffold flag / dedup refs
+.tokenade/
+
+# tokenade — legacy per-project embedding model cache (now global)
+.fastembed_cache/
+
+# Local AI tool state (per-editor skills + agent config). Tooling, not project source.
+.agents/
+.aider-desk/
+.augment/
+.claude/
+.codestudio/
+.codex/
+.cortex/
+.forge/
+.fx/
+.grok/
+.impeccable/
+.inferencesh/
+.kimchi/
+.kiro/
+.minimax/
+.omc/
+.pi/
+.qoder/
+.qodo/
+.qwen/
+.serena/
+.trae/
+.zencoder/
+# gstack is symlinked in here and lives outside the repo
+.commandcode/skills/

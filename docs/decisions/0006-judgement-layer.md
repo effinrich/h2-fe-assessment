@@ -15,11 +15,11 @@ machine-checkable.
 Use **TypeSafe (jev)** for the judgement questions, asked as typed questions
 against the diff and the spec in a single call:
 
-| Question | Primitive | Use |
-|---|---|---|
-| Does this diff add public API not named in the spec? | `Noul` (0–1) | scope creep |
-| Which spec criterion does this change address? | `Choice` | traceability |
-| How completely does this satisfy the spec? | `Score` + rubric | completeness |
+| Question                                             | Primitive        | Use          |
+| ---------------------------------------------------- | ---------------- | ------------ |
+| Does this diff add public API not named in the spec? | `Noul` (0–1)     | scope creep  |
+| Which spec criterion does this change address?       | `Choice`         | traceability |
+| How completely does this satisfy the spec?           | `Score` + rubric | completeness |
 
 The gate blocks when a `Noul` exceeds a threshold or a `Score` falls short,
 **weighted by the returned confidence**, so a low-confidence answer escalates

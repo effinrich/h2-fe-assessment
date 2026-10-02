@@ -15,12 +15,12 @@ knowing before anyone spends time on it.
 **The treatment matters.** The UI is dark-mode and tesseract wants dark text on light.
 Four passes compared on the noisiest frames:
 
-| Treatment | Result |
-|---|---|
-| as-is, 1.5× | noisy chrome, most labels lost |
-| `negate`, 1.5× | no better than as-is |
+| Treatment                                   | Result                                           |
+| ------------------------------------------- | ------------------------------------------------ |
+| as-is, 1.5×                                 | noisy chrome, most labels lost                   |
+| `negate`, 1.5×                              | no better than as-is                             |
 | **`eq=brightness=0.25:contrast=1.5`, 1.5×** | **best** — recovered the style panel and a toast |
-| `format=gray,negate,eq=contrast=1.6`, 2× | comparable to bright, not better |
+| `format=gray,negate,eq=contrast=1.6`, 2×    | comparable to bright, not better                 |
 
 The brightness lift is what made the difference; inverting did not, which was my
 prediction and it was wrong.
@@ -30,21 +30,21 @@ tools, and from the frames they appear to be **icon-only** — no labels to read
 the brightening axis reaches them. What follows is what is readable, and what definitively
 is not.
 
-| Clip | Length | Frames sampled |
-|---|---|---|
-| task-2.mp4 | 5.6s | 11 |
-| task-3.mp4 | 20.5s | 41 |
-| task-4.mp4 | 14.2s | 28 |
+| Clip       | Length | Frames sampled |
+| ---------- | ------ | -------------- |
+| task-2.mp4 | 5.6s   | 11             |
+| task-3.mp4 | 20.5s  | 41             |
+| task-4.mp4 | 14.2s  | 28             |
 
 ---
 
 ## Task 2 — display a PDF
 
-| Time | What happens |
-|---|---|
-| 0.0–1.0s | Empty state, two controls: **"Open PDF"** and **"Use an example"**. |
-| 1.5–2.0s | macOS file picker on **Downloads**, selecting **`Dummy (1).pdf`**. |
-| 2.5s+ | The PDF renders in the canvas, showing the exercise README's own text. |
+| Time     | What happens                                                           |
+| -------- | ---------------------------------------------------------------------- |
+| 0.0–1.0s | Empty state, two controls: **"Open PDF"** and **"Use an example"**.    |
+| 1.5–2.0s | macOS file picker on **Downloads**, selecting **`Dummy (1).pdf`**.     |
+| 2.5s+    | The PDF renders in the canvas, showing the exercise README's own text. |
 
 Controls while viewing: **`S` `M` `L` `XL`**, **`Export PDF`**, a **`Page 1`** indicator.
 
@@ -56,11 +56,11 @@ Persistent style panel, now readable (this is tldraw's stock panel, not bespoke 
 Page 1   ·   S M L XL   ·   Aa Aa Aa Aa   ·   < >|< >|   ·   Shape   ·   100%
 ```
 
-| Time | What happens |
-|---|---|
-| 0.0–0.5s | Canvas with one shape; stock chrome. |
-| 1.0–3.5s | The panel above is open; **`Shape`** is the active tool/menu entry. |
-| 4.0–20.0s | Shapes are moved around the canvas; the panel opens and closes. |
+| Time      | What happens                                                        |
+| --------- | ------------------------------------------------------------------- |
+| 0.0–0.5s  | Canvas with one shape; stock chrome.                                |
+| 1.0–3.5s  | The panel above is open; **`Shape`** is the active tool/menu entry. |
+| 4.0–20.0s | Shapes are moved around the canvas; the panel opens and closes.     |
 
 **Not readable:** how the pin attaches, how the link between two shapes is drawn, what
 feedback a successful bind gives, and what happens on the next move. Icon-only, and the
@@ -68,12 +68,12 @@ substance of the task.
 
 ## Task 4 — camera tool
 
-| Time | What happens |
-|---|---|
-| 0.0–5.5s | Canvas with stock chrome. |
-| 6.0–8.5s | An image lands on the canvas: **`Screenshot from tldraw examples.png`**, with tldraw's **`Undo`** toast beside it. |
-| 9.0–10.5s | The image sits on the canvas. |
-| 11.0–13.5s | macOS file picker on **Downloads** (Finder shows image dimensions, `554x616` / `505x665`). |
+| Time       | What happens                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| 0.0–5.5s   | Canvas with stock chrome.                                                                                          |
+| 6.0–8.5s   | An image lands on the canvas: **`Screenshot from tldraw examples.png`**, with tldraw's **`Undo`** toast beside it. |
+| 9.0–10.5s  | The image sits on the canvas.                                                                                      |
+| 11.0–13.5s | macOS file picker on **Downloads** (Finder shows image dimensions, `554x616` / `505x665`).                         |
 
 **Not readable:** the crop interaction — how the region is drawn, what handles exist, what
 the export produces, where the file lands. Also icon-only.
@@ -98,7 +98,7 @@ these clips never show:
 - **The second half of Task 4.** "Data back to them, in formats familiar and universal" —
   the clip stops before revealing the download.
 
-That is the brief's own emphasis: *"How you fill the gaps is the core of the exercise."*
+That is the brief's own emphasis: _"How you fill the gaps is the core of the exercise."_
 Here the gaps are literally missing states.
 
 ## Open question for Rich
@@ -115,11 +115,11 @@ them deliberately and record that as the decision — defensible, since the brie
 After the first write-up I tried harder, using your full VLC scene-detection dumps (321
 frames for task 3, 264 for task 4 — every detected scene change, not a 2 fps sample):
 
-| Attempt | Yield |
-|---|---|
-| Full-frame OCR of all 585 scene frames, brightened | Nothing beyond the labels already listed |
+| Attempt                                                     | Yield                                                                                          |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Full-frame OCR of all 585 scene frames, brightened          | Nothing beyond the labels already listed                                                       |
 | Rank all frames by pixel delta, OCR the biggest transitions | Confirmed the largest visual changes in **both** clips are the style panel opening and closing |
-| Crop + upscale the toolbar region 3× | No new text; the toolbar is icon-only |
+| Crop + upscale the toolbar region 3×                        | No new text; the toolbar is icon-only                                                          |
 
 **The conclusion is now firm, and it is a limit rather than a gap in effort.** Every
 readable pixel in these clips is tldraw's stock chrome. There is no text anywhere in the

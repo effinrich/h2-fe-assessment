@@ -11,19 +11,19 @@
 > especially in terms of performance."
 
 The last clause is the task. Rendering a PDF is a solved problem; rendering one
-*inside an infinite canvas without it being the thing that makes the canvas
-slow* is the engineering being assessed.
+_inside an infinite canvas without it being the thing that makes the canvas
+slow_ is the engineering being assessed.
 
 ## What the demo does
 
 From `docs/demos.md` — OCR of the video, so labels and sequence are reliable and
 spatial detail is not:
 
-| Time | Observed |
-|---|---|
+| Time     | Observed                                                           |
+| -------- | ------------------------------------------------------------------ |
 | 0.0–1.0s | Empty state, two controls: **"Open PDF"** and **"Use an example"** |
-| 1.5–2.0s | macOS file picker, selects `Dummy (1).pdf` |
-| 2.5s+ | The PDF renders in the canvas |
+| 1.5–2.0s | macOS file picker, selects `Dummy (1).pdf`                         |
+| 2.5s+    | The PDF renders in the canvas                                      |
 
 Controls while viewing: **`S` `M` `L` `XL`**, **`Export PDF`**, a **`Page 1`**
 indicator. Everything else visible is stock tldraw chrome.
@@ -75,21 +75,21 @@ and committed failing before the code exists.
 
 ## States
 
-| State | Handled | How |
-|---|---|---|
-| Empty | yes | Two controls, named in the criterion above |
-| Loading | yes | Skeleton at the shape's bounds, through Query so it is modelled once |
-| Error | yes | Message plus retry; the dump/file is not lost |
-| Success | yes | The page renders |
-| Disabled | yes | Open/Save disabled with no file selected |
-| Overflow | yes | 100+ page document; long filename truncates |
+| State    | Handled | How                                                                  |
+| -------- | ------- | -------------------------------------------------------------------- |
+| Empty    | yes     | Two controls, named in the criterion above                           |
+| Loading  | yes     | Skeleton at the shape's bounds, through Query so it is modelled once |
+| Error    | yes     | Message plus retry; the dump/file is not lost                        |
+| Success  | yes     | The page renders                                                     |
+| Disabled | yes     | Open/Save disabled with no file selected                             |
+| Overflow | yes     | 100+ page document; long filename truncates                          |
 
 ## Test strategy
 
 Honest about what can be proven where, because jsdom cannot rasterise a PDF:
 
 - **Component and logic tests (Vitest + jsdom):** everything above. The renderer
-  is stubbed, so the tests assert *our* behaviour — mount count, state
+  is stubbed, so the tests assert _our_ behaviour — mount count, state
   transitions, virtualisation bounds — not the PDF library's correctness.
 - **Interaction (Storybook play functions):** open, navigate, resize. Runs under
   the Storybook test runner and Chromatic.
@@ -108,7 +108,7 @@ Honest about what can be proven where, because jsdom cannot rasterise a PDF:
 
 ## Open questions
 
-- Whether the PDF should be a tldraw *asset* (via `handledAssetTypes` and
+- Whether the PDF should be a tldraw _asset_ (via `handledAssetTypes` and
   `createShapeForAsset`, so dropping a file on the canvas works) or a shape
   created by an explicit action. The demo uses a picker; drag-and-drop is a
   better affordance and the API supports it. Decided when the shape is built.

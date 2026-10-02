@@ -1,5 +1,5 @@
-import { Button } from "@h2-fe/ui"
-import type { PdfDocumentEmptyProps } from "./pdf-document-empty.types"
+import { Button } from '@h2-fe/ui'
+import type { PdfDocumentEmptyProps } from './pdf-document-empty.types'
 
 // The first thing anyone sees: a document can be opened or an example loaded.
 // The demo offered the same two controls; here they carry a hint of what a PDF
@@ -7,7 +7,7 @@ import type { PdfDocumentEmptyProps } from "./pdf-document-empty.types"
 export function PdfDocumentEmpty({
   onOpenPdf,
   onUseExample,
-  isBusy = false,
+  isBusy = false
 }: PdfDocumentEmptyProps) {
   return (
     <div>
@@ -15,7 +15,7 @@ export function PdfDocumentEmpty({
       <p>A PDF lands on the canvas, and anything you draw on top of it stays yours.</p>
       <div>
         <Button disabled={isBusy} variant="solid" onClick={onOpenPdf}>
-          {isBusy ? "Opening" : "Open PDF"}
+          {isBusy ? 'Opening' : 'Open PDF'}
         </Button>
         <Button disabled={isBusy} variant="outline" onClick={onUseExample} marginLeft="10">
           Use an example

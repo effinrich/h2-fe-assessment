@@ -1,7 +1,7 @@
-import { vi } from "vitest"
+import { vi } from 'vitest'
 
 // jsdom has no matchMedia, and next-themes (inside UiProvider) reads it on mount.
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
     matches: false,
@@ -11,8 +11,8 @@ Object.defineProperty(window, "matchMedia", {
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  }),
+    dispatchEvent: vi.fn()
+  })
 })
 
 // jsdom has no ResizeObserver or Element.scrollTo; Zag's positioning calls both.

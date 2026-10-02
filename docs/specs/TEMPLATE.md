@@ -31,14 +31,14 @@ Falsifiable. Each one becomes a test before it becomes code.
 
 The brief grades product sense. Enumerate the states, then say which are built:
 
-| State | Handled | How |
-|---|---|---|
-| Empty | | |
-| Loading | | |
-| Error | | |
-| Success | | |
-| Disabled | | |
-| Overflow | | |
+| State    | Handled | How |
+| -------- | ------- | --- |
+| Empty    |         |     |
+| Loading  |         |     |
+| Error    |         |     |
+| Success  |         |     |
+| Disabled |         |     |
+| Overflow |         |     |
 
 ## Out of scope
 
