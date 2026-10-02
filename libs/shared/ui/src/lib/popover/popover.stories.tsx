@@ -1,6 +1,6 @@
 import { Button, Input, Text } from '@chakra-ui/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, screen } from 'storybook/test';
+import { expect, screen, waitFor, waitForElementToBeRemoved } from 'storybook/test';
 
 import { Popover } from './popover';
 
@@ -23,8 +23,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Shape details' }));
-    await expect(await screen.findByRole('dialog', { name: 'Rectangle' })).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Shape details' }, { container: 'document.body' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Rectangle' });
+
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    await userEvent.click(canvas.getByRole('body', { name: 'Close' }, { container: 'document.body' }));
+    await waitForElementToBeRemoved(() => screen.queryByRole('dialog', { name: 'Rectangle' }));
   },
 };
 

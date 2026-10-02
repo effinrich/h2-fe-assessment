@@ -1,6 +1,6 @@
 import { Button, Text } from '@chakra-ui/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, screen } from 'storybook/test';
+import { expect, screen, waitFor, waitForElementToBeRemoved } from 'storybook/test';
 
 import { Modal } from './modal';
 
@@ -19,8 +19,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Open modal' }));
-    await expect(await screen.findByRole('dialog', { name: 'Delete shape' })).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Open modal' },{ container: 'document.body' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Delete shape' });
+
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    await userEvent.click(screen.getByRole('button', { name: 'Close' },{ container: 'document.body' }))
+    await waitForElementToBeRemoved(() => screen.queryByRole('dialog', { name: 'Delete shape' }));
   },
 };
 

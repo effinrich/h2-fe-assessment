@@ -10,22 +10,19 @@ const config: StorybookConfig = {
     
     '../src/lib/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
-  addons: [],
-  core: {
-    builder: {
-      name: '@storybook/builder-vite',
-      options: {
+  addons: [
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@chromatic-com/storybook'),
+  ],
+  framework: {
+    name: "@storybook/react-vite",
+    options: {
+      builder: {
         viteConfigPath: './libs/shared/ui/vite.config.mts',
       },
     },
   },
-  framework: {
-    name: getAbsolutePath('@storybook/react-vite'),
-    options: { 
-
-    },
-  },
-  
 };
 
 

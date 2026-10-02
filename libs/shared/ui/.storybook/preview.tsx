@@ -1,4 +1,3 @@
-import React from 'react'
 import type { Preview } from '@storybook/react-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { UiProvider } from '../src/lib/provider/provider'
@@ -23,8 +22,19 @@ const preview: Preview = {
     ),
   ],
   parameters: {
+    options: {
+      autodocs: 'tag',
+    },
     controls: {
       matchers: { color: /(background|color)$/i, date: /Date$/i },
+    },
+    a11y: {
+      test: "error",
+    },
+    chromatic: {
+      pauseAnimationAtEnd: true,
+      delay: 300,
+      diffThreshold: 0.5,
     },
   },
 }

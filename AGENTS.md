@@ -19,7 +19,13 @@ made during this project's setup.
 
 ## Workspace
 
-- **Nx 22 + npm.** Prefer `pnpm nx`/`npx nx` over a global CLI.
+- **Nx 22 + npm.** Prefer `npx nx` over a global CLI.
+- **Install at the root.** Every dependency goes in the root `package.json`
+  (`npm install` from the repo root, no `-w`). Workspace `package.json` files
+  list no dependencies.
+- **No manual linking.** Nx infers project edges from imports and npm workspaces
+  resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
+  Tags restrict imports; they don't link.
 - **Generators only.** Never hand-create a project folder. A hand-made folder
   never enters the project graph, so `nx affected` skips it and tags never apply.
   `nx g @nx/react:lib <name> --directory=libs/<scope>/<name> --tags=scope:<scope>,type:<type>`
@@ -30,11 +36,14 @@ made during this project's setup.
 ## Stack
 
 Vite + React 19 + TypeScript (strict) · Chakra UI v3 · TanStack Query · tldraw v5 ·
-Storybook + Chromatic · Vitest
+Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 
 ## Layout
 
 - `libs/shared/ui` — the design system. Every `type:ui` component has a story.
+  Public API is the `src/index.ts` barrel, consumed as named imports from
+  `@h2-fe/ui`. Simple Chakra primitives are re-exported unchanged
+  (`src/lib/primitives/`); compound components get thin wrappers, one folder each.
 - `libs/<scope>/features/<name>` — feature libs; inside them, the
   feature-based-architecture skill governs the file layout.
 - `apps/web` — a thin shell. Logic belongs in libs.
