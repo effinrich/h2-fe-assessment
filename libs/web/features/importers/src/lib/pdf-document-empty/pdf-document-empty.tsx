@@ -17,7 +17,7 @@ export function PdfDocumentEmpty({
         <Button disabled={isBusy} variant="solid" onClick={onOpenPdf}>
           {isBusy ? "Opening" : "Open PDF"}
         </Button>
-        <Button disabled={isBusy} variant="outline" onClick={onUseExample}>
+        <Button disabled={isBusy} variant="outline" onClick={onUseExample} marginLeft="10">
           Use an example
         </Button>
       </div>
