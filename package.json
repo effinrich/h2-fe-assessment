@@ -1,36 +1,50 @@
 {
   "name": "@h2-fe/source",
   "version": "0.0.0",
-  "license": "MIT",
-  "scripts": {},
   "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "libs/shared/*",
+    "libs/web/features/*",
+    "libs/web/**"
+  ],
+  "scripts": {
+    "start": "nx serve web",
+    "build": "nx build web",
+    "test": "nx run-many -t test",
+    "lint": "nx run-many -t lint",
+    "lint:fix": "nx run-many -t lint:fix",
+    "oxfmt": "nx run-many -t oxfmt",
+    "oxfmt:fix": "nx run-many -t oxfmt:fix",
+    "storybook": "nx run shared-ui:storybook",
+    "build-storybook": "nx run shared-ui:build-storybook",
+    "gate": "nx affected -t lint,oxfmt,typecheck,test,build,build-storybook"
+  },
   "dependencies": {
-    "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.1",
+    "@chakra-ui/react": "^3.37.0",
+    "@chromatic-com/storybook": "^5.4.0",
+    "@emotion/react": "^11.14.0",
+    "@tanstack/react-query": "^5.104.0",
+    "next-themes": "^0.4.6",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.3.289",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "6.30.3"
+    "react-router-dom": "6.30.3",
+    "tldraw": "^5.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.5",
-    "@babel/preset-react": "^7.14.5",
-    "@emotion/babel-plugin": "11.13.5",
-    "@eslint/js": "^9.8.0",
-    "@nx/eslint": "22.7.12",
-    "@nx/eslint-plugin": "22.7.12",
-    "@nx/js": "22.7.12",
-    "@nx/oxlint": "^23.2.1",
-    "@nx/react": "22.7.12",
-    "@nx/storybook": "22.7.12",
-    "@nx/vite": "22.7.12",
-    "@nx/vitest": "22.7.12",
-    "@nx/web": "22.7.12",
-    "@nx/workspace": "22.7.12",
-    "@storybook/react-vite": "^10.1.0",
-    "@swc-node/register": "~1.11.1",
-    "@swc/cli": "~0.8.0",
-    "@swc/core": "~1.15.5",
-    "@swc/helpers": "~0.5.18",
+    "@nx/js": "23.2.1",
+    "@nx/oxlint": "23.2.1",
+    "@nx/react": "23.2.1",
+    "@nx/storybook": "23.2.1",
+    "@nx/vite": "23.2.1",
+    "@nx/vitest": "23.2.1",
+    "@nx/workspace": "23.2.1",
+    "@storybook/addon-a11y": "^10.6.1",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/react-vite": "10.6.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
     "@types/node": "20.19.9",
@@ -38,52 +52,28 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "~4.1.0",
-    "@vitest/ui": "~4.1.0",
-    "ajv": "^8.0.0",
-    "eslint": "^9.8.0",
-    "eslint-config-prettier": "^10.0.0",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jsx-a11y": "6.10.1",
-    "eslint-plugin-react": "7.35.0",
-    "eslint-plugin-react-hooks": "5.0.0",
-    "jiti": "2.4.2",
     "jsdom": "~22.1.0",
-    "nx": "22.7.12",
+    "nx": "23.2.1",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.75.0",
-    "storybook": "^10.1.0",
-    "ts-node": "10.9.1",
+    "oxlint-tsgolint": "^7.0.2003",
+    "storybook": "10.6.1",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
-    "typescript-eslint": "^8.40.0",
-    "verdaccio": "^6.3.2",
     "vite": "^8.0.0",
     "vite-plugin-dts": "~4.5.0",
     "vitest": "~4.1.0"
   },
-  "workspaces": [
-    "apps/*",
-    "libs/shared/*"
-  ],
   "allowScripts": {
     "@nx/oxlint": true,
     "@nx/vite": true,
-    "@swc/core@1.15.47": true,
-    "fsevents@2.3.3": true,
-    "nx@23.2.1": true,
-    "esbuild@0.28.2": true
+    "@parcel/watcher@2.5.6": true,
+    "esbuild": true,
+    "nx": true,
+    "@swc/core": true,
+    "fsevents": true
   },
   "nx": {
-    "includedScripts": [],
-    "targets": {
-      "local-registry": {
-        "executor": "@nx/js:verdaccio",
-        "options": {
-          "port": 4873,
-          "config": ".verdaccio/config.yml",
-          "storage": "tmp/local-registry/storage"
-        }
-      }
-    }
+    "includedScripts": []
   }
 }

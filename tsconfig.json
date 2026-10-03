@@ -8,13 +8,15 @@
     },
     {
       "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./libs/web/features/pdf-viewer"
+    },
+    {
+      "path": "./libs/web/features/home"
+    },
+    {
+      "path": "./libs/web/ui"
     }
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node10",
-      "customConditions": null
-    }
-  }
+  ]
 }

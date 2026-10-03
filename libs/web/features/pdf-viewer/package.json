@@ -1,0 +1,34 @@
+{
+  "name": "@h2-fe/pdf-viewer",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@h2-fe/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "tags": [
+      "scope:web",
+      "type:feature"
+    ],
+    "targets": {
+      "lint": {
+        "options": {
+          "args": [
+            "--type-aware"
+          ]
+        }
+      },
+      "oxfmt": {},
+      "oxfmt:fix": {}
+    }
+  }
+}

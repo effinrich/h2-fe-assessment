@@ -4,9 +4,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
-    "lib": [
-      "dom"
-    ],
+    "lib": ["dom"],
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -30,14 +28,21 @@
     "vite.config.mts",
     "vitest.config.ts",
     "vitest.config.mts",
-    "eslint.config.js",
-    "eslint.config.cjs",
-    "eslint.config.mjs"
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/*.stories.jsx",
+    "**/*.stories.tsx"
   ],
-  "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx"
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "../../libs/web/features/pdf-viewer/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/web/features/home/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/ui/tsconfig.lib.json"
+    }
   ]
 }
