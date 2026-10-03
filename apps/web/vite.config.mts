@@ -14,11 +14,11 @@ export default defineConfig(() => ({
     host: "localhost",
   },
   plugins: [react()],
-  // Workspace libs export their TypeScript source under this condition, so the
-  // app consumes them without a prior lib build. Setting `conditions` replaces
-  // Vite's defaults, hence the spread.
+  // Workspace libs export their TypeScript source under the @h2-fe/source
+  // condition, so the app consumes them without a prior lib build. Setting
+  // `conditions` replaces Vite's defaults, hence the spread.
   resolve: {
-    conditions: [...defaultClientConditions],
+    conditions: [...defaultClientConditions, "@h2-fe/source"],
   },
   // Uncomment this if you are using workers.
   // worker: {

@@ -1,33 +1,47 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UiProvider } from "@h2-fe/ui";
+import { MemoryRouter } from "react-router-dom";
 import App from "./app";
 
-// The canvas itself needs a real browser (canvas, ResizeObserver), so the app
-// spec checks composition: the surface mounts and the empty state is offered.
-// vi.mock is hoisted above the imports at runtime.
-vi.mock("tldraw", () => ({
-  Tldraw: () => <div data-testid="tldraw" />,
-  AssetRecordType: { create: vi.fn() },
-}));
-
-// main.tsx installs UiProvider; mirror that here so Chakra has its context.
-function renderApp() {
+// Route-level behavior only: the table mounts home on '/', redirects '/viewer'
+// with no handoff to home, and carries a handoff file through to the canvas
+// surface. The handoff File object survives the navigation and even a refresh;
+// jsdom cannot rasterise, so the exercised end is the honest error surface.
+// Providers mirror main.tsx (Ui + Query clients) since the viewer route's
+// raster actually runs here.
+function renderAt(path: string, state?: unknown) {
   return render(
     <UiProvider>
-      <App />
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter initialEntries={[{ pathname: path, state }]}>
+          <App />
+        </MemoryRouter>
+      </QueryClientProvider>
     </UiProvider>,
   );
 }
 
-describe("App", () => {
-  it("mounts the document canvas", () => {
-    renderApp();
-    expect(screen.getByTestId("tldraw")).toBeTruthy();
+describe("App route table", () => {
+  it("renders the home surface at '/'", () => {
+    renderAt("/");
+    expect(screen.getByRole("heading", { name: "Open a document" })).toBeTruthy();
   });
 
-  it("offers a way to get a document in before one is loaded", () => {
-    renderApp();
-    expect(screen.getByRole("button", { name: /open pdf/i })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /use an example/i })).toBeTruthy();
+  it("redirects '/viewer' with no handoff to home", async () => {
+    renderAt("/viewer");
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { name: "Open a document" })).toBeTruthy(),
+    );
+  });
+
+  it("carries a handoff file through to the canvas's error surface", async () => {
+    const file = new File(["%PDF-1.4 truncated"], "swap.pdf", { type: "application/pdf" });
+    renderAt("/viewer", { file });
+    // The viewer route mounts and the raster query fails against the
+    // placeholder bytes; the alert surface is the state the query lands on.
+    await waitFor(() => expect(screen.getByRole("alert")).toBeTruthy());
+    expect(screen.getByRole("button", { name: /try again/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /open another document/i })).toBeTruthy();
   });
 });

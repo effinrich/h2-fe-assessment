@@ -7,10 +7,16 @@
       "path": "./apps/web"
     },
     {
-      "path": "./libs/web/features/importers"
+      "path": "./libs/shared/ui"
     },
     {
-      "path": "./libs/shared/ui"
+      "path": "./libs/web/features/pdf-viewer"
+    },
+    {
+      "path": "./libs/web/features/home"
+    },
+    {
+      "path": "./libs/web/ui"
     }
   ]
 }

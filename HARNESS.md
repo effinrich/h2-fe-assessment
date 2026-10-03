@@ -55,7 +55,8 @@ failing check whose message the model can act on.
 
 - **three.js** — considered and declined. ADR 0003.
 - **Tailwind, Radix, shadcn** — considered and declined. ADR 0004.
-- **SSR and a router** — one route, client-only canvas. ADR 0002.
+- **SSR** — one route, client-only canvas. ADR 0002. (The router is now in
+  use — `home` and `pdf-viewer`; see ADR 0011 and 0002's amendment.)
 - **Backend, auth, persistence** beyond tldraw's local store. ADR 0009.
 - **Screens storied exhaustively** — only in meaningful states. ADR 0007.
 - **Testing inside the architecture skill** — the skill governs structure; the

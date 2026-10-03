@@ -89,3 +89,51 @@ its own entry here, written as it lands.
   verdaccio) no longer exists. Recording it here so nobody reads its absence
   as an oversight — the ui library stays publishable per ADR 0009; there is
   just no local rehearsal target for it anymore.
+
+### Entry 3 — the build-storybook targetDefault drops webpackStatsJson
+
+- Date: 2026-10-03
+- Change: removed `options.webpackStatsJson: true` from the `nx.json`
+  `build-storybook` targetDefault; the option stays on `shared-ui`'s explicit
+  `@nx/storybook:build` target.
+- Evidence: `libs/web/ui`'s storybook targets come from the @nx/storybook
+  plugin's inference (run-commands of the storybook CLI). The targetDefault's
+  option was forwarded to the CLI as `--webpackStatsJson=true`, which
+  `storybook build` rejects ("error: unknown option"). The executor-driven
+  target knew the flag; the CLI-inferred one did not.
+- Verification: full 0%-cache gate green including both storybook builds —
+  `shared-ui` (executor, stats kept) and `@h2-fe/web-ui` (inferred, no flag).
+  `nx reset` + project set unchanged; graph parses.
+- Consequence: the workspace-wide chromatic-stats knob is gone; per-project
+  storybook targets configure it where it means something.
+
+### Entry 4 — two route-scoped feature libs and the web stage are scaffolds
+
+- Date: 2026-10-03
+- Change: `nx g @nx/react:library` scaffolded `@h2-fe/pdf-viewer`
+  (`libs/web/features/pdf-viewer`) and `@h2-fe/home`
+  (`libs/web/features/home`), then `@h2-fe/web-ui` (`libs/web/ui`, tags
+  `["scope:web","type:ui"]`) with its own Storybook stage. Feature libs carry
+  `tags ["scope:web","type:feature"]`. The `importers` project was deleted
+  outright; every live symbol of it moved into one of the new libs and the
+  rest was already dead.
+- Scaffold hazards handled, per entry 1's convention:
+  - The generator re-added its babel set as devDeps; they were re-removed
+    (`@babel/core`, `@babel/preset-react`, `@nx/web`, `@swc/helpers`, `ajv`,
+    `@vitest/ui`, `jiti`, `ts-node`, `typescript-eslint`).
+  - The generator names a lib from the directory arg's last segment:
+    `libs/web/ui` produced `@h2-fe/ui` and collided with shared-ui; renamed
+    to `@h2-fe/web-ui` before the workspace settled.
+  - Both emitted `.babelrc`s deleted post-scaffold.
+  - Both new `vite.config.mts` test configs point `setupFiles` at
+    `tools/vitest-setup.ts` (as the app and the old importer did) and carry
+    the `@h2-fe/source` resolve condition so the app consumes their TS
+    source directly.
+- Verification: `nx reset` → project set changed exactly as designed (six
+  projects now: `@h2-fe/web`, `@h2-fe/home`, `@h2-fe/pdf-viewer`,
+  `@h2-fe/web-ui`, `shared-ui`, `@h2-fe/source`); `nx sync` rewrote project
+  references (the app's tsconfigs + the libs'); graph parses; full gate green.
+- Consequence: the audit's "importers feature" is gone from the graph; the
+  intended tier set is in its place.
+
+

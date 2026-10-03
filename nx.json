@@ -71,9 +71,6 @@
   ],
   "targetDefaults": {
     "build-storybook": {
-      "options": {
-        "webpackStatsJson": true
-      },
       "inputs": [
         "production",
         "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",

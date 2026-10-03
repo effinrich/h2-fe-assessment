@@ -98,3 +98,19 @@ styled-system
 
 # Chromatic artifacts
 build-storybook.log
+
+# Local agent-surface artifacts: tooling, not project source
+llms-full.txt
+.hermes.md
+.install-plan.md
+.gstack/
+.commandcode/agents/
+.cursor/tools/
+skills-lock.json
+
+# Test and verification artifacts
+playwright-report/
+.playwright-screenshots/
+test-results/
+.vitest-reports/
+.chromatic-mobile/

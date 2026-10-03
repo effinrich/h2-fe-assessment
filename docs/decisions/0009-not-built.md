@@ -13,7 +13,8 @@ judgement. This is the cheapest credibility in the submission.
 - **No backend, auth, or persistence** beyond tldraw's local store. The four
   tasks are a canvas app; adding a server would be scope the brief did not ask
   for.
-- **No SSR or router.** See 0002.
+- **No SSR.** Still true. (The router is no longer excluded — two routes are
+  live; see 0002's amendment and ADR 0011.)
 - **three.js.** Considered and declined; see 0003.
 - **Tailwind, Radix, shadcn.** Considered and declined; see 0004.
 - **Publishing the UI library.** It is a real workspace package with enforced

@@ -55,7 +55,9 @@ Falsifiable, each with the test that proves it. Test-first: the test is written
 and committed failing before the code exists.
 
 - [x] **Given no document, the canvas offers "Open PDF" and "Use an example".**
-      — `pdf-document-empty.spec.tsx` (red `edf477a`, green `ac2b31d`)
+      — now `libs/web/features/home/src/lib/home.spec.tsx` (red `edf477a`,
+      green `ac2b31d`); the interface moved from the empty-state card to the
+      routed home page in the rebuild — see ADR 0011.
 - [x] **Choosing a file renders its first page inside a shape on the canvas.**
       — verified by hand in the browser: both pages land as locked image shapes
       and survive pan/zoom. Not unit-testable in jsdom, since rasterising needs
