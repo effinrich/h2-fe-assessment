@@ -12,16 +12,21 @@ against `node_modules/@chakra-ui/react/dist/types`; v3 differs heavily from v2.
 
 ## Boundaries
 
-- Tags: `scope:shared`, `type:ui`. This library may import **only** other
-  `type:ui` and `type:util` libraries, and only `scope:shared`. It may not import
-  a feature lib or an app. `@nx/enforce-module-boundaries` fails lint if it does.
-- Enforced by `.eslintrc`-equivalent in the root `eslint.config.mjs`, which is the
-  one rule that cannot move to oxlint (ADR 0008).
+- Tags: `scope:shared`, `type:ui`. The enforced constraint is the tag rule:
+  this library may depend only on other `scope:shared` libraries — it may not
+  import a feature lib or an app, and `@nx/enforce-module-boundaries` fails
+  lint if it does.
+- Enforced by the root `.oxlintrc.json`: the `@nx/oxlint/boundaries-plugin`
+  jsPlugin runs the rule inside oxlint (ADR 0008's addendum is the record of
+  how reality overtook that ADR's original plan). The `type:*` tags are
+  intent, not enforcement — the depConstraints carry only the two `scope:`
+  rules (`scope:shared` → `scope:shared`; `scope:web` → `scope:web` +
+  `scope:shared`).
 
 ## Truth lives in the tools, not in this file
 
-- **Nx behaviour** — ask the graph: `nx show project @h2-fe/ui`,
-  `nx show project @h2-fe/ui --json` for inferred targets and tags. Do not read
+- **Nx behaviour** — ask the graph: `nx show project shared-ui`,
+  `nx show project shared-ui --json` for inferred targets and tags. Do not read
   `project.json` and infer; it is intentionally sparse.
 
 ## Rules

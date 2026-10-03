@@ -12,7 +12,6 @@ export interface RenderedPdfPage {
 }
 
 export interface PdfDocumentSummary {
-  pageCount: number
   pages: RenderedPdfPage[]
 }
 
@@ -44,7 +43,6 @@ export async function renderPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocume
     })
   }
 
-  const pageCount = document.numPages
   await loadingTask.destroy()
-  return { pageCount, pages }
+  return { pages }
 }

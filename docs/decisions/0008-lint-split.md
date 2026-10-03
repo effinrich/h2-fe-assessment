@@ -28,3 +28,15 @@ feedback an agent can get.
   architectural guarantee for tidiness. Declined.
 - `@nx/oxlint` requires Nx 23 while the workspace is on 22.7.12, which pulls a
   second `nx` into the tree. Unresolved; see the note in HARNESS.md.
+
+## Addendum — 2026-10-03
+
+Reality overtook this record. `@nx/oxlint` 23 ships `@nx/oxlint/boundaries-plugin`,
+an oxlint jsPlugin that runs `@nx/enforce-module-boundaries` *inside* oxlint —
+which is exactly what the workspace now does (root `.oxlintrc.json`, error
+level). The `eslint.config.mjs` this ADR planned was never created; the rule
+moved all the way in, and the two-tools consequence is gone. The reason this
+ADR existed ("oxlint is Rust-native and does not load custom JavaScript
+plugins") turned out to be outdated rather than impossible. Same fix as
+planned — module boundaries as the load-bearing rule — one tool instead of
+two.

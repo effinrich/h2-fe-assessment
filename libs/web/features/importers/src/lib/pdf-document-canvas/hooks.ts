@@ -47,10 +47,3 @@ export async function placePdfOnCanvas(editor: Editor, file: File): Promise<void
   editor.createShapes(shapes)
   editor.zoomToFit({ animation: { duration: 200 } })
 }
-
-export function usePdfPlacement(editor: Editor | null) {
-  return async (file: File) => {
-    if (!editor) return
-    await placePdfOnCanvas(editor, file)
-  }
-}

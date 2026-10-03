@@ -39,7 +39,7 @@ answer twice at double cost. Model diversity only pays when the checks differ.
 ## Gates
 
 ```
-bun run gate   →   nx affected -t lint,typecheck,test,build-storybook
+bun run gate   →   nx affected -t lint,oxfmt,typecheck,test,build,build-storybook
 ```
 
 Wired to a `Stop` hook (`.commandcode/settings.json`), so failures reach the
@@ -61,10 +61,11 @@ failing check whose message the model can act on.
 - **Testing inside the architecture skill** — the skill governs structure; the
   suite is the gate. ADR 0005.
 
-## Known issue
+## Known issue — resolved
 
-`@nx/oxlint` has no 22.x release — oxlint support starts at Nx 23 — so it pulls
-`nx@23.2.1` alongside the workspace's `nx@22.7.12`. Two `nx` copies in one tree.
-The fix is either aligning the workspace up to 23 or dropping the plugin and
-running oxlint directly. Not yet decided; recorded so it is not mistaken for a
-mis-install.
+This used to record that `@nx/oxlint` (22.x-less) pulled `nx@23.2.1` alongside
+the workspace's `nx@22.7.12` — two nx copies in one tree, undecided. The
+workspace moved up to 23 in the bun migration (`nx@23.2.1`, single install),
+so the two-nx tree no longer exists, and module boundaries now run inside
+oxlint — the alignment outcome of the original choice. ADR 0008's addendum
+records the whole story.
