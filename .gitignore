@@ -92,3 +92,6 @@ styled-system
 .zencoder/
 # gstack is symlinked in here and lives outside the repo
 .commandcode/skills/
+
+# Secrets-bearing tool configs never go up to the repo
+.cursor/mcp.json
