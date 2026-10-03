@@ -48,16 +48,6 @@
           "quiet": true
         }
       }
-    },
-    "targets": {
-      "chromatic": {
-        "metadata": {
-          "projectId": "112233445566778899"
-        },
-        "options": {
-          "args": ["--project-token=$CHROMATIC_PROJECT_TOKEN"]
-        }
-      }
     }
   }
 }
