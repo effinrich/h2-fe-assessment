@@ -95,3 +95,6 @@ styled-system
 
 # Secrets-bearing tool configs never go up to the repo
 .cursor/mcp.json
+
+# Chromatic artifacts
+build-storybook.log
