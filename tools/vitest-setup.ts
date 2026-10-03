@@ -36,8 +36,8 @@ class FontFaceStub {
   constructor(family: string) {
     this.family = family;
   }
-  load(): Promise<FontFaceStub[]> {
-    return Promise.resolve([]);
+  load(): Promise<FontFaceStub> {
+    return Promise.resolve(this);
   }
 }
 globalThis.FontFace ??= FontFaceStub as unknown as typeof FontFace;
