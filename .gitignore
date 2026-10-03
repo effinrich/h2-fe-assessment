@@ -52,3 +52,14 @@ H2 FE 2026.zip
 
 
 storybook-static
+
+# tokenade — per-project cache / scaffold flag / dedup refs
+.tokenade/
+
+# tokenade — legacy per-project embedding model cache (now global)
+.fastembed_cache/
+
+# tokenade — auto-scaffolded agent instructions / backups
+.github/copilot-instructions.md
+.gitignore.*-original
+.hermes.md
