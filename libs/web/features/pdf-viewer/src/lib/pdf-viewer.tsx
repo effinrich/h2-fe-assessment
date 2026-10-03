@@ -24,8 +24,9 @@ export function PdfViewerScreen({
     setRenderError(false)
     placePagesOnCanvas(editor, document.pages)
 
-    let request = 0
+    let active = true
     const renderedPages = new Map<number, RenderedPdfPage>()
+    const renderingPages = new Set<number>()
     const updateVisiblePages = () => {
       const visible = visiblePageNumbers(document.pages, editor.getViewportPageBounds())
       const visibleSet = new Set(visible)
@@ -34,14 +35,16 @@ export function PdfViewerScreen({
       }
 
       syncVisiblePages(editor, document.pages, visible, [])
-      const missing = visible.filter(pageNumber => !renderedPages.has(pageNumber))
+      const missing = visible.filter(
+        pageNumber => !renderedPages.has(pageNumber) && !renderingPages.has(pageNumber)
+      )
       if (missing.length === 0) return
 
-      const currentRequest = ++request
+      missing.forEach(pageNumber => renderingPages.add(pageNumber))
       void document
         .renderPages(missing)
         .then(pages => {
-          if (currentRequest !== request) return
+          if (!active) return
           const currentVisible = visiblePageNumbers(document.pages, editor.getViewportPageBounds())
           const currentVisibleSet = new Set(currentVisible)
           for (const page of pages) {
@@ -55,14 +58,21 @@ export function PdfViewerScreen({
           )
         })
         .catch(() => {
-          if (currentRequest === request) setRenderError(true)
+          if (!active) return
+          const currentVisible = new Set(
+            visiblePageNumbers(document.pages, editor.getViewportPageBounds())
+          )
+          if (missing.some(pageNumber => currentVisible.has(pageNumber))) setRenderError(true)
+        })
+        .finally(() => {
+          missing.forEach(pageNumber => renderingPages.delete(pageNumber))
         })
     }
 
     const stopListening = editor.store.listen(updateVisiblePages, { scope: 'session' })
     updateVisiblePages()
     return () => {
-      request++
+      active = false
       stopListening()
       syncVisiblePages(editor, document.pages, [], [])
       renderedPages.clear()
