@@ -19,7 +19,11 @@ export function Toaster() {
                 <Toast.Description>{toast.description}</Toast.Description>
               ) : null}
             </Stack>
-            {toast.action ? <Toast.ActionTrigger>{toast.action.label}</Toast.ActionTrigger> : null}
+            {toast.action ? (
+              <Toast.ActionTrigger onClick={toast.action.onClick}>
+                {toast.action.label}
+              </Toast.ActionTrigger>
+            ) : null}
             {toast.closable ? <Toast.CloseTrigger /> : null}
           </Toast.Root>
         )}

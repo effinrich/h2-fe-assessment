@@ -19,7 +19,9 @@ export function Tabs({ items, value, defaultValue, onValueChange, ...rootProps }
     <ChakraTabs.Root
       {...rootProps}
       value={value}
-      defaultValue={value === undefined ? (defaultValue ?? items[0]?.value) : undefined}
+      defaultValue={
+        value === undefined ? (defaultValue ?? items.find(item => !item.disabled)?.value) : undefined
+      }
       onValueChange={(details) => onValueChange?.(details.value)}
     >
       <ChakraTabs.List>

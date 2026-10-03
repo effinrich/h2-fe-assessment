@@ -27,6 +27,21 @@ export const Default: Story = {
   },
 };
 
+export const FirstEnabled: Story = {
+  args: {
+    items: [
+      { value: "disabled", label: "Disabled", content: "Not available.", disabled: true },
+      { value: "enabled", label: "Enabled", content: "Available." },
+    ],
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("tab", { name: "Enabled" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  },
+};
+
 export const Enclosed: Story = {
   args: { variant: "enclosed" },
 };

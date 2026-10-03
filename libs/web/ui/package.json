@@ -15,6 +15,10 @@
     }
   },
   "nx": {
+    "implicitDependencies": [
+      "home",
+      "pdf-viewer"
+    ],
     "tags": [
       "scope:web",
       "type:ui"
@@ -28,7 +32,16 @@
         }
       },
       "oxfmt": {},
-      "oxfmt:fix": {}
+      "oxfmt:fix": {},
+      "build-storybook": {
+        "inputs": [
+          "production",
+          "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+          "{projectRoot}/.storybook/**/*",
+          "{projectRoot}/tsconfig.storybook.json",
+          "{workspaceRoot}/libs/web/features/**/src/lib/**/*.stories.@(js|jsx|ts|tsx)"
+        ]
+      }
     }
   }
 }

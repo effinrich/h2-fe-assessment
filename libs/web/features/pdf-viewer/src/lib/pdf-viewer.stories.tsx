@@ -4,10 +4,7 @@ import { PdfViewerScreen } from './pdf-viewer'
 import type { RenderedPdfPage } from './types'
 
 // Storybook is the test surface for screen-level compositions; these stories
-// carry the three states the viewer owns. tldraw runs real for the Ready
-// state, so Chromatic snapshots stay off for that story (diffing an animated
-// canvas is a flake budget) — the states that matter visually are Loading and
-// Error.
+// carry the states the viewer owns.
 const meta = {
   title: 'Features/PdfViewer',
   component: PdfViewerScreen
@@ -26,6 +23,12 @@ const examplePage: RenderedPdfPage = {
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
 }
 
+const exampleDocument = {
+  pages: [examplePage],
+  renderPages: async () => [examplePage],
+  destroy: async () => {}
+}
+
 export const Loading: Story = {
   args: { isLoading: true, onOpenAnother: fn() }
 }
@@ -35,6 +38,6 @@ export const Error: Story = {
 }
 
 export const Ready: Story = {
-  args: { pages: [examplePage], onOpenAnother: fn() },
-  parameters: { chromatic: { disableSnapshot: true } }
+  args: { onOpenAnother: fn() },
+  render: args => <PdfViewerScreen {...args} document={exampleDocument} />
 }

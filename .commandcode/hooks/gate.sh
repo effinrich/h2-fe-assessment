@@ -16,7 +16,7 @@ if [ -z "$(git status --porcelain 2>/dev/null)" ]; then
   exit 0
 fi
 
-if ! OUT=$(npm run --silent gate 2>&1); then
+if ! OUT=$(bun run gate 2>&1); then
   {
     echo "Gates failed. Fix these before finishing:"
     printf '%s\n' "$OUT" | tail -40

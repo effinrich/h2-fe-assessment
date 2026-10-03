@@ -3,92 +3,170 @@ import * as pdfjs from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url'
 import { type Editor, type TLAssetId, type TLShapeId } from 'tldraw'
 import { AssetRecordType } from 'tldraw'
-import type { PdfDocumentSummary, RenderedPdfPage } from './types'
+import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from './types'
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
 
-// Rasterise every page up front. The canvas keeps the result as a plain image,
-// so panning and zooming never re-run this. pdfjs 6 takes the canvas element
-// itself (`canvas` is required, `canvasContext` is now optional).
-export async function renderPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocumentSummary> {
+const PAGE_PLACEHOLDER =
+  'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+
+export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocumentSummary> {
   const loadingTask = pdfjs.getDocument({ data })
-  const document = await loadingTask.promise
-  const pages: RenderedPdfPage[] = []
+  let ownsLoadingTask = false
 
-  for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber++) {
-    const page = await document.getPage(pageNumber)
-    const viewport = page.getViewport({ scale })
-    const canvas = window.document.createElement('canvas')
-    canvas.width = Math.ceil(viewport.width)
-    canvas.height = Math.ceil(viewport.height)
+  try {
+    const pdfDocument = await loadingTask.promise
+    const pages: PdfPage[] = []
 
-    const canvasContext = canvas.getContext('2d')
-    if (!canvasContext) throw new Error('Could not get a 2D context for the page')
+    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
+      const page = await pdfDocument.getPage(pageNumber)
+      const viewport = page.getViewport({ scale })
+      pages.push({
+        pageNumber,
+        width: Math.ceil(viewport.width),
+        height: Math.ceil(viewport.height)
+      })
+    }
 
-    await page.render({ canvas, viewport, canvasContext }).promise
+    let destroyed = false
+    const destroy = async () => {
+      if (destroyed) return
+      destroyed = true
+      await loadingTask.destroy()
+    }
 
-    pages.push({
-      pageNumber,
-      width: canvas.width,
-      height: canvas.height,
-      dataUrl: canvas.toDataURL('image/png')
-    })
+    ownsLoadingTask = true
+    return {
+      pages,
+      renderPages: async (pageNumbers: number[]) => {
+        let renderedSuccessfully = false
+        try {
+          const rendered = await Promise.all(
+            [...new Set(pageNumbers)].map(async pageNumber => {
+              const page = await pdfDocument.getPage(pageNumber)
+              const viewport = page.getViewport({ scale })
+              const canvas = window.document.createElement('canvas')
+              canvas.width = Math.ceil(viewport.width)
+              canvas.height = Math.ceil(viewport.height)
+
+              try {
+                const canvasContext = canvas.getContext('2d')
+                if (!canvasContext) throw new Error('Could not get a 2D context for the page')
+
+                await page.render({ canvas, viewport, canvasContext }).promise
+
+                return {
+                  pageNumber,
+                  width: canvas.width,
+                  height: canvas.height,
+                  dataUrl: canvas.toDataURL('image/png')
+                }
+              } finally {
+                canvas.width = 0
+                canvas.height = 0
+              }
+            })
+          )
+          renderedSuccessfully = true
+          return rendered
+        } finally {
+          if (!renderedSuccessfully) await destroy()
+        }
+      },
+      destroy
+    }
+  } finally {
+    if (!ownsLoadingTask) await loadingTask.destroy()
   }
-
-  await loadingTask.destroy()
-  return { pages }
 }
 
-// Every page becomes its own locked image shape, laid out one below the next
-// with a gap. Locked because a page is the paper, not a thing you drag around.
-// Idempotent by construction: stable page and asset ids, stale shapes deleted
-// before new ones are created, so a retry refreshes the canvas in place rather
-// than stacking a second copy of every page.
-export function placePagesOnCanvas(editor: Editor, pages: RenderedPdfPage[]): void {
+export function visiblePageNumbers(
+  pages: PdfPage[],
+  bounds: { x: number; y: number; w: number; h: number }
+): number[] {
+  const visible: number[] = []
+  let y = 0
+
+  for (const page of pages) {
+    const intersects =
+      bounds.x < page.width &&
+      bounds.x + bounds.w > 0 &&
+      bounds.y < y + page.height &&
+      bounds.y + bounds.h > y
+    if (intersects) visible.push(page.pageNumber)
+    y += page.height + PDF_PAGE_GAP
+  }
+
+  return visible
+}
+
+export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {
   if (pages.length === 0) return
 
-  const shapeIds = pages.map(page => `shape:page-${page.pageNumber}` as TLShapeId)
-  const assetIds = pages.map(page => `asset:page-${page.pageNumber}` as TLAssetId)
-  editor.deleteShapes(shapeIds)
-  editor.deleteAssets(assetIds)
+  syncVisiblePages(editor, pages, [pages[0].pageNumber], [])
+  editor.zoomToFit({ animation: { duration: 200 } })
+}
 
-  const assets = pages.map(page =>
-    AssetRecordType.create({
-      id: `asset:page-${page.pageNumber}` as TLAssetId,
-      type: 'image',
-      meta: {},
-      props: {
-        name: `page-${page.pageNumber}.png`,
-        src: page.dataUrl,
-        w: page.width,
-        h: page.height,
-        mimeType: 'image/png',
-        isAnimated: false
-      }
-    })
-  )
+export function syncVisiblePages(
+  editor: Editor,
+  pages: PdfPage[],
+  visiblePageNumbers: number[],
+  renderedPages: RenderedPdfPage[]
+): void {
+  const visible = new Set(visiblePageNumbers)
+  const offscreenPages = pages.filter(page => !visible.has(page.pageNumber))
+  const offscreenShapeIds = offscreenPages
+    .map(page => `shape:page-${page.pageNumber}` as TLShapeId)
+    .filter(id => editor.getShape(id))
+  const offscreenAssetIds = offscreenPages
+    .map(page => `asset:page-${page.pageNumber}` as TLAssetId)
+    .filter(id => editor.getAsset(id))
 
-  editor.createAssets(assets)
+  if (offscreenShapeIds.length) editor.deleteShapes(offscreenShapeIds)
+  if (offscreenAssetIds.length) editor.deleteAssets(offscreenAssetIds)
 
+  const renderedByPage = new Map(renderedPages.map(page => [page.pageNumber, page]))
   let y = 0
-  const shapes = pages.map((page, index) => {
-    const shape = {
-      id: `shape:page-${page.pageNumber}` as TLShapeId,
-      type: 'image' as const,
-      x: 0,
-      y,
-      isLocked: true,
-      props: {
-        assetId: assets[index].id,
-        w: page.width,
-        h: page.height
+
+  for (const page of pages) {
+    if (visible.has(page.pageNumber)) {
+      const assetId = `asset:page-${page.pageNumber}` as TLAssetId
+      const shapeId = `shape:page-${page.pageNumber}` as TLShapeId
+      const existingAsset = editor.getAsset(assetId)
+      const renderedPage = renderedByPage.get(page.pageNumber)
+
+      if (!existingAsset || renderedPage) {
+        const asset = AssetRecordType.create({
+          id: assetId,
+          type: 'image',
+          meta: {},
+          props: {
+            name: `page-${page.pageNumber}.png`,
+            src: renderedPage?.dataUrl ?? PAGE_PLACEHOLDER,
+            w: page.width,
+            h: page.height,
+            mimeType: 'image/png',
+            isAnimated: false
+          }
+        })
+        if (existingAsset) editor.updateAssets([asset])
+        else editor.createAssets([asset])
+      }
+
+      if (!editor.getShape(shapeId)) {
+        editor.createShapes([
+          {
+            id: shapeId,
+            type: 'image',
+            x: 0,
+            y,
+            isLocked: true,
+            props: { assetId, w: page.width, h: page.height }
+          }
+        ])
       }
     }
     y += page.height + PDF_PAGE_GAP
-    return shape
-  })
-
-  editor.createShapes(shapes)
-  editor.zoomToFit({ animation: { duration: 200 } })
+  }
 }

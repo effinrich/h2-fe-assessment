@@ -80,4 +80,9 @@ export const WithAction: Story = {
       Delete shape
     </Button>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Delete shape" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Undo" }));
+    await expect(await screen.findByText("Restored")).toBeInTheDocument();
+  },
 };

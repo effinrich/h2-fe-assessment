@@ -1,12 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
-import { renderPdf } from './utils'
+import { openPdf } from './utils'
 import type { FileToken } from './types'
 
-// A stable key per file: File objects don't serialise, so the query key carries
-// name/size/lastModified instead — same document, same key, refetchable.
+const fileTokens = new WeakMap<File, string>()
+let nextFileToken = 0
+
 export function pdfFileToken(file: File | null): FileToken | null {
   if (!file) return null
-  return `${file.name}:${file.size}:${file.lastModified}`
+  let token = fileTokens.get(file)
+  if (!token) {
+    token = `pdf-${nextFileToken++}`
+    fileTokens.set(file, token)
+  }
+  return token
 }
 
 // Rasterisation is the expensive step, so: no retry storms with retry:false,
@@ -15,9 +21,16 @@ export function pdfFileToken(file: File | null): FileToken | null {
 export function usePdfPages(file: File | null) {
   return useQuery({
     enabled: file !== null,
-    queryFn: async () => renderPdf(await file!.arrayBuffer()),
+    queryFn: async ({ signal }) => {
+      const data = await file!.arrayBuffer()
+      if (signal.aborted) throw signal.reason
+      const document = await openPdf(data)
+      if (signal.aborted) await document.destroy()
+      return document
+    },
     queryKey: ['pdf-pages', pdfFileToken(file)],
     retry: false,
-    staleTime: Infinity
+    staleTime: Infinity,
+    gcTime: 0
   })
 }
