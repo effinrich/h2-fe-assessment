@@ -31,6 +31,9 @@
           ]
         }
       },
+      "build": {
+        "dependsOn": []
+      },
       "oxfmt": {},
       "oxfmt:fix": {},
       "build-storybook": {
