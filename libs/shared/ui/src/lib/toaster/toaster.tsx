@@ -16,7 +16,9 @@ export function Toaster() {
             <Stack gap="1" flex="1" maxWidth="100%">
               {toast.title ? <Toast.Title>{toast.title}</Toast.Title> : null}
               {toast.description ? (
-                <Toast.Description>{toast.description}</Toast.Description>
+                // Chakra dims the description to 0.8, which fails AA contrast
+                // on the coloured success/warning/error toasts.
+                <Toast.Description opacity="1">{toast.description}</Toast.Description>
               ) : null}
             </Stack>
             {toast.action ? (

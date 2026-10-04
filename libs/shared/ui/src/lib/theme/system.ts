@@ -35,7 +35,17 @@ const config = defineConfig({
           solid: { value: { _light: "{colors.brand.600}", _dark: "{colors.brand.600}" } },
           focusRing: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.500}" } },
           border: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.400}" } }
-        }
+        },
+        // WCAG AA (4.5:1): Chakra's defaults put white text on the 600 shade of
+        // these palettes and red.500 error text on white, both below the ratio.
+        fg: {
+          error: { value: { _light: "{colors.red.600}", _dark: "{colors.red.400}" } }
+        },
+        orange: { solid: { value: "{colors.orange.700}" } },
+        green: { solid: { value: "{colors.green.700}" } },
+        teal: { solid: { value: "{colors.teal.700}" } },
+        cyan: { solid: { value: "{colors.cyan.700}" } },
+        pink: { solid: { value: "{colors.pink.700}" } }
       }
     }
   }
