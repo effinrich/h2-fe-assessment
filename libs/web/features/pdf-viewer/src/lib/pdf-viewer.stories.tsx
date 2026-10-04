@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
+import type { ReactNode } from "react"
 
-import { useEffect, type ReactNode } from "react"
 import { expect, fn, screen, waitFor, within } from "storybook/test"
 import {
   atom,
@@ -259,10 +259,7 @@ export const WithExtensions: Story = {
 }
 
 function ColorModeProbe({ children }: { children: ReactNode }) {
-  const { setColorMode, toggleColorMode } = useColorMode()
-  useEffect(() => {
-    setColorMode("light")
-  }, [setColorMode])
+  const { toggleColorMode } = useColorMode()
   return (
     <>
       <button type="button" onClick={toggleColorMode}>
@@ -289,19 +286,23 @@ export const FollowsAppColorMode: Story = {
   play: async ({ canvas, canvasElement, userEvent }) => {
     await waitFor(() => expect(canvasThemeRoot(canvasElement)).not.toBeNull())
     const wrapper = canvasThemeRoot(canvasElement)!
-    await expect(wrapper).toHaveAttribute("data-color-mode", "light")
+    const startMode = wrapper.getAttribute("data-color-mode")
+    await expect(startMode === "light" || startMode === "dark").toBe(true)
     const accent = getComputedStyle(wrapper).getPropertyValue("--app-accent").trim()
     await expect(accent).not.toBe("")
 
     await waitFor(() => expect(canvasElement.querySelector(".tl-container")).not.toBeNull())
     const container = canvasElement.querySelector(".tl-container")!
-    await expect(container).toHaveClass("tl-theme__light")
+    await expect(container).toHaveClass(startMode === "dark" ? "tl-theme__dark" : "tl-theme__light")
     await expect(getComputedStyle(container).getPropertyValue("--tl-color-primary").trim()).toBe(
       accent
     )
 
+    const nextMode = startMode === "dark" ? "light" : "dark"
     await userEvent.click(canvas.getByRole("button", { name: "Toggle app color mode" }))
-    await expect(wrapper).toHaveAttribute("data-color-mode", "dark")
-    await waitFor(() => expect(container).toHaveClass("tl-theme__dark"))
+    await waitFor(() => expect(wrapper).toHaveAttribute("data-color-mode", nextMode))
+    await waitFor(() =>
+      expect(container).toHaveClass(nextMode === "dark" ? "tl-theme__dark" : "tl-theme__light")
+    )
   }
 }
