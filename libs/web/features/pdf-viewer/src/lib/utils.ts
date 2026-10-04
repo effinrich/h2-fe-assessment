@@ -1,6 +1,12 @@
 import * as pdfjs from "pdfjs-dist"
 import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
-import { type BoxModel, type Editor, type TLAssetId, type TLShapeId } from "tldraw"
+import {
+  type BoxModel,
+  type Editor,
+  type TLAssetId,
+  type TLImageShape,
+  type TLShapeId
+} from "tldraw"
 import { AssetRecordType } from "tldraw"
 
 import type {
@@ -12,12 +18,10 @@ import type {
   RenderedPdfPage
 } from "./types"
 
-import { PDF_PAGE_GAP, PDF_PAGE_SHAPE_ID, VIEWER_OVERRIDES } from "./consts"
+import { PDF_PAGE_ASSET_ID, PDF_PAGE_GAP, PDF_PAGE_SHAPE_ID, VIEWER_OVERRIDES } from "./consts"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
-
-const PAGE_PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 
 export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocumentSummary> {
   const loadingTask = pdfjs.getDocument({ data })
@@ -203,6 +207,35 @@ export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {
   editor.zoomToFit({ animation: { duration: 200 } })
 }
 
+let rasterSequence = 0
+
+function pageAsset(id: TLAssetId, page: PdfPage, src: string | null) {
+  return AssetRecordType.create({
+    id,
+    type: "image",
+    meta: {},
+    props: {
+      name: `page-${page.pageNumber}.png`,
+      src,
+      w: page.width,
+      h: page.height,
+      mimeType: "image/png",
+      isAnimated: false
+    }
+  })
+}
+
+function assetIdsByPage(editor: Editor): Map<number, TLAssetId[]> {
+  const byPage = new Map<number, TLAssetId[]>()
+  for (const asset of editor.getAssets()) {
+    const match = PDF_PAGE_ASSET_ID.exec(asset.id)
+    if (!match) continue
+    const pageNumber = Number(match[1])
+    byPage.set(pageNumber, [...(byPage.get(pageNumber) ?? []), asset.id])
+  }
+  return byPage
+}
+
 export function syncVisiblePages(
   editor: Editor,
   pages: PdfPage[],
@@ -210,48 +243,38 @@ export function syncVisiblePages(
   renderedPages: RenderedPdfPage[]
 ): void {
   const visible = new Set(visiblePageNumbers)
-  const offscreenPages = pages.filter((page) => !visible.has(page.pageNumber))
-  const offscreenShapeIds = offscreenPages
-    .map((page) => `shape:page-${page.pageNumber}` as TLShapeId)
-    .filter((id) => editor.getShape(id))
-  const offscreenAssetIds = offscreenPages
-    .map((page) => `asset:page-${page.pageNumber}` as TLAssetId)
-    .filter((id) => editor.getAsset(id))
+  const renderedByPage = new Map(renderedPages.map((page) => [page.pageNumber, page]))
+  const pageAssetIds = assetIdsByPage(editor)
+  const evictedShapeIds: TLShapeId[] = []
+  const staleAssetIds: TLAssetId[] = []
 
   editor.run(
     () => {
-      if (offscreenShapeIds.length) editor.deleteShapes(offscreenShapeIds)
-      if (offscreenAssetIds.length) editor.deleteAssets(offscreenAssetIds)
-
-      const renderedByPage = new Map(renderedPages.map((page) => [page.pageNumber, page]))
       let y = 0
-
       for (const page of pages) {
-        if (visible.has(page.pageNumber)) {
-          const assetId = `asset:page-${page.pageNumber}` as TLAssetId
-          const shapeId = `shape:page-${page.pageNumber}` as TLShapeId
-          const existingAsset = editor.getAsset(assetId)
-          const renderedPage = renderedByPage.get(page.pageNumber)
+        const shapeId = `shape:page-${page.pageNumber}` as TLShapeId
+        const shape = editor.getShape<TLImageShape>(shapeId)
+        const assetIds = pageAssetIds.get(page.pageNumber) ?? []
 
-          if (!existingAsset || renderedPage) {
-            const asset = AssetRecordType.create({
-              id: assetId,
-              type: "image",
-              meta: {},
-              props: {
-                name: `page-${page.pageNumber}.png`,
-                src: renderedPage?.dataUrl ?? PAGE_PLACEHOLDER,
-                w: page.width,
-                h: page.height,
-                mimeType: "image/png",
-                isAnimated: false
-              }
-            })
-            if (existingAsset) editor.updateAssets([asset])
-            else editor.createAssets([asset])
+        if (!visible.has(page.pageNumber)) {
+          if (shape) evictedShapeIds.push(shapeId)
+          staleAssetIds.push(...assetIds)
+        } else {
+          const shownAssetId = shape?.props.assetId
+          const rendered = renderedByPage.get(page.pageNumber)
+          let assetId: TLAssetId
+          if (rendered) {
+            // tldraw shows a src change on a shown asset only after ~32 frames; a new id shows at once.
+            assetId = `asset:page-${page.pageNumber}-r${++rasterSequence}` as TLAssetId
+            editor.createAssets([pageAsset(assetId, page, rendered.dataUrl)])
+          } else if (shownAssetId && editor.getAsset(shownAssetId)) {
+            assetId = shownAssetId
+          } else {
+            assetId = `asset:page-${page.pageNumber}-pending` as TLAssetId
+            if (!editor.getAsset(assetId)) editor.createAssets([pageAsset(assetId, page, null)])
           }
 
-          if (!editor.getShape(shapeId)) {
+          if (!shape) {
             editor.createShapes([
               {
                 id: shapeId,
@@ -262,11 +285,18 @@ export function syncVisiblePages(
                 props: { assetId, w: page.width, h: page.height }
               }
             ])
+          } else if (shownAssetId !== assetId) {
+            editor.updateShapes<TLImageShape>([{ id: shapeId, type: "image", props: { assetId } }])
           }
+          staleAssetIds.push(...assetIds.filter((id) => id !== assetId))
         }
         y += page.height + PDF_PAGE_GAP
       }
+
+      if (evictedShapeIds.length) editor.deleteShapes(evictedShapeIds)
+      if (staleAssetIds.length) editor.deleteAssets(staleAssetIds)
     },
-    { history: "ignore" }
+    // Page shapes are locked; tldraw silently skips locked shapes in updateShapes and deleteShapes.
+    { history: "ignore", ignoreShapeLock: true }
   )
 }

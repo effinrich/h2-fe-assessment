@@ -114,7 +114,7 @@ and committed failing before the code exists.
 - [x] **Only pages intersecting the viewport are selected for raster.** —
       `pdf-viewer.spec.tsx` › "selects only pages intersecting the viewport"
       (100 synthetic pages, pure selector). No real 100-page PDF is tested.
-- [ ] **Off-screen pages release their locked shape and every asset of the
+- [x] **Off-screen pages release their locked shape and every asset of the
       page; pages under a retained box stay until the box goes; user marks are
       untouched.** Previously ticked against an editor stub that ignored
       tldraw's lock rule: in the real editor `deleteShapes` skipped the locked
@@ -124,14 +124,14 @@ and committed failing before the code exists.
       they leave the viewport"; "keeps pages under a retained box after they
       leave the viewport, until the box goes"; "tracks page position, jumps
       without rasterising all pages, and preserves marks".
-- [ ] **A landed raster is on screen within a few animation frames of its
+- [x] **A landed raster is on screen within a few animation frames of its
       render completing, whatever the frame rate.** Before: the page's asset
       `src` was updated in place, which tldraw shows only after more than 32
       frames without a further change — ~0.5s at 60fps, ~33s measured at 1fps.
-      — `pdf-viewer.stories.tsx` › `RasterLandsPromptly` play test (fewer than
-      8 frames, real tldraw); `pdf-viewer.spec.tsx` › "lands each raster on a
-      fresh asset and repoints the page shape".
-- [ ] **Unmounting the viewer or changing document removes the previous
+      Now 1 frame. — `pdf-viewer.stories.tsx` › `RasterLandsPromptly` play
+      test (fewer than 8 frames, real tldraw; red at 32); `pdf-viewer.spec.tsx`
+      › "lands each raster on a fresh asset and repoints the page shape".
+- [x] **Unmounting the viewer or changing document removes the previous
       document's page shapes and assets**, so the new document's pages take
       their own sizes. — `pdf-viewer.stories.tsx` › `SwitchesDocument` play
       test (real tldraw); `pdf-viewer.spec.tsx` › "replaces page shapes and

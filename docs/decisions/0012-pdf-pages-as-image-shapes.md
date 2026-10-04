@@ -60,8 +60,17 @@ without a rewrite.
 - **Store churn:** scrolling creates and deletes shape and asset records. Each
   sync is one history-ignored `editor.run`; it must run only when the visible
   set actually changes.
-- **Pins must not bind to page shapes** while eviction deletes them, or eviction
-  must change to keep shapes and swap only the asset. Decide in Task 3.
+- **Asset lifecycle.** A visible page's shape first shows a `src: null` asset
+  (`asset:page-N-pending`, drawn by tldraw as a page-sized placeholder). Each
+  landed raster is a new asset (`asset:page-N-r<seq>`); the shape is repointed
+  and the old asset deleted. Updating a shown asset's `src` in place is not an
+  option: tldraw shows that change only after 32+ animation frames without a
+  further change, so pages arrived ~33s late at 1fps.
+- **Page shapes are locked**, and tldraw silently skips locked shapes in
+  `updateShapes` and `deleteShapes`; every page write runs in
+  `editor.run(…, { history: "ignore", ignoreShapeLock: true })`.
+- **Pins never bind to page shapes** (decided in Task 3, `task-3-pin.md` §4),
+  so eviction may delete them.
 - **Scroll-back re-rasterises** until a raster cache lands.
-- **Revisit** if Task 3 needs bindings to pages, or if zoomed-in sharpness is
+- **Revisit** if pages ever need bindings, or if zoomed-in sharpness is
   judged unacceptable before the resolution fix ships.
