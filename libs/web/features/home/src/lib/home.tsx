@@ -1,5 +1,6 @@
+import { useCallback, useRef } from "react"
+
 import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
-import { useRef } from "react"
 
 import type { HomeScreenProps } from "./types"
 
@@ -8,6 +9,7 @@ import type { HomeScreenProps } from "./types"
 // file input's ref.
 export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const handleOpenPdf = useCallback(() => inputRef.current?.click(), [])
 
   return (
     <Flex align="center" justify="center" minH="100dvh" p="8">
@@ -24,13 +26,7 @@ export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeS
         <Heading size="lg">Open a document</Heading>
         <Text marginTop="2">A PDF lands on the canvas, ready to mark up.</Text>
 
-        <Button
-          disabled={isBusy}
-          marginTop="6"
-          variant="solid"
-          w="full"
-          onClick={() => inputRef.current?.click()}
-        >
+        <Button disabled={isBusy} marginTop="6" variant="solid" w="full" onClick={handleOpenPdf}>
           {isBusy ? "Opening" : "Open PDF"}
         </Button>
         <Button disabled={isBusy} marginTop="2" variant="outline" w="full" onClick={onUseExample}>

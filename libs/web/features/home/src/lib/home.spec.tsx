@@ -1,9 +1,11 @@
-import { UiProvider } from "@h2-fe/ui"
 import { fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-import { HomeScreen } from "./home"
+import { UiProvider } from "@h2-fe/ui"
+
 import type { HomeScreenProps } from "./types"
+
+import { HomeScreen } from "./home"
 
 // Spec: docs/specs/task-2-pdf.md criterion 1 —
 // "Given no document, the canvas offers 'Open PDF' and 'Use an example'."
@@ -65,7 +67,7 @@ describe("HomeScreen", () => {
     })
     expect(screen.getByRole("button", { name: /opening/i })).toBeTruthy()
     expect(
-      (screen.getByRole("button", { name: /use an example/i })).disabled
+      screen.getByRole<HTMLButtonElement>("button", { name: /use an example/i }).disabled
     ).toBe(true)
   })
 })

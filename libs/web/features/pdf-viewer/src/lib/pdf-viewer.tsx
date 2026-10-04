@@ -1,11 +1,19 @@
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent
+} from "react"
+import { Tldraw, type Editor } from "tldraw"
+import "tldraw/tldraw.css"
+
 import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
 import { ViewerTopBar } from "@h2-fe/web-ui"
 
-import "tldraw/tldraw.css"
-import { useEffect, useRef, useState } from "react"
-import { Tldraw, type Editor } from "tldraw"
-
 import type { PdfViewerScreenProps, RenderedPdfPage } from "./types"
+
 import {
   activePageNumber,
   hasUserMarks,
@@ -16,7 +24,9 @@ import {
 } from "./utils"
 
 type PageState = "loading" | "error"
-type PageOverlay = { page: number; state: PageState; x: number; y: number; w: number; h: number }
+type PageOverlay = { page: number; state: PageState; style: CSSProperties }
+
+const viewerStyle = { position: "absolute", inset: 0 } as const
 
 export function PdfViewerScreen({
   filename,
@@ -33,15 +43,19 @@ export function PdfViewerScreen({
   const retryPage = useRef<(pageNumber: number) => void>(() => {})
 
   useEffect(() => {
-    if (!editor || !onMarksChange) return
-    const updateMarks = () => onMarksChange(hasUserMarks(editor.getCurrentPageShapes()))
-    const stop = editor.store.listen(updateMarks, { scope: "document" })
-    updateMarks()
-    return stop
+    let stop: (() => void) | undefined
+    if (editor && onMarksChange) {
+      const updateMarks = () => onMarksChange(hasUserMarks(editor.getCurrentPageShapes()))
+      stop = editor.store.listen(updateMarks, { scope: "document" })
+      updateMarks()
+    }
+    return () => {
+      stop?.()
+    }
   }, [editor, onMarksChange])
 
   useEffect(() => {
-    if (!editor || !document || document.pages.length === 0) return
+    if (!editor || !document || document.pages.length === 0) return () => {}
     placePagesOnCanvas(editor, document.pages)
 
     let active = true
@@ -80,8 +94,12 @@ export function PdfViewerScreen({
                 document.pages,
                 editor.getViewportPageBounds()
               )
-              const rendered = pages.filter((page) => currentVisible.includes(page.pageNumber))
-              for (const page of rendered) renderedPages.set(page.pageNumber, page)
+              const rendered = pages.filter((renderedPage) =>
+                currentVisible.includes(renderedPage.pageNumber)
+              )
+              for (const renderedPage of rendered) {
+                renderedPages.set(renderedPage.pageNumber, renderedPage)
+              }
               syncVisiblePages(editor, document.pages, currentVisible, rendered)
             })
             .catch(() => {
@@ -103,10 +121,12 @@ export function PdfViewerScreen({
               {
                 page: pageNumber,
                 state: failedPages.has(pageNumber) ? ("error" as const) : ("loading" as const),
-                x: topLeft.x,
-                y: topLeft.y,
-                w: pageBox.w * editor.getZoomLevel(),
-                h: pageBox.h * editor.getZoomLevel()
+                style: {
+                  left: topLeft.x,
+                  top: topLeft.y,
+                  width: pageBox.w * editor.getZoomLevel(),
+                  height: pageBox.h * editor.getZoomLevel()
+                }
               }
             ]
           })
@@ -131,14 +151,21 @@ export function PdfViewerScreen({
     }
   }, [editor, document])
 
-  const jumpToPage = (pageNumber: number) => {
-    if (!editor || !document) return
-    const bounds = pageBounds(document.pages, pageNumber)
-    if (bounds) editor.centerOnPoint({ x: bounds.x + bounds.w / 2, y: bounds.y + bounds.h / 2 })
-  }
+  const jumpToPage = useCallback(
+    (pageNumber: number) => {
+      if (!editor || !document) return
+      const bounds = pageBounds(document.pages, pageNumber)
+      if (bounds) editor.centerOnPoint({ x: bounds.x + bounds.w / 2, y: bounds.y + bounds.h / 2 })
+    },
+    [editor, document]
+  )
+
+  const handleRetryPage = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    retryPage.current(Number(event.currentTarget.dataset.page))
+  }, [])
 
   return (
-    <div style={{ position: "absolute", inset: 0 }}>
+    <div style={viewerStyle}>
       <Tldraw onMount={setEditor} />
 
       {isLoading ? (
@@ -182,17 +209,17 @@ export function PdfViewerScreen({
           justify="center"
           key={overlay.page}
           pointerEvents="none"
-          aria-label={`Page ${overlay.page} ${overlay.state === 'error' ? 'did not load' : 'is loading'}`}
+          aria-label={`Page ${overlay.page} ${overlay.state === "error" ? "did not load" : "is loading"}`}
           position="absolute"
           role={overlay.state === "error" ? "alert" : "status"}
-          style={{ left: overlay.x, top: overlay.y, width: overlay.w, height: overlay.h }}
+          style={overlay.style}
         >
           {overlay.state === "loading" ? (
             <Spinner aria-label={`Loading page ${overlay.page}`} />
           ) : (
             <Box pointerEvents="auto" textAlign="center">
               <Text>Page {overlay.page} couldn't load.</Text>
-              <Button onClick={() => retryPage.current(overlay.page)} size="sm">
+              <Button data-page={overlay.page} onClick={handleRetryPage} size="sm">
                 Retry page {overlay.page}
               </Button>
             </Box>

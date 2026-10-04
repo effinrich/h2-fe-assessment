@@ -1,14 +1,15 @@
-import { UiProvider } from "@h2-fe/ui"
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import * as pdfjs from "pdfjs-dist"
 import { useEffect } from "react"
-import type { Editor } from "tldraw"
 import { afterEach, describe, expect, it, vi } from "vitest"
+
+import { UiProvider } from "@h2-fe/ui"
+
+import type { PdfPage, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
 import { PDF_PAGE_GAP } from "./consts"
 import { pdfFileToken } from "./hooks"
 import { PdfViewerScreen } from "./pdf-viewer"
-import type { PdfPage, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 import {
   activePageNumber,
   hasUserMarks,
@@ -24,7 +25,7 @@ import {
 // and canvas placement.
 vi.mock("tldraw", () => ({
   AssetRecordType: { create: (input: Record<string, unknown>) => input },
-  Tldraw: ({ onMount }: { onMount?: (editor: Editor) => void }) => {
+  Tldraw: ({ onMount }: { onMount?: (editor: object) => void }) => {
     useEffect(() => {
       if (onMount && mountedEditor) onMount(mountedEditor)
     }, [onMount])
@@ -32,7 +33,9 @@ vi.mock("tldraw", () => ({
   }
 }))
 
-let mountedEditor: Editor | null = null
+let mountedEditor: object | null = null
+let notifyViewportChange = () => {}
+let finish: (pages: RenderedPdfPage[]) => void = () => {}
 
 vi.mock("pdfjs-dist", () => ({
   GlobalWorkerOptions: {},
@@ -81,6 +84,7 @@ function renderScreen(props: PdfViewerScreenProps) {
 
 afterEach(() => {
   mountedEditor = null
+  notifyViewportChange = () => {}
   vi.restoreAllMocks()
   vi.clearAllMocks()
   vi.mocked(pdfjs.getDocument).mockReset()
@@ -108,7 +112,6 @@ describe("PdfViewerScreen", () => {
   it("tracks page position, jumps without rasterising all pages, and preserves marks", async () => {
     const stub = createEditorStub()
     let bounds = { x: 0, y: 0, w: 100, h: 140 }
-    let notify = () => {}
     const editor = {
       ...stub,
       getViewportPageBounds: () => bounds,
@@ -117,16 +120,16 @@ describe("PdfViewerScreen", () => {
       getCurrentPageShapes: () => [{ id: "shape:page-1" }, { id: "shape:mark-1" }],
       centerOnPoint: (point: { x: number; y: number }) => {
         bounds = { ...bounds, y: point.y - 70 }
-        notify()
+        notifyViewportChange()
       },
       store: {
         listen: (callback: () => void) => {
-          notify = callback
+          notifyViewportChange = callback
           return () => {}
         }
       }
     }
-    mountedEditor = editor as unknown as Editor
+    mountedEditor = editor
     const onMarksChange = vi.fn<(hasMarks: boolean) => void>()
     const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async (numbers) =>
       numbers.map((number) => (number === 1 ? page : page2))
@@ -161,8 +164,7 @@ describe("PdfViewerScreen", () => {
       getZoomLevel: () => 1,
       pageToViewport: (point: { x: number; y: number }) => point,
       store: { listen: () => () => {} }
-    } as unknown as Editor
-    let finish: (pages: RenderedPdfPage[]) => void = () => {}
+    }
     const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(
       () =>
         new Promise((resolve) => {
@@ -194,7 +196,7 @@ describe("PdfViewerScreen", () => {
           return () => {}
         }
       }
-    } as unknown as Editor
+    }
     const renderPages = vi
       .fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>()
       .mockRejectedValueOnce(new Error("render failed"))
@@ -221,14 +223,9 @@ describe("PdfViewerScreen", () => {
 describe("placePagesOnCanvas", () => {
   it("starts with the first page so zoom-to-fit does not rasterise the full document", () => {
     const editorStub = createEditorStub()
-    placePagesOnCanvas(editorStub as unknown as Editor, [page, page2])
+    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, [page, page2]])
 
-    const shapes = editorStub.createShapes.mock.calls[0][0] as {
-      id: string
-      isLocked: boolean
-      y: number
-      props: { assetId: string; w: number; h: number }
-    }[]
+    const shapes = editorStub.createShapes.mock.calls[0][0]
     expect(shapes).toHaveLength(1)
     expect(shapes[0]).toEqual({
       id: "shape:page-1",
@@ -244,13 +241,13 @@ describe("placePagesOnCanvas", () => {
 
   it("releases page shapes and assets when they leave the viewport", () => {
     const editorStub = createEditorStub()
-    placePagesOnCanvas(editorStub as unknown as Editor, [page, page2])
+    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, [page, page2]])
 
-    syncVisiblePages(editorStub as unknown as Editor, [page, page2], [2], [page2])
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, [page, page2], [2], [page2]])
     expect(editorStub.deleteShapes).toHaveBeenCalledWith(["shape:page-1"])
     expect(editorStub.deleteAssets).toHaveBeenCalledWith(["asset:page-1"])
 
-    syncVisiblePages(editorStub as unknown as Editor, [page, page2], [], [])
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, [page, page2], [], []])
     expect(editorStub.deleteShapes).toHaveBeenLastCalledWith(["shape:page-2"])
     expect(editorStub.deleteAssets).toHaveBeenLastCalledWith(["asset:page-2"])
   })
