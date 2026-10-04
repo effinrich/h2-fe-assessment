@@ -412,6 +412,17 @@ describe("PdfViewerScreen", () => {
     fireEvent.click(screen.getByRole("button", { name: /open another document/i }))
     expect(onOpenAnother).toHaveBeenCalledTimes(1)
   })
+
+  it("scopes the canvas to the app color mode", () => {
+    const setColorMode = vi.fn<(mode: "dark" | "light") => unknown>()
+    mountedEditor = { setColorMode }
+    renderScreen({ onOpenAnother: vi.fn<() => void>() })
+    const root = document.querySelector("[data-canvas-theme]")
+    expect(root).toBeTruthy()
+    expect(root?.getAttribute("data-color-mode")).toBe("light")
+    expect(setColorMode).toHaveBeenCalledWith("light")
+    expect(tldraw.props?.hideUi).toBeUndefined()
+  })
 })
 
 describe("canvas extensions", () => {

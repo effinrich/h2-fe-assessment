@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
+import { useEffect, type ReactNode } from "react"
 import { expect, fn, screen, waitFor, within } from "storybook/test"
 import {
   atom,
@@ -10,6 +11,8 @@ import {
   tleditors,
   useValue
 } from "tldraw"
+
+import { useColorMode } from "@h2-fe/ui"
 
 import type {
   CanvasExtension,
@@ -252,5 +255,54 @@ export const WithExtensions: Story = {
     await expect(within(dialog).getByText("Document tools")).toBeInTheDocument()
     await expect(within(dialog).getByText("Stamp")).toBeInTheDocument()
     await userEvent.keyboard("{Escape}")
+  }
+}
+
+function ColorModeProbe({ children }: { children: ReactNode }) {
+  const { setColorMode, toggleColorMode } = useColorMode()
+  useEffect(() => {
+    setColorMode("light")
+  }, [setColorMode])
+  return (
+    <>
+      <button type="button" onClick={toggleColorMode}>
+        Toggle app color mode
+      </button>
+      {children}
+    </>
+  )
+}
+
+function canvasThemeRoot(canvasElement: HTMLElement) {
+  return canvasElement.querySelector("[data-canvas-theme]")
+}
+
+// Spec: docs/specs/task-2-pdf.md — the canvas theme follows the app color
+// mode and maps Chakra semantic tokens onto tldraw's --tl-color-* vars.
+export const FollowsAppColorMode: Story = {
+  args: { filename: "example.pdf", onOpenAnother: fn() },
+  render: (args) => (
+    <ColorModeProbe>
+      <PdfViewerScreen {...args} document={exampleDocument} />
+    </ColorModeProbe>
+  ),
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    await waitFor(() => expect(canvasThemeRoot(canvasElement)).not.toBeNull())
+    const wrapper = canvasThemeRoot(canvasElement)!
+    await expect(wrapper).toHaveAttribute("data-color-mode", "light")
+    await expect(getComputedStyle(wrapper).getPropertyValue("--app-accent").trim()).toBe(
+      "var(--chakra-colors-brand-solid)"
+    )
+
+    await waitFor(() => expect(canvasElement.querySelector(".tl-container")).not.toBeNull())
+    const container = canvasElement.querySelector(".tl-container")!
+    await expect(container).toHaveClass("tl-theme__light")
+    await expect(getComputedStyle(container).getPropertyValue("--tl-color-primary").trim()).toBe(
+      "var(--app-accent)"
+    )
+
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle app color mode" }))
+    await expect(wrapper).toHaveAttribute("data-color-mode", "dark")
+    await waitFor(() => expect(container).toHaveClass("tl-theme__dark"))
   }
 }

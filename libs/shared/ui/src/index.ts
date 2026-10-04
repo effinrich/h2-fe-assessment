@@ -1,6 +1,8 @@
 export * from "./lib/theme/system"
 export * from "./lib/provider/provider"
 export * from "./lib/color-mode-button/color-mode-button"
+export { useColorMode } from "./lib/color-mode-button/hooks"
+export type { ColorMode, UseColorModeReturn } from "./lib/color-mode-button/types"
 export * from "./lib/text-field/text-field"
 export * from "./lib/modal/modal"
 export * from "./lib/tooltip/tooltip"
