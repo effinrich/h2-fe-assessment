@@ -1,19 +1,19 @@
-import { Tag as ChakraTag } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Tag as ChakraTag } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 
 export interface TagProps extends ChakraTag.RootProps {
-  startElement?: ReactNode;
-  endElement?: ReactNode;
+  startElement?: ReactNode
+  endElement?: ReactNode
   /** Renders a remove button that calls this. */
-  onClose?: () => void;
-  closeLabel?: string;
+  onClose?: () => void
+  closeLabel?: string
 }
 
 export function Tag({
   startElement,
   endElement,
   onClose,
-  closeLabel = "Remove",
+  closeLabel = 'Remove',
   children,
   ...rootProps
 }: TagProps) {
@@ -28,5 +28,5 @@ export function Tag({
         </ChakraTag.EndElement>
       ) : null}
     </ChakraTag.Root>
-  );
+  )
 }

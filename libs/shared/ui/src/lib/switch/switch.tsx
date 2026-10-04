@@ -1,17 +1,17 @@
-import { Switch as ChakraSwitch } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Switch as ChakraSwitch } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 
-export interface SwitchProps extends Omit<ChakraSwitch.RootProps, "onCheckedChange"> {
+export interface SwitchProps extends Omit<ChakraSwitch.RootProps, 'onCheckedChange'> {
   /** The switch's label. */
-  children?: ReactNode;
-  onCheckedChange?: (checked: boolean) => void;
+  children?: ReactNode
+  onCheckedChange?: (checked: boolean) => void
 }
 
 export function Switch({ children, onCheckedChange, ...rootProps }: SwitchProps) {
   return (
     <ChakraSwitch.Root
       {...rootProps}
-      onCheckedChange={(details) => onCheckedChange?.(details.checked)}
+      onCheckedChange={details => onCheckedChange?.(details.checked)}
     >
       <ChakraSwitch.HiddenInput />
       <ChakraSwitch.Control>
@@ -19,5 +19,5 @@ export function Switch({ children, onCheckedChange, ...rootProps }: SwitchProps)
       </ChakraSwitch.Control>
       {children != null ? <ChakraSwitch.Label>{children}</ChakraSwitch.Label> : null}
     </ChakraSwitch.Root>
-  );
+  )
 }

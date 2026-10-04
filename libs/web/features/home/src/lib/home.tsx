@@ -22,9 +22,7 @@ export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeS
         maxW="sm"
       >
         <Heading size="lg">Open a document</Heading>
-        <Text marginTop="2">
-          A PDF lands on the canvas, and anything you draw on top of it stays yours.
-        </Text>
+        <Text marginTop="2">A PDF lands on the canvas, ready to mark up.</Text>
 
         <Button
           disabled={isBusy}

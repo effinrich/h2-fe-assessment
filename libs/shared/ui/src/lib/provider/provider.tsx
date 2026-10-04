@@ -1,12 +1,12 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { ThemeProvider } from "next-themes";
-import type { ReactNode } from "react";
+import { ChakraProvider } from '@chakra-ui/react'
+import { ThemeProvider } from 'next-themes'
+import type { ReactNode } from 'react'
 
-import { system } from "../theme/system";
-import { Toaster } from "../toaster/toaster";
+import { system } from '../theme/system'
+import { Toaster } from '../toaster/toaster'
 
 export interface UiProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 // Chakra's dark condition matches a `.dark` ancestor, so next-themes writes the
@@ -19,5 +19,5 @@ export function UiProvider({ children }: UiProviderProps) {
         <Toaster />
       </ThemeProvider>
     </ChakraProvider>
-  );
+  )
 }

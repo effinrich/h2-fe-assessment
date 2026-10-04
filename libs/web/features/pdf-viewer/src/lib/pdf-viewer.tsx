@@ -142,11 +142,19 @@ export function PdfViewerScreen({
       <Tldraw onMount={setEditor} />
 
       {isLoading ? (
-        <Flex align="center" inset="0" justify="center" pointerEvents="none" position="absolute">
+        <Flex
+          align="center"
+          aria-label="Opening the document"
+          aria-live="polite"
+          inset="0"
+          justify="center"
+          pointerEvents="auto"
+          position="absolute"
+        >
           <Spinner data-testid="viewer-loading" size="lg" />
         </Flex>
       ) : isError ? (
-        <Flex align="center" inset="0" justify="center" pointerEvents="none" position="absolute">
+        <Flex align="center" inset="0" justify="center" pointerEvents="auto" position="absolute">
           <Box
             bg="bg.panel"
             borderColor="border"
@@ -159,10 +167,7 @@ export function PdfViewerScreen({
             role="alert"
           >
             <Heading size="lg">The document didn't open</Heading>
-            <Text marginTop="2">
-              The file may be unreadable or an unsupported PDF dialect. Try again, or open a
-              different document.
-            </Text>
+            <Text marginTop="2">The file may be unreadable or in an unsupported PDF dialect.</Text>
             <Button marginTop="6" variant="solid" w="full" onClick={onRetry}>
               Try again
             </Button>
@@ -177,6 +182,7 @@ export function PdfViewerScreen({
           justify="center"
           key={overlay.page}
           pointerEvents="none"
+          aria-label={`Page ${overlay.page} ${overlay.state === 'error' ? 'did not load' : 'is loading'}`}
           position="absolute"
           role={overlay.state === "error" ? "alert" : "status"}
           style={{ left: overlay.x, top: overlay.y, width: overlay.w, height: overlay.h }}

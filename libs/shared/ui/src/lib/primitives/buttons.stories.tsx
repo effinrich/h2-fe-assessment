@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { SunIcon } from "../color-mode-button/partials/sun-icon";
-import { ButtonGroup, CloseButton, IconButton } from "./buttons";
-import { HStack, Stack } from "./layout";
+import { SunIcon } from '../color-mode-button/partials/sun-icon'
+import { ButtonGroup, CloseButton, IconButton } from './buttons'
+import { HStack, Stack } from './layout'
 
 const meta = {
-  title: "Primitives/Buttons",
-} satisfies Meta;
+  title: 'Primitives/Buttons'
+} satisfies Meta
 
-export default meta;
-type Story = StoryObj;
+export default meta
+type Story = StoryObj
 
 export const IconButtons: Story = {
   render: () => (
@@ -25,8 +25,8 @@ export const IconButtons: Story = {
       </IconButton>
       <CloseButton aria-label="Close" />
     </HStack>
-  ),
-};
+  )
+}
 
 export const Groups: Story = {
   render: () => (
@@ -44,5 +44,5 @@ export const Groups: Story = {
         <CloseButton aria-label="Close" />
       </ButtonGroup>
     </Stack>
-  ),
-};
+  )
+}

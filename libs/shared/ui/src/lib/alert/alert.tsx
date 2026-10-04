@@ -1,14 +1,14 @@
-import { Alert as ChakraAlert } from "@chakra-ui/react";
-import type { ReactElement, ReactNode } from "react";
+import { Alert as ChakraAlert } from '@chakra-ui/react'
+import type { ReactElement, ReactNode } from 'react'
 
-export interface AlertProps extends Omit<ChakraAlert.RootProps, "title"> {
-  title: ReactNode;
+export interface AlertProps extends Omit<ChakraAlert.RootProps, 'title'> {
+  title: ReactNode
   /** Optional description under the title. */
-  children?: ReactNode;
+  children?: ReactNode
   /** Replaces the status icon. */
-  icon?: ReactElement;
+  icon?: ReactElement
   /** Rendered at the end of the alert, e.g. a dismiss or retry button. */
-  action?: ReactNode;
+  action?: ReactNode
 }
 
 export function Alert({ title, children, icon, action, ...rootProps }: AlertProps) {
@@ -21,5 +21,5 @@ export function Alert({ title, children, icon, action, ...rootProps }: AlertProp
       </ChakraAlert.Content>
       {action}
     </ChakraAlert.Root>
-  );
+  )
 }

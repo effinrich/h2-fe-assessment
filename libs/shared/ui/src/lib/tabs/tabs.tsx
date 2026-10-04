@@ -1,16 +1,16 @@
-import { Tabs as ChakraTabs } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Tabs as ChakraTabs } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 
 export interface TabsItemData {
-  value: string;
-  label: ReactNode;
-  content: ReactNode;
-  disabled?: boolean;
+  value: string
+  label: ReactNode
+  content: ReactNode
+  disabled?: boolean
 }
 
-export interface TabsProps extends Omit<ChakraTabs.RootProps, "children" | "onValueChange"> {
-  items: TabsItemData[];
-  onValueChange?: (value: string) => void;
+export interface TabsProps extends Omit<ChakraTabs.RootProps, 'children' | 'onValueChange'> {
+  items: TabsItemData[]
+  onValueChange?: (value: string) => void
 }
 
 /** Opens on the first tab unless `value` or `defaultValue` says otherwise. */
@@ -21,23 +21,23 @@ export function Tabs({ items, value, defaultValue, onValueChange, ...rootProps }
       value={value}
       defaultValue={
         value === undefined
-          ? (defaultValue ?? items.find((item) => !item.disabled)?.value)
+          ? (defaultValue ?? items.find(item => !item.disabled)?.value)
           : undefined
       }
-      onValueChange={(details) => onValueChange?.(details.value)}
+      onValueChange={details => onValueChange?.(details.value)}
     >
       <ChakraTabs.List>
-        {items.map((item) => (
+        {items.map(item => (
           <ChakraTabs.Trigger key={item.value} value={item.value} disabled={item.disabled}>
             {item.label}
           </ChakraTabs.Trigger>
         ))}
       </ChakraTabs.List>
-      {items.map((item) => (
+      {items.map(item => (
         <ChakraTabs.Content key={item.value} value={item.value}>
           {item.content}
         </ChakraTabs.Content>
       ))}
     </ChakraTabs.Root>
-  );
+  )
 }

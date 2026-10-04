@@ -44,13 +44,15 @@ export function ViewerTopBar({
       position="absolute"
       right="0"
       top="0"
-      zIndex={1}
+      zIndex={400}
     >
       <Flex
         align="center"
         bg="bg.panel"
         borderRadius="md"
         boxShadow="md"
+        color="fg"
+        flexWrap="wrap"
         gap="2"
         maxW="full"
         p="2"
@@ -83,7 +85,7 @@ export function ViewerTopBar({
                 jump()
               }}
             >
-              <input
+              <Input
                 aria-label="Page number"
                 defaultValue={page}
                 inputMode="numeric"
@@ -92,8 +94,10 @@ export function ViewerTopBar({
                 min={1}
                 onBlur={abandonJump}
                 ref={pageInput}
-                style={{ width: "3.5em", textAlign: "center" }}
+                size="sm"
+                textAlign="center"
                 type="number"
+                w="14"
               />
             </form>
             <Text fontSize="sm" whiteSpace="nowrap">
