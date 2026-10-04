@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
+
 import { fn } from "storybook/test"
 
-import { PdfViewerScreen } from "./pdf-viewer"
 import type { RenderedPdfPage } from "./types"
+
+import { PdfViewerScreen } from "./pdf-viewer"
 
 // Storybook is the test surface for screen-level compositions; these stories
 // carry the states the viewer owns.

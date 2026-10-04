@@ -1,7 +1,8 @@
-import { Portal, Tooltip as ChakraTooltip } from '@chakra-ui/react'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react"
 
-export interface TooltipProps extends Omit<ChakraTooltip.RootProps, 'children'> {
+import { Portal, Tooltip as ChakraTooltip } from "@chakra-ui/react"
+
+export interface TooltipProps extends Omit<ChakraTooltip.RootProps, "children"> {
   content: ReactNode
   /** A single focusable element; the tooltip attaches to it rather than wrapping it. */
   children: ReactElement

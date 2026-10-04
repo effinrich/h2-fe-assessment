@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 
 import type { FileToken } from "./types"
+
 import { openPdf } from "./utils"
 
 const fileTokens = new WeakMap<File, string>()

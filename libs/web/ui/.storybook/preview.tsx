@@ -1,6 +1,8 @@
-import { UiProvider } from "@h2-fe/ui"
 import type { Preview } from "@storybook/react-vite"
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
+import { UiProvider } from "@h2-fe/ui"
 
 // A stub client for every story: no story touches the network, and Chromatic
 // snapshots stay deterministic. retry:false so a deliberate error story fails

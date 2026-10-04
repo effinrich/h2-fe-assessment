@@ -1,5 +1,6 @@
-import { Accordion as ChakraAccordion, Span } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
+
+import { Accordion as ChakraAccordion, Span } from "@chakra-ui/react"
 
 export interface AccordionItemData {
   value: string
@@ -10,7 +11,7 @@ export interface AccordionItemData {
 
 export interface AccordionProps extends Omit<
   ChakraAccordion.RootProps,
-  'children' | 'onValueChange'
+  "children" | "onValueChange"
 > {
   items: AccordionItemData[]
   /** Values of the open items. */
@@ -28,9 +29,9 @@ export function Accordion({
     <ChakraAccordion.Root
       {...rootProps}
       collapsible={collapsible}
-      onValueChange={details => onValueChange?.(details.value)}
+      onValueChange={(details) => onValueChange?.(details.value)}
     >
-      {items.map(item => (
+      {items.map((item) => (
         <ChakraAccordion.Item key={item.value} value={item.value} disabled={item.disabled}>
           <ChakraAccordion.ItemTrigger>
             <Span flex="1">{item.title}</Span>

@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Field, Input, Textarea } from './forms'
-import { Stack } from './layout'
+import { Field, Input, Textarea } from "./forms"
+import { Stack } from "./layout"
 
 const meta = {
-  title: 'Primitives/Forms'
+  title: "Primitives/Forms"
 } satisfies Meta
 
 export default meta

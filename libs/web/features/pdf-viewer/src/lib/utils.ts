@@ -3,8 +3,9 @@ import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
 import { type Editor, type TLAssetId, type TLShapeId } from "tldraw"
 import { AssetRecordType } from "tldraw"
 
-import { PDF_PAGE_GAP } from "./consts"
 import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from "./types"
+
+import { PDF_PAGE_GAP } from "./consts"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Box, Button, Flex, Heading, Text } from '@h2-fe/ui'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { PdfViewerScreen, usePdfPages } from '@h2-fe/pdf-viewer'
-import type { PdfDocumentSummary } from '@h2-fe/pdf-viewer'
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
+import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
+import type { PdfDocumentSummary } from "@h2-fe/pdf-viewer"
+import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
 
 // The route that owns the document: it reads the file home handed off through
 // the navigation state, rasterises it through the lib's query hook, and
@@ -28,17 +29,17 @@ export default function PdfViewerRoute() {
 
   const onOpenAnother = useCallback(() => {
     if (hasMarks) setConfirmExit(true)
-    else navigate('/', { replace: true })
+    else navigate("/", { replace: true })
   }, [hasMarks, navigate])
 
   useEffect(() => {
     if (!hasMarks) return
     const warn = (event: BeforeUnloadEvent) => {
       event.preventDefault()
-      event.returnValue = ''
+      event.returnValue = ""
     }
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
+    window.addEventListener("beforeunload", warn)
+    return () => window.removeEventListener("beforeunload", warn)
   }, [hasMarks])
   useEffect(() => {
     activeDocument.current = document ?? null
@@ -51,7 +52,7 @@ export default function PdfViewerRoute() {
     }
   }, [document])
   useEffect(() => {
-    if (!file) navigate('/', { replace: true })
+    if (!file) navigate("/", { replace: true })
   }, [file, navigate])
 
   if (!file) return null
@@ -77,9 +78,9 @@ export default function PdfViewerRoute() {
         style={{
           border: 0,
           borderRadius: 12,
-          margin: 'auto',
+          margin: "auto",
           maxWidth: 380,
-          width: 'calc(100% - 32px)'
+          width: "calc(100% - 32px)"
         }}
       >
         <Box bg="bg.panel" color="fg" p="6">
@@ -93,7 +94,7 @@ export default function PdfViewerRoute() {
             <Button onClick={() => setConfirmExit(false)}>Keep working</Button>
             <Button
               colorPalette="red"
-              onClick={() => navigate('/', { replace: true })}
+              onClick={() => navigate("/", { replace: true })}
               variant="outline"
             >
               Discard marks

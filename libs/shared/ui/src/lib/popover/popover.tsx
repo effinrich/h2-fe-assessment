@@ -1,7 +1,8 @@
-import { Popover as ChakraPopover, Portal } from '@chakra-ui/react'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react"
 
-export interface PopoverProps extends Omit<ChakraPopover.RootProps, 'children' | 'onOpenChange'> {
+import { Popover as ChakraPopover, Portal } from "@chakra-ui/react"
+
+export interface PopoverProps extends Omit<ChakraPopover.RootProps, "children" | "onOpenChange"> {
   /** A single element that opens the popover. */
   trigger: ReactElement
   title?: ReactNode
@@ -21,7 +22,7 @@ export function Popover({
   ...rootProps
 }: PopoverProps) {
   return (
-    <ChakraPopover.Root {...rootProps} onOpenChange={details => onOpenChange?.(details.open)}>
+    <ChakraPopover.Root {...rootProps} onOpenChange={(details) => onOpenChange?.(details.open)}>
       <ChakraPopover.Trigger asChild>{trigger}</ChakraPopover.Trigger>
       <Portal>
         <ChakraPopover.Positioner>

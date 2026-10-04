@@ -1,5 +1,6 @@
-import { CloseButton, Dialog, Portal } from '@chakra-ui/react'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react"
+
+import { CloseButton, Dialog, Portal } from "@chakra-ui/react"
 
 export interface ModalProps {
   title: ReactNode
@@ -10,7 +11,7 @@ export interface ModalProps {
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
-  size?: Dialog.RootProps['size']
+  size?: Dialog.RootProps["size"]
   closeLabel?: string
 }
 
@@ -23,13 +24,13 @@ export function Modal({
   defaultOpen,
   onOpenChange,
   size,
-  closeLabel = 'Close'
+  closeLabel = "Close"
 }: ModalProps) {
   return (
     <Dialog.Root
       open={open}
       defaultOpen={defaultOpen}
-      onOpenChange={details => onOpenChange?.(details.open)}
+      onOpenChange={(details) => onOpenChange?.(details.open)}
       size={size}
       lazyMount
       unmountOnExit

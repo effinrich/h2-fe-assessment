@@ -1,7 +1,7 @@
+import type { StorybookConfig } from "@storybook/react-vite"
+
 import { dirname } from "node:path"
 import { fileURLToPath } from "node:url"
-
-import type { StorybookConfig } from "@storybook/react-vite"
 
 // The web stage: app-scoped UI under `libs/web/ui`, plus every feature
 // screen's stories, in one book. `libs/shared/ui` keeps its own stage for

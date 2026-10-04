@@ -1,5 +1,5 @@
-import { createListCollection, Portal, Select as ChakraSelect } from '@chakra-ui/react'
-import { type ReactNode, useMemo } from 'react'
+import { createListCollection, Portal, Select as ChakraSelect } from "@chakra-ui/react"
+import { type ReactNode, useMemo } from "react"
 
 export interface SelectOption {
   value: string
@@ -9,7 +9,7 @@ export interface SelectOption {
 
 export interface SelectProps extends Omit<
   ChakraSelect.RootProps<SelectOption>,
-  'collection' | 'children' | 'onValueChange'
+  "collection" | "children" | "onValueChange"
 > {
   items: SelectOption[]
   label?: ReactNode
@@ -33,7 +33,7 @@ export function Select({
       {...rootProps}
       collection={collection}
       positioning={{ sameWidth: true, ...positioning }}
-      onValueChange={details => onValueChange?.(details.value)}
+      onValueChange={(details) => onValueChange?.(details.value)}
     >
       <ChakraSelect.HiddenSelect />
       {label ? <ChakraSelect.Label>{label}</ChakraSelect.Label> : null}
@@ -48,7 +48,7 @@ export function Select({
       <Portal>
         <ChakraSelect.Positioner>
           <ChakraSelect.Content>
-            {collection.items.map(item => (
+            {collection.items.map((item) => (
               <ChakraSelect.Item key={item.value} item={item}>
                 {item.label}
                 <ChakraSelect.ItemIndicator />
