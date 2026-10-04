@@ -1,6 +1,6 @@
 import { useRef } from "react"
 
-import { Box, Button, Flex, Input, Text } from "@h2-fe/ui"
+import { Button, Field, Flex, Input, Text } from "@h2-fe/ui"
 
 interface ViewerTopBarProps {
   filename?: string
@@ -86,20 +86,23 @@ export function ViewerTopBar({
                 jump()
               }}
             >
-              <Input
-                aria-label="Page number"
-                defaultValue={page}
-                inputMode="numeric"
-                key={page}
-                max={totalPages}
-                min={1}
-                onBlur={abandonJump}
-                ref={pageInput}
-                size="sm"
-                textAlign="center"
-                type="number"
-                w="14"
-              />
+              <Field.Root>
+                <Field.Label srOnly>Page number</Field.Label>
+                <Input
+                  aria-label="Page number"
+                  defaultValue={page}
+                  inputMode="numeric"
+                  key={page}
+                  max={totalPages}
+                  min={1}
+                  onBlur={abandonJump}
+                  ref={pageInput}
+                  size="sm"
+                  textAlign="center"
+                  type="number"
+                  w="14"
+                />
+              </Field.Root>
             </form>
             <Text fontSize="sm" whiteSpace="nowrap">
               of {totalPages}
@@ -116,11 +119,9 @@ export function ViewerTopBar({
           </Flex>
         )}
       </Flex>
-      <Box marginLeft="auto" pointerEvents="auto">
-        <Button onClick={onOpenAnother} variant="outline">
-          Open another document
-        </Button>
-      </Box>
+      <Button marginLeft="auto" onClick={onOpenAnother} pointerEvents="auto" variant="outline">
+        Open another document
+      </Button>
     </Flex>
   )
 }

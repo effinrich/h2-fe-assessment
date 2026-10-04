@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react"
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
@@ -6,9 +6,6 @@ import { getCropFrameBounds } from "@h2-fe/camera"
 import { UiProvider } from "@h2-fe/ui"
 
 import PdfViewerRoute from "./pdf-viewer-route"
-
-const originalShowModal = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "showModal")
-const originalClose = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "close")
 
 const viewer = vi.hoisted(() => ({
   marks: null as null | ((value: boolean) => void),
@@ -68,11 +65,6 @@ afterEach(() => {
   viewer.marks = null
   viewer.extensions = undefined
   viewer.retainPageBounds = undefined
-  if (originalShowModal)
-    Object.defineProperty(HTMLDialogElement.prototype, "showModal", originalShowModal)
-  else delete (HTMLDialogElement.prototype as { showModal?: () => void }).showModal
-  if (originalClose) Object.defineProperty(HTMLDialogElement.prototype, "close", originalClose)
-  else delete (HTMLDialogElement.prototype as { close?: () => void }).close
   vi.restoreAllMocks()
 })
 
@@ -84,26 +76,20 @@ describe("PdfViewerRoute exit protection", () => {
     expect(screen.getByRole("heading", { name: "Home" })).toBeTruthy()
   })
 
-  it("warns on unload, lets the user cancel, then discards marks on confirmation", () => {
-    const showModal = vi.fn<(this: HTMLDialogElement) => void>(function () {
-      this.open = true
-    })
-    vi.stubGlobal("HTMLDialogElement", HTMLDialogElement)
-    HTMLDialogElement.prototype.showModal = showModal
-    HTMLDialogElement.prototype.close = vi.fn<(this: HTMLDialogElement) => void>(function () {
-      this.open = false
-    })
+  it("warns on unload, lets the user cancel, then discards marks on confirmation", async () => {
     renderRoute()
     act(() => viewer.marks?.(true))
     const unload = new Event("beforeunload", { cancelable: true })
     window.dispatchEvent(unload)
     expect(unload.defaultPrevented).toBe(true)
     fireEvent.click(screen.getByRole("button", { name: "Open another document" }))
-    expect(showModal).toHaveBeenCalled()
+    expect(await screen.findByRole("dialog", { name: "Leave this document?" })).toBeTruthy()
     expect(screen.getByText("Your marks aren't saved and will be lost.")).toBeTruthy()
     fireEvent.click(screen.getByRole("button", { name: "Keep working" }))
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull())
     expect(screen.getByText("sample.pdf")).toBeTruthy()
     fireEvent.click(screen.getByRole("button", { name: "Open another document" }))
+    await screen.findByRole("dialog", { name: "Leave this document?" })
     fireEvent.click(screen.getByRole("button", { name: "Discard marks" }))
     expect(screen.getByRole("heading", { name: "Home" })).toBeTruthy()
     const afterExit = new Event("beforeunload", { cancelable: true })

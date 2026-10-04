@@ -5,7 +5,7 @@ import { createCameraExtension, getCropFrameBounds } from "@h2-fe/camera"
 import { isPdfPageShape, PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
 import type { CanvasExtension, PdfDocumentSummary } from "@h2-fe/pdf-viewer"
 import { createPinExtension } from "@h2-fe/pin"
-import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
+import { Button, Flex, Modal, Text } from "@h2-fe/ui"
 
 const pinExtension = createPinExtension({ canAttach: (shape) => !isPdfPageShape(shape) })
 
@@ -22,19 +22,11 @@ export default function PdfViewerRoute() {
   const activeDocument = useRef<PdfDocumentSummary | null>(null)
   const [hasMarks, setHasMarks] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
-  const confirmDialog = useRef<HTMLDialogElement>(null)
   const documentName = file?.name
   const extensions = useMemo<readonly CanvasExtension[]>(
     () => [pinExtension, createCameraExtension({ documentName })],
     [documentName]
   )
-
-  useEffect(() => {
-    const dialog = confirmDialog.current
-    if (!dialog) return
-    if (confirmExit && !dialog.open) dialog.showModal()
-    if (!confirmExit && dialog.open) dialog.close()
-  }, [confirmExit])
 
   const onOpenAnother = useCallback(() => {
     if (hasMarks) setConfirmExit(true)
@@ -81,27 +73,9 @@ export default function PdfViewerRoute() {
         extensions={extensions}
         retainPageBounds={getCropFrameBounds}
       />
-      <dialog
-        aria-describedby="discard-body"
-        aria-labelledby="discard-title"
-        onCancel={() => setConfirmExit(false)}
-        ref={confirmDialog}
-        style={{
-          border: 0,
-          borderRadius: 12,
-          margin: "auto",
-          maxWidth: 380,
-          width: "calc(100% - 32px)"
-        }}
-      >
-        <Box bg="bg.panel" color="fg" p="6">
-          <Heading id="discard-title" size="md">
-            Leave this document?
-          </Heading>
-          <Text id="discard-body" mt="2">
-            Your marks aren't saved and will be lost.
-          </Text>
-          <Flex gap="3" mt="6">
+      <Modal
+        footer={
+          <Flex gap="3">
             <Button onClick={() => setConfirmExit(false)}>Keep working</Button>
             <Button
               colorPalette="red"
@@ -111,8 +85,13 @@ export default function PdfViewerRoute() {
               Discard marks
             </Button>
           </Flex>
-        </Box>
-      </dialog>
+        }
+        onOpenChange={setConfirmExit}
+        open={confirmExit}
+        title="Leave this document?"
+      >
+        <Text>Your marks aren't saved and will be lost.</Text>
+      </Modal>
     </>
   )
 }

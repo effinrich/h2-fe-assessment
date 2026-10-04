@@ -2,12 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } fr
 import { react, Tldraw, unsafe__withoutCapture, type BoxModel, type Editor } from "tldraw"
 import "tldraw/tldraw.css"
 
-import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
+import { Button, Heading, Spinner, Stack, Text } from "@h2-fe/ui"
 import { ViewerTopBar } from "@h2-fe/web-ui"
 
 import type { CanvasExtension, PageOverlay, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
 import { createCanvasComponents } from "./partials/canvas-components"
+import { PageOverlayCard, ViewerCover, ViewerPanel, ViewerRoot } from "./partials/viewer-chrome"
 import {
   activePageNumber,
   hasUserMarks,
@@ -21,7 +22,6 @@ import {
   visiblePageNumbers
 } from "./utils"
 
-const viewerStyle = { position: "absolute", inset: 0 } as const
 const NO_EXTENSIONS: readonly CanvasExtension[] = []
 const NO_BOXES: readonly BoxModel[] = []
 
@@ -199,7 +199,7 @@ export function PdfViewerScreen({
   }, [])
 
   return (
-    <div style={viewerStyle}>
+    <ViewerRoot>
       <Tldraw
         bindingUtils={merged.bindingUtils}
         components={components}
@@ -211,62 +211,48 @@ export function PdfViewerScreen({
       />
 
       {isLoading ? (
-        <Flex
-          align="center"
-          aria-label="Opening the document"
-          as="output"
-          inset="0"
-          justify="center"
-          pointerEvents="auto"
-          position="absolute"
-        >
+        <ViewerCover aria-label="Opening the document" as="output">
           <Spinner data-testid="viewer-loading" size="lg" />
-        </Flex>
+        </ViewerCover>
       ) : isError ? (
-        <Flex align="center" inset="0" justify="center" pointerEvents="auto" position="absolute">
-          <Box
-            bg="bg.panel"
-            borderColor="border"
-            borderRadius="lg"
-            borderWidth="1px"
-            boxShadow="lg"
-            color="fg"
-            p="8"
-            pointerEvents="auto"
-            role="alert"
-          >
-            <Heading size="lg">The document didn't open</Heading>
-            <Text marginTop="2">The file may be unreadable or in an unsupported PDF dialect.</Text>
-            <Button marginTop="6" variant="solid" w="full" onClick={onRetry}>
-              Try again
-            </Button>
-          </Box>
-        </Flex>
+        <ViewerCover>
+          <ViewerPanel role="alert">
+            <Stack gap="6">
+              <Stack gap="2">
+                <Heading size="lg">The document didn't open</Heading>
+                <Text>The file may be unreadable or in an unsupported PDF dialect.</Text>
+              </Stack>
+              <Button variant="solid" w="full" onClick={onRetry}>
+                Try again
+              </Button>
+            </Stack>
+          </ViewerPanel>
+        </ViewerCover>
       ) : null}
 
       {overlays.map((overlay) => (
-        <Flex
-          align="center"
-          bg="bg.panel"
-          justify="center"
-          key={overlay.page}
-          pointerEvents="none"
+        <PageOverlayCard
           aria-label={`Page ${overlay.page} ${overlay.state === "error" ? "did not load" : "is loading"}`}
-          position="absolute"
+          css={{
+            left: `${overlay.style.left}px`,
+            top: `${overlay.style.top}px`,
+            width: `${overlay.style.width}px`,
+            height: `${overlay.style.height}px`
+          }}
+          key={overlay.page}
           role={overlay.state === "error" ? "alert" : "status"}
-          style={overlay.style}
         >
           {overlay.state === "loading" ? (
             <Spinner aria-label={`Loading page ${overlay.page}`} />
           ) : (
-            <Box pointerEvents="auto" textAlign="center">
+            <Stack gap="2" pointerEvents="auto" textAlign="center">
               <Text>Page {overlay.page} couldn't load.</Text>
               <Button data-page={overlay.page} onClick={handleRetryPage} size="sm">
                 Retry page {overlay.page}
               </Button>
-            </Box>
+            </Stack>
           )}
-        </Flex>
+        </PageOverlayCard>
       ))}
 
       <ViewerTopBar
@@ -276,6 +262,6 @@ export function PdfViewerScreen({
         page={page}
         totalPages={document?.pages.length ?? 0}
       />
-    </div>
+    </ViewerRoot>
   )
 }

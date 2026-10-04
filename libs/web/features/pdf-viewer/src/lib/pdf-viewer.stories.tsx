@@ -68,7 +68,12 @@ export const Loading: Story = {
 }
 
 export const Error: Story = {
-  args: { isError: true, onRetry: fn(), onOpenAnother: fn() }
+  args: { isError: true, onRetry: fn(), onOpenAnother: fn() },
+  play: async ({ args, canvas, userEvent }) => {
+    await expect(canvas.getByRole("alert")).toBeInTheDocument()
+    await userEvent.click(canvas.getByRole("button", { name: "Try again" }))
+    await expect(args.onRetry).toHaveBeenCalled()
+  }
 }
 
 export const Ready: Story = {
