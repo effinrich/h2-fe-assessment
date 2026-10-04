@@ -1,30 +1,22 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type MouseEvent
-} from "react"
-import { Tldraw, type Editor } from "tldraw"
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
+import { react, Tldraw, unsafe__withoutCapture, type Editor } from "tldraw"
 import "tldraw/tldraw.css"
 
 import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
 import { ViewerTopBar } from "@h2-fe/web-ui"
 
-import type { PdfViewerScreenProps, RenderedPdfPage } from "./types"
+import type { PageOverlay, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
 import {
   activePageNumber,
   hasUserMarks,
   pageBounds,
   placePagesOnCanvas,
+  sameOverlays,
+  samePageNumbers,
   syncVisiblePages,
   visiblePageNumbers
 } from "./utils"
-
-type PageState = "loading" | "error"
-type PageOverlay = { page: number; state: PageState; style: CSSProperties }
 
 const viewerStyle = { position: "absolute", inset: 0 } as const
 
@@ -62,90 +54,102 @@ export function PdfViewerScreen({
     const renderedPages = new Map<number, RenderedPdfPage>()
     const renderingPages = new Set<number>()
     const failedPages = new Set<number>()
-    let updating = false
+    // What React and the store were last told; an update that would repeat
+    // either is skipped, so panning within the same pages costs no commit.
+    let visible: number[] = []
+    let shownPage: number | undefined
+    let shownOverlays: PageOverlay[] | undefined
 
-    const updateVisiblePages = () => {
-      if (!active || updating) return
-      updating = true
-      try {
-        const bounds = editor.getViewportPageBounds()
-        const visible = visiblePageNumbers(document.pages, bounds)
-        const visibleSet = new Set(visible)
-        for (const pageNumber of renderedPages.keys()) {
-          if (!visibleSet.has(pageNumber)) renderedPages.delete(pageNumber)
-        }
-
-        syncVisiblePages(editor, document.pages, visible, [])
-        const nextPage = activePageNumber(document.pages, bounds)
-        setPage((previous) => (previous === nextPage ? previous : nextPage))
-        for (const pageNumber of visible) {
-          if (
-            renderedPages.has(pageNumber) ||
-            renderingPages.has(pageNumber) ||
-            failedPages.has(pageNumber)
-          )
-            continue
-          renderingPages.add(pageNumber)
-          void document
-            .renderPages([pageNumber])
-            .then((pages) => {
-              if (!active) return
-              const currentVisible = visiblePageNumbers(
-                document.pages,
-                editor.getViewportPageBounds()
-              )
-              const rendered = pages.filter((renderedPage) =>
-                currentVisible.includes(renderedPage.pageNumber)
-              )
-              for (const renderedPage of rendered) {
-                renderedPages.set(renderedPage.pageNumber, renderedPage)
-              }
-              syncVisiblePages(editor, document.pages, currentVisible, rendered)
-            })
-            .catch(() => {
-              if (!active) return
-              failedPages.add(pageNumber)
-            })
-            .finally(() => {
-              renderingPages.delete(pageNumber)
-              if (active) updateVisiblePages()
-            })
-        }
-        setOverlays(
-          visible.flatMap((pageNumber) => {
-            if (!renderingPages.has(pageNumber) && !failedPages.has(pageNumber)) return []
-            const pageBox = pageBounds(document.pages, pageNumber)
-            if (!pageBox) return []
-            const topLeft = editor.pageToViewport({ x: pageBox.x, y: pageBox.y })
-            return [
-              {
-                page: pageNumber,
-                state: failedPages.has(pageNumber) ? ("error" as const) : ("loading" as const),
-                style: {
-                  left: topLeft.x,
-                  top: topLeft.y,
-                  width: pageBox.w * editor.getZoomLevel(),
-                  height: pageBox.h * editor.getZoomLevel()
-                }
-              }
-            ]
-          })
+    const requestRasters = () => {
+      for (const pageNumber of visible) {
+        if (
+          renderedPages.has(pageNumber) ||
+          renderingPages.has(pageNumber) ||
+          failedPages.has(pageNumber)
         )
-      } finally {
-        updating = false
+          continue
+        renderingPages.add(pageNumber)
+        void document
+          .renderPages([pageNumber])
+          .then((pages) => {
+            if (!active) return
+            const rendered = pages.filter((renderedPage) =>
+              visible.includes(renderedPage.pageNumber)
+            )
+            for (const renderedPage of rendered) {
+              renderedPages.set(renderedPage.pageNumber, renderedPage)
+            }
+            syncVisiblePages(editor, document.pages, visible, rendered)
+          })
+          .catch(() => {
+            if (!active) return
+            failedPages.add(pageNumber)
+          })
+          .finally(() => {
+            renderingPages.delete(pageNumber)
+            if (active) update(editor.getViewportPageBounds())
+          })
+      }
+    }
+
+    const update = (bounds: { x: number; y: number; w: number; h: number }) => {
+      if (!active) return
+      const nextVisible = visiblePageNumbers(document.pages, bounds)
+      if (!samePageNumbers(nextVisible, visible)) {
+        visible = nextVisible
+        for (const pageNumber of renderedPages.keys()) {
+          if (!visible.includes(pageNumber)) renderedPages.delete(pageNumber)
+        }
+        syncVisiblePages(editor, document.pages, visible, [])
+      }
+
+      const nextPage = activePageNumber(document.pages, bounds)
+      if (nextPage !== shownPage) {
+        shownPage = nextPage
+        setPage(nextPage)
+      }
+
+      requestRasters()
+
+      const zoom = editor.getZoomLevel()
+      const nextOverlays = visible.flatMap((pageNumber): PageOverlay[] => {
+        if (!renderingPages.has(pageNumber) && !failedPages.has(pageNumber)) return []
+        const pageBox = pageBounds(document.pages, pageNumber)
+        if (!pageBox) return []
+        const topLeft = editor.pageToViewport({ x: pageBox.x, y: pageBox.y })
+        return [
+          {
+            page: pageNumber,
+            state: failedPages.has(pageNumber) ? "error" : "loading",
+            style: {
+              left: topLeft.x,
+              top: topLeft.y,
+              width: pageBox.w * zoom,
+              height: pageBox.h * zoom
+            }
+          }
+        ]
+      })
+      if (!shownOverlays || !sameOverlays(nextOverlays, shownOverlays)) {
+        shownOverlays = nextOverlays
+        setOverlays(nextOverlays)
       }
     }
 
     retryPage.current = (pageNumber) => {
       failedPages.delete(pageNumber)
-      updateVisiblePages()
+      update(editor.getViewportPageBounds())
     }
-    const stopListening = editor.store.listen(updateVisiblePages, { scope: "session" })
-    queueMicrotask(updateVisiblePages)
+    // Tracks only the viewport (camera + screen bounds), never the pointer.
+    // Store reads made while syncing pages must not become dependencies.
+    const stopReacting = react("pdf-viewer visible pages", () => {
+      const bounds = editor.getViewportPageBounds()
+      unsafe__withoutCapture(() => update(bounds))
+    })
     return () => {
       active = false
       retryPage.current = () => {}
-      stopListening()
+      stopReacting()
       syncVisiblePages(editor, document.pages, [], [])
       renderedPages.clear()
     }

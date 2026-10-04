@@ -1,6 +1,9 @@
+import type * as TldrawModule from "tldraw"
+
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import * as pdfjs from "pdfjs-dist"
-import { useEffect } from "react"
+import { Profiler, useEffect } from "react"
+import { atom } from "tldraw"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { UiProvider } from "@h2-fe/ui"
@@ -22,19 +25,29 @@ import {
 
 // jsdom cannot rasterise real PDFs, so PDF.js and tldraw are stubbed. These
 // tests cover the screen states, file identity, viewport selection, cleanup,
-// and canvas placement.
-vi.mock("tldraw", () => ({
-  AssetRecordType: { create: (input: Record<string, unknown>) => input },
-  Tldraw: ({ onMount }: { onMount?: (editor: object) => void }) => {
-    useEffect(() => {
-      if (onMount && mountedEditor) onMount(mountedEditor)
-    }, [onMount])
-    return <div data-testid="tldraw" />
+// and canvas placement. tldraw's signals stay real so reactive viewport code
+// is exercised as it runs in the app.
+vi.mock("tldraw", async () => {
+  const {
+    atom: realAtom,
+    react,
+    unsafe__withoutCapture
+  } = await vi.importActual<typeof TldrawModule>("tldraw")
+  return {
+    atom: realAtom,
+    react,
+    unsafe__withoutCapture,
+    AssetRecordType: { create: (input: Record<string, unknown>) => input },
+    Tldraw: ({ onMount }: { onMount?: (editor: object) => void }) => {
+      useEffect(() => {
+        if (onMount && mountedEditor) onMount(mountedEditor)
+      }, [onMount])
+      return <div data-testid="tldraw" />
+    }
   }
-}))
+})
 
 let mountedEditor: object | null = null
-let notifyViewportChange = () => {}
 let finish: (pages: RenderedPdfPage[]) => void = () => {}
 
 vi.mock("pdfjs-dist", () => ({
@@ -74,17 +87,18 @@ function createEditorStub() {
   }
 }
 
-function renderScreen(props: PdfViewerScreenProps) {
+function renderScreen(props: PdfViewerScreenProps, onRender: () => void = () => {}) {
   return render(
     <UiProvider>
-      <PdfViewerScreen {...props} />
+      <Profiler id="pdf-viewer" onRender={onRender}>
+        <PdfViewerScreen {...props} />
+      </Profiler>
     </UiProvider>
   )
 }
 
 afterEach(() => {
   mountedEditor = null
-  notifyViewportChange = () => {}
   vi.restoreAllMocks()
   vi.clearAllMocks()
   vi.mocked(pdfjs.getDocument).mockReset()
@@ -111,23 +125,17 @@ describe("PdfViewerScreen", () => {
 
   it("tracks page position, jumps without rasterising all pages, and preserves marks", async () => {
     const stub = createEditorStub()
-    let bounds = { x: 0, y: 0, w: 100, h: 140 }
+    const viewport = atom("viewport", { x: 0, y: 0, w: 100, h: 140 })
     const editor = {
       ...stub,
-      getViewportPageBounds: () => bounds,
+      getViewportPageBounds: () => viewport.get(),
       getZoomLevel: () => 1,
       pageToViewport: (point: { x: number; y: number }) => point,
       getCurrentPageShapes: () => [{ id: "shape:page-1" }, { id: "shape:mark-1" }],
       centerOnPoint: (point: { x: number; y: number }) => {
-        bounds = { ...bounds, y: point.y - 70 }
-        notifyViewportChange()
+        viewport.set({ ...viewport.get(), y: point.y - 70 })
       },
-      store: {
-        listen: (callback: () => void) => {
-          notifyViewportChange = callback
-          return () => {}
-        }
-      }
+      store: { listen: () => () => {} }
     }
     mountedEditor = editor
     const onMarksChange = vi.fn<(hasMarks: boolean) => void>()
@@ -210,6 +218,65 @@ describe("PdfViewerScreen", () => {
     await waitFor(() => expect(renderPages).toHaveBeenCalledTimes(2))
     act(notify)
     await waitFor(() => expect(screen.queryByRole("button", { name: "Retry page 1" })).toBeNull())
+  })
+
+  it("does not re-render or touch the store when the viewport moves within the same pages", async () => {
+    const stub = createEditorStub()
+    const viewport = atom("viewport", { x: 0, y: 0, w: 100, h: 140 })
+    // tldraw's camera and pointer records are both session-scoped, so a
+    // session listener hears every pointer move as well as every pan.
+    const sessionListeners = new Set<() => void>()
+    const emitSessionChange = () => sessionListeners.forEach((listener) => listener())
+    const moveCamera = (next: { x: number; y: number; w: number; h: number }) => {
+      viewport.set(next)
+      emitSessionChange()
+    }
+    mountedEditor = {
+      ...stub,
+      getViewportPageBounds: () => viewport.get(),
+      getZoomLevel: () => 1,
+      pageToViewport: (point: { x: number; y: number }) => point,
+      store: {
+        listen: (callback: () => void, filters?: { scope?: string }) => {
+          if (filters?.scope !== "session") return () => {}
+          sessionListeners.add(callback)
+          return () => sessionListeners.delete(callback)
+        }
+      }
+    }
+    const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async (numbers) =>
+      numbers.map((number) => (number === 1 ? page : page2))
+    )
+    const onRender = vi.fn<() => void>()
+    renderScreen(
+      {
+        document: { pages: [page, page2], renderPages, destroy: async () => {} },
+        onOpenAnother: vi.fn<() => void>()
+      },
+      onRender
+    )
+    await waitFor(() => expect(renderPages).toHaveBeenCalledWith([1]))
+    await waitFor(() => expect(screen.queryByLabelText("Loading page 1")).toBeNull())
+
+    const commits = onRender.mock.calls.length
+    const transactions = stub.run.mock.calls.length
+    await act(async () => {
+      emitSessionChange()
+      emitSessionChange()
+      moveCamera({ x: 5, y: 10, w: 100, h: 120 })
+      emitSessionChange()
+    })
+
+    expect(onRender).toHaveBeenCalledTimes(commits)
+    expect(stub.run).toHaveBeenCalledTimes(transactions)
+    expect(renderPages).toHaveBeenCalledTimes(1)
+
+    await act(async () => {
+      moveCamera({ x: 0, y: page.height + PDF_PAGE_GAP, w: 100, h: 140 })
+    })
+    await waitFor(() => expect(renderPages).toHaveBeenCalledWith([2]))
+    expect(stub.run.mock.calls.length).toBeGreaterThan(transactions)
+    expect(screen.getByRole("spinbutton", { name: "Page number" }).getAttribute("value")).toBe("2")
   })
 
   it("offers Open another document when a document is on the canvas", () => {

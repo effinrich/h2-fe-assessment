@@ -3,7 +3,7 @@ import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
 import { type Editor, type TLAssetId, type TLShapeId } from "tldraw"
 import { AssetRecordType } from "tldraw"
 
-import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from "./types"
+import type { PageOverlay, PdfDocumentSummary, PdfPage, RenderedPdfPage } from "./types"
 
 import { PDF_PAGE_GAP } from "./consts"
 
@@ -129,6 +129,27 @@ export function visiblePageNumbers(
   }
 
   return visible
+}
+
+export function samePageNumbers(a: readonly number[], b: readonly number[]): boolean {
+  return a.length === b.length && a.every((pageNumber, index) => pageNumber === b[index])
+}
+
+export function sameOverlays(a: readonly PageOverlay[], b: readonly PageOverlay[]): boolean {
+  return (
+    a.length === b.length &&
+    a.every((overlay, index) => {
+      const other = b[index]
+      return (
+        overlay.page === other.page &&
+        overlay.state === other.state &&
+        overlay.style.left === other.style.left &&
+        overlay.style.top === other.style.top &&
+        overlay.style.width === other.style.width &&
+        overlay.style.height === other.style.height
+      )
+    })
+  )
 }
 
 export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {

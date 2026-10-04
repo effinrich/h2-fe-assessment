@@ -16,6 +16,12 @@ export interface PdfDocumentSummary {
 
 export type FileToken = string
 
+export interface PageOverlay {
+  page: number
+  state: "loading" | "error"
+  style: { left: number; top: number; width: number; height: number }
+}
+
 export interface PdfViewerScreenProps {
   filename?: string
   onMarksChange?: (hasMarks: boolean) => void
