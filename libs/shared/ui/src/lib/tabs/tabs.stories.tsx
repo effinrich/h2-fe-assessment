@@ -23,7 +23,9 @@ export const Default: Story = {
   play: async ({ args, canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("tab", { name: "Pins" }));
     await expect(args.onValueChange).toHaveBeenCalledWith("pins");
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Pins attached to shapes.");
+    await expect(canvas.getByRole("tabpanel", { name: "Pins" })).toHaveTextContent(
+      "Pins attached to shapes.",
+    );
   },
 };
 
