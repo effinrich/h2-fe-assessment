@@ -23,7 +23,7 @@
     "build-storybook:web": "nx run @h2-fe/web-ui:build-storybook",
     "storybook-web": "bun run storybook:web",
     "build-storybook-web": "bun run build-storybook:web",
-    "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook"
+    "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook,test-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
@@ -48,6 +48,7 @@
     "@nx/workspace": "23.2.1",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-vitest": "10.6.1",
     "@storybook/react-vite": "10.6.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.3.0",
@@ -55,12 +56,14 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
+    "@vitest/browser-playwright": "~4.1.0",
     "@vitest/coverage-v8": "~4.1.0",
     "jsdom": "~22.1.0",
     "nx": "23.2.1",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.75.0",
     "oxlint-tsgolint": "^7.0.2003",
+    "playwright": "^1.63.0",
     "storybook": "10.6.1",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",

@@ -13,7 +13,19 @@
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/tsconfig.storybook.json"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [],
+    "storybookTestRunner": [
+      {
+        "externalDependencies": [
+          "vitest",
+          "@vitest/browser-playwright",
+          "@vitest/coverage-v8",
+          "playwright",
+          "storybook",
+          "@storybook/addon-vitest"
+        ]
+      }
+    ]
   },
   "plugins": [
     {
@@ -101,6 +113,16 @@
         "cwd": "{projectRoot}"
       },
       "cache": false
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --config vitest.storybook.config.mts --coverage",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "^production", "storybookTestRunner"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
     }
   },
   "generators": {

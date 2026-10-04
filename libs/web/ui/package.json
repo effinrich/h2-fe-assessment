@@ -35,6 +35,14 @@
       },
       "format": {},
       "format:fix": {},
+      "test-storybook": {
+        "inputs": [
+          "default",
+          "^production",
+          "storybookTestRunner",
+          "{workspaceRoot}/libs/web/features/*/src/**/*"
+        ]
+      },
       "build-storybook": {
         "inputs": [
           "production",

@@ -14,7 +14,8 @@ const config: StorybookConfig = {
   addons: [
     getAbsolutePath("@storybook/addon-a11y"),
     getAbsolutePath("@storybook/addon-docs"),
-    getAbsolutePath("@chromatic-com/storybook")
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-vitest")
   ],
   framework: {
     name: "@storybook/react-vite",

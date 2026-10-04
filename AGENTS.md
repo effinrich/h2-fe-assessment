@@ -37,7 +37,15 @@ made during this project's setup.
   in the root `.oxlintrc.json` enforces them. An illegal import fails lint
   before tests run.
 - `nx affected` over `--all` on any branch. `bun run gate` =
-  `nx affected -t lint,format,typecheck,test,build,build-storybook`.
+  `nx affected -t lint,format,typecheck,test,build,build-storybook,test-storybook`.
+- **`test-storybook`** runs every story (render, play function, axe a11y at
+  `"error"`) in headless Chromium via `@storybook/addon-vitest`, with v8
+  coverage to `coverage/<projectRoot>`. Each Storybook project has a
+  `vitest.storybook.config.mts`: the name sits outside the inferred-`test`
+  glob, so `test` stays the jsdom run. The target lives in nx.json
+  `targetDefaults`; a project opts in with `"test-storybook": {}`. Feature
+  stories run in the `@h2-fe/web-ui` stage. Locally, run
+  `bunx playwright install chromium` once.
 - **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
   inferred target (`args: ["--type-aware"]` in `project.json`); never write
   `@nx/oxlint:lint`. Two plugins must not claim the same target name.
