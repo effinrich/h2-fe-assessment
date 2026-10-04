@@ -1,6 +1,6 @@
 import * as pdfjs from "pdfjs-dist"
 import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
-import { type Editor, type TLAssetId, type TLShapeId } from "tldraw"
+import { type BoxModel, type Editor, type TLAssetId, type TLShapeId } from "tldraw"
 import { AssetRecordType } from "tldraw"
 
 import type {
@@ -160,6 +160,19 @@ export function visiblePageNumbers(
   }
 
   return visible
+}
+
+export function keptPageNumbers(
+  pages: PdfPage[],
+  viewport: BoxModel,
+  retained: readonly BoxModel[]
+): number[] {
+  if (retained.length === 0) return visiblePageNumbers(pages, viewport)
+  const kept = new Set(visiblePageNumbers(pages, viewport))
+  for (const box of retained) {
+    for (const pageNumber of visiblePageNumbers(pages, box)) kept.add(pageNumber)
+  }
+  return pages.map((page) => page.pageNumber).filter((pageNumber) => kept.has(pageNumber))
 }
 
 export function samePageNumbers(a: readonly number[], b: readonly number[]): boolean {

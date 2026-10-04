@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
+import { getCropFrameBounds } from "@h2-fe/camera"
 import { UiProvider } from "@h2-fe/ui"
 
 import PdfViewerRoute from "./pdf-viewer-route"
@@ -11,7 +12,8 @@ const originalClose = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototyp
 
 const viewer = vi.hoisted(() => ({
   marks: null as null | ((value: boolean) => void),
-  extensions: undefined as readonly object[] | undefined
+  extensions: undefined as readonly object[] | undefined,
+  retainPageBounds: undefined as unknown
 }))
 
 vi.mock("@h2-fe/pdf-viewer", () => ({
@@ -26,15 +28,18 @@ vi.mock("@h2-fe/pdf-viewer", () => ({
     filename,
     onMarksChange,
     onOpenAnother,
-    extensions
+    extensions,
+    retainPageBounds
   }: {
     filename: string
     onMarksChange: (value: boolean) => void
     onOpenAnother: () => void
     extensions?: readonly object[]
+    retainPageBounds?: unknown
   }) => {
     viewer.marks = onMarksChange
     viewer.extensions = extensions
+    viewer.retainPageBounds = retainPageBounds
     return (
       <>
         <span>{filename}</span>
@@ -62,6 +67,7 @@ function renderRoute() {
 afterEach(() => {
   viewer.marks = null
   viewer.extensions = undefined
+  viewer.retainPageBounds = undefined
   if (originalShowModal)
     Object.defineProperty(HTMLDialogElement.prototype, "showModal", originalShowModal)
   else delete (HTMLDialogElement.prototype as { showModal?: () => void }).showModal
@@ -115,5 +121,10 @@ describe("PdfViewerRoute canvas extensions", () => {
     act(() => viewer.marks?.(true))
 
     expect(viewer.extensions).toBe(first)
+  })
+
+  it("keeps pages under crop frames on the canvas", () => {
+    renderRoute()
+    expect(viewer.retainPageBounds).toBe(getCropFrameBounds)
   })
 })

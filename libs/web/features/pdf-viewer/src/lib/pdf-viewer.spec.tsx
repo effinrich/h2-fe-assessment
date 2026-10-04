@@ -285,6 +285,66 @@ describe("PdfViewerScreen", () => {
     expect(screen.getByRole("spinbutton", { name: "Page number" }).getAttribute("value")).toBe("2")
   })
 
+  it("keeps pages under a retained box after they leave the viewport, until the box goes", async () => {
+    const stub = createEditorStub()
+    const viewport = atom("viewport", { x: 0, y: 0, w: 100, h: 140 })
+    const retained = atom<{ x: number; y: number; w: number; h: number }[]>("retained", [])
+    mountedEditor = {
+      ...stub,
+      getViewportPageBounds: () => viewport.get(),
+      getZoomLevel: () => 1,
+      pageToViewport: (point: { x: number; y: number }) => point,
+      store: { listen: () => () => {} }
+    }
+    const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async (numbers) =>
+      numbers.map((number) => (number === 1 ? page : page2))
+    )
+    renderScreen({
+      document: { pages: [page, page2], renderPages, destroy: async () => {} },
+      retainPageBounds: () => retained.get(),
+      onOpenAnother: vi.fn<() => void>()
+    })
+    await waitFor(() => expect(renderPages).toHaveBeenCalledWith([1]))
+
+    await act(async () => {
+      retained.set([{ x: 10, y: 10, w: 50, h: 50 }])
+      viewport.set({ x: 0, y: page.height + PDF_PAGE_GAP, w: 100, h: 140 })
+    })
+    await waitFor(() => expect(renderPages).toHaveBeenCalledWith([2]))
+    expect(stub.getShape("shape:page-1")).toBeDefined()
+    expect(stub.getShape("shape:page-2")).toBeDefined()
+    expect(screen.getByRole("spinbutton", { name: "Page number" }).getAttribute("value")).toBe("2")
+
+    await act(async () => {
+      retained.set([])
+    })
+    expect(stub.getShape("shape:page-1")).toBeUndefined()
+    expect(stub.getShape("shape:page-2")).toBeDefined()
+  })
+
+  it("rasterises a retained page that is outside the viewport", async () => {
+    const stub = createEditorStub()
+    mountedEditor = {
+      ...stub,
+      getViewportPageBounds: () => ({ x: 0, y: 0, w: 100, h: 140 }),
+      getZoomLevel: () => 1,
+      pageToViewport: (point: { x: number; y: number }) => point,
+      store: { listen: () => () => {} }
+    }
+    const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async (numbers) =>
+      numbers.map((number) => (number === 1 ? page : page2))
+    )
+    renderScreen({
+      document: { pages: [page, page2], renderPages, destroy: async () => {} },
+      retainPageBounds: () => [{ x: 10, y: page.height + PDF_PAGE_GAP + 10, w: 50, h: 50 }],
+      onOpenAnother: vi.fn<() => void>()
+    })
+
+    await waitFor(() => expect(renderPages).toHaveBeenCalledWith([2]))
+    expect(stub.getShape("shape:page-2")).toBeDefined()
+    expect(screen.getByRole("spinbutton", { name: "Page number" }).getAttribute("value")).toBe("1")
+  })
+
   it("offers Open another document when a document is on the canvas", () => {
     const onOpenAnother = vi.fn<() => void>()
     renderScreen({ document: exampleDocument, onOpenAnother })

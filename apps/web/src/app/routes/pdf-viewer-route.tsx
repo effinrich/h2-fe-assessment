@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { createCameraExtension } from "@h2-fe/camera"
+import { createCameraExtension, getCropFrameBounds } from "@h2-fe/camera"
 import { isPdfPageShape, PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
 import type { CanvasExtension, PdfDocumentSummary } from "@h2-fe/pdf-viewer"
 import { createPinExtension } from "@h2-fe/pin"
@@ -79,6 +79,7 @@ export default function PdfViewerRoute() {
         }}
         document={document}
         extensions={extensions}
+        retainPageBounds={getCropFrameBounds}
       />
       <dialog
         aria-describedby="discard-body"

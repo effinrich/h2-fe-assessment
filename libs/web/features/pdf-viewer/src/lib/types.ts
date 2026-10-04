@@ -1,5 +1,7 @@
 import type { ComponentType } from "react"
 import type {
+  BoxModel,
+  Editor,
   TLAnyBindingUtilConstructor,
   TLAnyOverlayUtilConstructor,
   TLAnyShapeUtilConstructor,
@@ -68,4 +70,9 @@ export interface PdfViewerScreenProps {
   onRetry?: () => void
   onOpenAnother: () => void
   extensions?: readonly CanvasExtension[]
+  /**
+   * Page-space boxes whose pages stay on the canvas even when off-screen.
+   * Read reactively: store reads made here re-run page virtualisation.
+   */
+  retainPageBounds?: (editor: Editor) => readonly BoxModel[]
 }

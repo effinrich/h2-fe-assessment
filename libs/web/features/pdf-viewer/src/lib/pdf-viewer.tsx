@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react"
-import { react, Tldraw, unsafe__withoutCapture, type Editor } from "tldraw"
+import { react, Tldraw, unsafe__withoutCapture, type BoxModel, type Editor } from "tldraw"
 import "tldraw/tldraw.css"
 
 import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
@@ -11,6 +11,7 @@ import { createCanvasComponents } from "./partials/canvas-components"
 import {
   activePageNumber,
   hasUserMarks,
+  keptPageNumbers,
   mergeCanvasExtensions,
   pageBounds,
   placePagesOnCanvas,
@@ -22,6 +23,7 @@ import {
 
 const viewerStyle = { position: "absolute", inset: 0 } as const
 const NO_EXTENSIONS: readonly CanvasExtension[] = []
+const NO_BOXES: readonly BoxModel[] = []
 
 export function PdfViewerScreen({
   filename,
@@ -31,9 +33,14 @@ export function PdfViewerScreen({
   isError,
   onRetry,
   onOpenAnother,
-  extensions = NO_EXTENSIONS
+  extensions = NO_EXTENSIONS,
+  retainPageBounds
 }: PdfViewerScreenProps) {
   const [editor, setEditor] = useState<Editor | null>(null)
+  const retainPageBoundsRef = useRef(retainPageBounds)
+  useEffect(() => {
+    retainPageBoundsRef.current = retainPageBounds
+  }, [retainPageBounds])
   const merged = useMemo(() => mergeCanvasExtensions(extensions), [extensions])
   const components = useMemo(() => createCanvasComponents(merged), [merged])
   const handleMount = useCallback(
@@ -73,6 +80,7 @@ export function PdfViewerScreen({
     // What React and the store were last told; an update that would repeat
     // either is skipped, so panning within the same pages costs no commit.
     let visible: number[] = []
+    let retained: readonly BoxModel[] = NO_BOXES
     let shownPage: number | undefined
     let shownOverlays: PageOverlay[] | undefined
 
@@ -108,9 +116,10 @@ export function PdfViewerScreen({
       }
     }
 
-    const update = (bounds: { x: number; y: number; w: number; h: number }) => {
+    const update = (bounds: BoxModel) => {
       if (!active) return
-      const nextVisible = visiblePageNumbers(document.pages, bounds)
+      const onScreen = visiblePageNumbers(document.pages, bounds)
+      const nextVisible = keptPageNumbers(document.pages, bounds, retained)
       if (!samePageNumbers(nextVisible, visible)) {
         visible = nextVisible
         for (const pageNumber of renderedPages.keys()) {
@@ -128,7 +137,7 @@ export function PdfViewerScreen({
       requestRasters()
 
       const zoom = editor.getZoomLevel()
-      const nextOverlays = visible.flatMap((pageNumber): PageOverlay[] => {
+      const nextOverlays = onScreen.flatMap((pageNumber): PageOverlay[] => {
         if (!renderingPages.has(pageNumber) && !failedPages.has(pageNumber)) return []
         const pageBox = pageBounds(document.pages, pageNumber)
         if (!pageBox) return []
@@ -156,11 +165,16 @@ export function PdfViewerScreen({
       failedPages.delete(pageNumber)
       update(editor.getViewportPageBounds())
     }
-    // Tracks only the viewport (camera + screen bounds), never the pointer.
-    // Store reads made while syncing pages must not become dependencies.
+    // Tracks only the viewport (camera + screen bounds) and the retained
+    // boxes, never the pointer. Store reads made while syncing pages must not
+    // become dependencies.
     const stopReacting = react("pdf-viewer visible pages", () => {
       const bounds = editor.getViewportPageBounds()
-      unsafe__withoutCapture(() => update(bounds))
+      const nextRetained = retainPageBoundsRef.current?.(editor) ?? NO_BOXES
+      unsafe__withoutCapture(() => {
+        retained = nextRetained
+        update(bounds)
+      })
     })
     return () => {
       active = false
