@@ -3,6 +3,7 @@ import { createElement } from "react"
 import type { PinExtension, PinExtensionOptions } from "./types"
 
 import { PIN_KBD, PIN_LABEL, PIN_LABEL_KEY, PIN_TOOL_ID } from "./consts"
+import { FirstUseHint } from "./first-use-hint"
 import { PinIcon } from "./partials/pin-icon"
 import { PinBindingUtil } from "./pin-binding-util"
 import { feedbackOf, PinFeedbackOverlayUtil } from "./pin-feedback-overlay"
@@ -42,6 +43,7 @@ export function createPinExtension({
       }),
       translations: { en: { [PIN_LABEL_KEY]: PIN_LABEL } }
     },
+    InFrontOfTheCanvas: FirstUseHint,
     onMount: (editor) => {
       const stopRest = listenForRest(editor, settle)
       const stopLocks = listenForLocks(editor, settle)

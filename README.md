@@ -1,102 +1,57 @@
-# H2Fe
+# H2 frontend assessment
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
-
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `bunx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Run tasks
-
-To run the dev server for your app, use:
+## Run
 
 ```sh
-bunx nx serve web
+bun install
+bun run start
 ```
 
-To create a production bundle:
+Then:
+
+- [`/`](http://localhost:4200/) — drop a PDF or open the example
+- [`/viewer`](http://localhost:4200/viewer) — the canvas (needs a document in session)
+
+`bun` only, from the repo root. Workspace `package.json` files hold no dependencies.
+
+## What a reviewer should try
+
+1. Open the example from home. Page 1 is on the canvas; **Previous / Next** and the page field move between pages without redrawing the ones you cannot see.
+2. Draw a rectangle. **Open another document** warns before discarding marks. Cancel keeps the canvas.
+3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
+4. Press **C** (Export area), drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. An empty frame disables the actions instead of exporting nothing.
+5. Toggle color mode. Chrome and the canvas follow it; PNG export stays light.
+
+## Better than the demo
+
+The reference videos show the happy path. This build also handles:
+
+- Opening, per-page loading, and document failure with retry
+- A cancelable leave warning, and `beforeunload` only while marks exist
+- Pin settle-on-rest, undo, and “will not attach” feedback
+- Crop export that names the file, stays busy once, and fails with a toast
+- Keyboard paths for pin (**P**), crop (**C**, Enter, Esc), and the top bar at 390px
+
+PDF-page shapes are never marks. Crop frames are never in the export.
+
+## What I left out
+
+Recorded in [ADR 0009](docs/decisions/0009-not-built.md). The short list: no backend, no auth, no persistence beyond tldraw’s local store, no SSR, no three.js, no Tailwind. The demo’s “Export PDF” is also out — an export that is not the document would be dishonest.
+
+Specs: [docs/specs](docs/specs). Decisions: [docs/decisions](docs/decisions).
+
+## Stack
+
+Nx 23 + bun · Vite · React 19 · TypeScript strict · Chakra UI v3 · TanStack Query · tldraw 5.5 · Storybook 10 · Vitest
+
+`apps/web` is a thin shell. Feature libs live under `libs/web/features/*`. The design system is `libs/shared/ui` (`@h2-fe/ui`). Pin, camera, and the PDF viewer do not import each other; the viewer route composes them.
+
+## Check
 
 ```sh
-bunx nx build web
+bun run gate
 ```
 
-To see all available targets to run for a project, run:
-
-```sh
-bunx nx show project web
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-bunx nx g @nx/react:app demo
-```
-
-To generate a new library, use:
-
-```sh
-bunx nx g @nx/react:lib mylib
-```
-
-You can use `bunx nx list` to get a list of installed plugins. Then, run `bunx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-bunx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-bunx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+That is `nx affected` for lint, format, typecheck, test, build, Storybook build, and Storybook play tests (including axe).

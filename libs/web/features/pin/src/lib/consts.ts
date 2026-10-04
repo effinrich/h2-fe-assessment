@@ -6,6 +6,8 @@ export const PIN_BINDING = "pin"
 export const PIN_KBD = "p"
 export const PIN_LABEL_KEY = "tool.pin"
 export const PIN_LABEL = "Pin"
+export const FIRST_USE_HINT = "Click or drag to pin · Esc to cancel"
+export const FIRST_USE_HINT_STORAGE_KEY = "h2-pin-first-use-hint-seen"
 
 /** Page units, so on screen the pin scales with the zoom like any shape. */
 export const PIN_SIZE = { w: 24, h: 36 } as const

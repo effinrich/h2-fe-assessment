@@ -69,7 +69,10 @@ const overrides: TLUiOverrides = {
     }
   },
   // tldraw announces a selected shape by the `tool.<type>` message.
-  translations: { en: { [`tool.${CROP_FRAME}`]: CROP_FRAME_TOOLBAR_LABEL } }
+  translations: {
+    en: { [`tool.${CROP_FRAME}`]: CROP_FRAME_TOOLBAR_LABEL },
+    fr: { [`tool.${CROP_FRAME}`]: CROP_FRAME_TOOLBAR_LABEL }
+  }
 }
 
 /**

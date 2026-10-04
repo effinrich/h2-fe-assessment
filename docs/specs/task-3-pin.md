@@ -451,7 +451,7 @@ real pointer events (`userEvent.pointer`) at `editor.pageToScreen(...)` coordina
       their pre-drag positions. — `pin-follow.stories.tsx`
 - [x] **`UndoDetachIsOneStep`** — after `DragPinToEmptyDetaches`, one `undo()` returns the pin to
       A∩B with bindings {A, B}. — `pin-settle.stories.tsx`
-- [ ] **`RotateOffPinDetaches`** _(added)_ — a pin at (10,10) holds {A}. Select A and drag its
+- [x] **`RotateOffPinDetaches`** _(added)_ — a pin at (10,10) holds {A}. Select A and drag its
       top-right rotate handle 30° anticlockwise about A's centre: on release the pin holds
       nothing. One `undo()` restores A's rotation and the binding. — `pin-settle.stories.tsx`
 - [x] **`ResizeOffPinDetaches`** _(added)_ — a pin at (10,10) holds {A}. Resizing A from its

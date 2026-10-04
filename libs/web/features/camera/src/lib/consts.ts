@@ -21,6 +21,8 @@ export const MAX_EXPORT_SIDE_PX = 8192
 /** Device pixels per raster export: the smallest common browser canvas-area limit. */
 export const MAX_EXPORT_AREA_PX = 4096 * 4096
 export const EXPORT_PIXEL_RATIO = 2
+/** Page units: a shape this close to the crop still counts as inside. */
+export const EXPORT_EDGE_SLOP = 4
 
 export const FALLBACK_EXPORT_BASENAME = "canvas"
 export const MAX_EXPORT_BASENAME_LENGTH = 100

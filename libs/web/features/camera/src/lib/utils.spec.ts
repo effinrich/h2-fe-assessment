@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest"
 
 import type { ExportCandidate } from "./types"
 
-import { CROP_FRAME, MAX_EXPORT_AREA_PX, MAX_EXPORT_SIDE_PX } from "./consts"
+import { CROP_FRAME, EXPORT_EDGE_SLOP, MAX_EXPORT_AREA_PX, MAX_EXPORT_SIDE_PX } from "./consts"
 import {
   buildExportFilename,
   cropToolbarAnchor,
@@ -13,6 +13,7 @@ import {
   exportShapeIds,
   frameInsertIndex,
   isBelowMinSize,
+  isCropFrameShape,
   normaliseBox
 } from "./utils"
 
@@ -49,6 +50,13 @@ describe("defaultFrameBox", () => {
   it("caps each side at 80% of the viewport", () => {
     const viewport = { x: 0, y: 0, w: 250, h: 150 }
     expect(defaultFrameBox(viewport, 1)).toEqual({ x: 25, y: 15, w: 200, h: 120 })
+  })
+})
+
+describe("isCropFrameShape", () => {
+  it("is true for crop-frame and false for other types", () => {
+    expect(isCropFrameShape({ type: "crop-frame" })).toBe(true)
+    expect(isCropFrameShape({ type: "geo" })).toBe(false)
   })
 })
 
@@ -177,14 +185,18 @@ describe("exportShapeIds", () => {
     expect(exportShapeIds(frame, candidates)).toEqual([id("rect")])
   })
 
-  it("ignores shapes that only touch the frame's edge, or have no bounds", () => {
+  it("keeps shapes within EXPORT_EDGE_SLOP of the frame and drops those beyond it", () => {
     const candidates: ExportCandidate[] = [
-      { id: id("touching-right"), type: "geo", bounds: { x: 400, y: 150, w: 50, h: 50 } },
-      { id: id("touching-top"), type: "geo", bounds: { x: 150, y: 50, w: 50, h: 50 } },
+      { id: id("just-in"), type: "geo", bounds: { x: 400, y: 150, w: 50, h: 50 } },
+      {
+        id: id("beyond"),
+        type: "geo",
+        bounds: { x: 400 + EXPORT_EDGE_SLOP + 1, y: 150, w: 50, h: 50 }
+      },
       { id: id("unbounded"), type: "group", bounds: undefined }
     ]
 
-    expect(exportShapeIds(frame, candidates)).toEqual([])
+    expect(exportShapeIds(frame, candidates)).toEqual([id("just-in")])
   })
 
   it("is empty for a frame over nothing", () => {

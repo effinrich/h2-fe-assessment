@@ -41,6 +41,7 @@ function CropFrame({ shape }: { shape: CropFrameShape }) {
           label={`${exportSizeText(shape.props)} PNG`}
           selected={isSelected}
           revealLabel={isHovered}
+          colorMode={colorMode}
         />
       </HTMLContainer>
     </Box>

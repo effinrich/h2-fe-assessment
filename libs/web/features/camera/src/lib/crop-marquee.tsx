@@ -41,7 +41,14 @@ export function CropMarquee() {
       pointerEvents="none"
       style={marquee.style}
     >
-      <CropFrameOutline w={marquee.w} h={marquee.h} unit={1} label={marquee.label} revealLabel />
+      <CropFrameOutline
+        w={marquee.w}
+        h={marquee.h}
+        unit={1}
+        label={marquee.label}
+        revealLabel
+        colorMode={colorMode}
+      />
     </Box>
   )
 }

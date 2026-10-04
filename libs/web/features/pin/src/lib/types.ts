@@ -1,3 +1,4 @@
+import type { ComponentType } from "react"
 import type {
   TLAnyBindingUtilConstructor,
   TLAnyOverlayUtilConstructor,
@@ -19,6 +20,7 @@ export interface PinExtension {
   tools: readonly TLStateNodeConstructor[]
   overlayUtils: readonly TLAnyOverlayUtilConstructor[]
   overrides: TLUiOverrides
+  InFrontOfTheCanvas?: ComponentType
   onMount: TLOnMountHandler
 }
 

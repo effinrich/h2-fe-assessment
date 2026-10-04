@@ -1,11 +1,12 @@
 import { getIndexBetween, type BoxModel, type IndexKey, type TLShapeId, type VecLike } from "tldraw"
 
-import type { ExportCandidate, ExportPixelSize, FrameSibling } from "./types"
+import type { CropFrameShape, ExportCandidate, ExportPixelSize, FrameSibling } from "./types"
 
 import {
   CROP_FRAME,
   DEFAULT_FRAME_MAX_VIEWPORT_SHARE,
   DEFAULT_FRAME_SCREEN_PX,
+  EXPORT_EDGE_SLOP,
   EXPORT_PIXEL_RATIO,
   FALLBACK_EXPORT_BASENAME,
   MAX_EXPORT_AREA_PX,
@@ -37,6 +38,11 @@ export function defaultFrameBox(viewport: BoxModel, zoom: number): BoxModel {
     viewport.h * DEFAULT_FRAME_MAX_VIEWPORT_SHARE
   )
   return { x: viewport.x + (viewport.w - w) / 2, y: viewport.y + (viewport.h - h) / 2, w, h }
+}
+
+/** True only for the persistent crop-frame shape. */
+export function isCropFrameShape(shape: { type: string }): shape is CropFrameShape {
+  return shape.type === CROP_FRAME
 }
 
 /** Whether a page-space box is too small on screen, at this zoom, to be a frame. */
@@ -91,23 +97,27 @@ export function cropToolbarAnchor({
   }
 }
 
-// Strict: a shape that only touches the frame's edge adds nothing to the crop.
+function expand(box: BoxModel, slop: number): BoxModel {
+  return { x: box.x - slop, y: box.y - slop, w: box.w + slop * 2, h: box.h + slop * 2 }
+}
+
 function overlapsWithArea(a: BoxModel, b: BoxModel): boolean {
   return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
 }
 
 /**
- * The shapes a crop renders: every candidate overlapping the frame, minus all
- * crop frames, in the candidates' (z-)order.
+ * The shapes a crop renders: every candidate overlapping the frame (grown by
+ * `EXPORT_EDGE_SLOP`), minus all crop frames, in the candidates' (z-)order.
  */
 export function exportShapeIds(
   frame: BoxModel,
   candidates: readonly ExportCandidate[]
 ): TLShapeId[] {
+  const region = expand(frame, EXPORT_EDGE_SLOP)
   return candidates
     .filter(
       ({ type, bounds }) =>
-        type !== CROP_FRAME && bounds !== undefined && overlapsWithArea(bounds, frame)
+        type !== CROP_FRAME && bounds !== undefined && overlapsWithArea(bounds, region)
     )
     .map(({ id }) => id)
 }

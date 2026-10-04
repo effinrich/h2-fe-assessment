@@ -30,7 +30,7 @@ export function getCropExportPlan(editor: Editor, frameId: TLShapeId): CropExpor
   const candidates = editor.getCurrentPageShapesSorted().map((shape) => ({
     id: shape.id,
     type: shape.type,
-    bounds: editor.getShapePageBounds(shape)
+    bounds: editor.getShapeMaskedPageBounds(shape)
   }))
   const pixelRatio = exportPixelRatio(bounds)
   return {

@@ -105,6 +105,11 @@ export class CameraDragging extends StateNode {
     this.updateMarquee()
   }
 
+  override onTick({ elapsed }: { elapsed: number }) {
+    this.editor.edgeScrollManager.updateEdgeScrolling(elapsed)
+    this.updateMarquee()
+  }
+
   override onPointerUp() {
     this.complete()
   }

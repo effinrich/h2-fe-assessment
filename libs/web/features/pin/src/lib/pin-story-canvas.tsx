@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import { Tldraw, type TLComponents } from "tldraw"
 
 import { Box } from "@h2-fe/ui"
@@ -8,17 +9,20 @@ import type { PinExtension } from "./types"
 import { PinStoryShortcutsDialog } from "./pin-story-shortcuts-dialog"
 import { PinStoryToolbar } from "./pin-story-toolbar"
 
-const components: TLComponents = {
-  Toolbar: PinStoryToolbar,
-  KeyboardShortcutsDialog: PinStoryShortcutsDialog
-}
-
 /**
  * A plain `<Tldraw>` carrying the pin extension, with the toolbar and
  * shortcuts-dialog slots the viewer renders for extension tools (ADR 0011
  * amendment: extension stories mount their own canvas).
  */
 export function PinStoryCanvas({ extension }: { extension: PinExtension }) {
+  const components = useMemo<TLComponents>(
+    () => ({
+      Toolbar: PinStoryToolbar,
+      KeyboardShortcutsDialog: PinStoryShortcutsDialog,
+      InFrontOfTheCanvas: extension.InFrontOfTheCanvas
+    }),
+    [extension.InFrontOfTheCanvas]
+  )
   return (
     <Box position="fixed" inset="0">
       <Tldraw

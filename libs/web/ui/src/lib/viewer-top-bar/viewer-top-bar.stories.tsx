@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 
 import { expect, fn } from "storybook/test"
 
+import { Box } from "@h2-fe/ui"
+
 import { ViewerTopBar } from "./viewer-top-bar"
 
 // Spec: the viewer's "Open another document" affordance stays above the
@@ -49,5 +51,32 @@ export const OnePage: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("button", { name: "Next page" })).toBeDisabled()
     await expect(canvas.getByRole("button", { name: "Previous page" })).toBeDisabled()
+  }
+}
+
+export const NarrowKeyboard: Story = {
+  decorators: [
+    (Story) => (
+      <Box position="relative" width="390px" minH="40">
+        <Story />
+      </Box>
+    )
+  ],
+  play: async ({ canvas, userEvent }) => {
+    const page = canvas.getByRole("spinbutton", { name: "Page number" })
+    const next = canvas.getByRole("button", { name: "Next page" })
+    const open = canvas.getByRole("button", { name: "Open another document" })
+
+    await expect(canvas.getByText("example.pdf")).toBeVisible()
+    await expect(open).toBeVisible()
+
+    await userEvent.tab()
+    await expect(page).toHaveFocus()
+    await userEvent.tab()
+    await expect(next).toHaveFocus()
+    await userEvent.tab()
+    await expect(canvas.getByRole("button", { name: /Switch to (light|dark) mode/ })).toHaveFocus()
+    await userEvent.tab()
+    await expect(open).toHaveFocus()
   }
 }

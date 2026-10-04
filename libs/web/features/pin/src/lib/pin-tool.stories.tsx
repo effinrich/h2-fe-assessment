@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, screen, waitFor, within } from "storybook/test"
 import { Vec } from "tldraw"
 
-import { PIN_BINDING, PIN_TOOL_ID } from "./consts"
+import { FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY, PIN_BINDING, PIN_TOOL_ID } from "./consts"
 import { createPinExtension } from "./pin-extension"
 import { PinStoryCanvas } from "./pin-story-canvas"
 import {
@@ -32,11 +32,34 @@ const pinExtension = createPinExtension()
 
 const meta = {
   title: "Features/Pin/Tool",
-  render: () => <PinStoryCanvas extension={pinExtension} />
+  render: () => <PinStoryCanvas extension={pinExtension} />,
+  beforeEach() {
+    sessionStorage.removeItem(FIRST_USE_HINT_STORAGE_KEY)
+  }
 } satisfies Meta
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+export const FirstUseHint: Story = {
+  play: async ({ canvasElement, userEvent }) => {
+    const editor = await mountedEditor(canvasElement)
+    const queryHint = () => within(canvasElement).queryByText(FIRST_USE_HINT)
+
+    editor.setCurrentTool(PIN_TOOL_ID)
+    const hint = await within(canvasElement).findByText(FIRST_USE_HINT)
+    await expect(hint.closest("output")).not.toBeNull()
+
+    editor.getContainer().focus()
+    await userEvent.keyboard("{Escape}")
+    await waitFor(() => expect(editor.getCurrentToolId()).toBe("select"))
+    await waitFor(() => expect(queryHint()).toBeNull())
+
+    editor.setCurrentTool(PIN_TOOL_ID)
+    await waitFor(() => expect(editor.getCurrentToolId()).toBe(PIN_TOOL_ID))
+    await expect(queryHint()).toBeNull()
+  }
+}
 
 export const ToolbarEntry: Story = {
   play: async ({ canvasElement, userEvent }) => {

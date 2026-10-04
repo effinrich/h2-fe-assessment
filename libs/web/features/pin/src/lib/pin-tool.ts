@@ -1,4 +1,5 @@
 import {
+  atom,
   createShapeId,
   StateNode,
   type TLPointerEventInfo,
@@ -10,6 +11,7 @@ import {
 import type { Settle } from "./pin-settle"
 
 import { PIN_SHAPE, PIN_TOOL_ID } from "./consts"
+import { claimFirstUseHint } from "./first-use-hint"
 import { pinOrigin } from "./utils"
 
 /** What `select.translating` reads on enter; tldraw doesn't export the type. */
@@ -51,6 +53,7 @@ function createPinPointing(settle: Settle): TLStateNodeConstructor {
     private pinId: TLShapeId | null = null
 
     override onEnter() {
+      this.editor.getStateDescendant<PinTool>(PIN_TOOL_ID)?.hint.set(false)
       const { editor } = this
       const id = createShapeId()
       const origin = pinOrigin(editor.inputs.getOriginPagePoint())
@@ -100,12 +103,24 @@ function createPinPointing(settle: Settle): TLStateNodeConstructor {
   }
 }
 
+export class PinTool extends StateNode {
+  static override id = PIN_TOOL_ID
+  readonly hint = atom("pin first-use hint", false)
+}
+
 export function createPinTool(settle: Settle): TLStateNodeConstructor {
   const PinPointing = createPinPointing(settle)
-  return class PinTool extends StateNode {
-    static override id = PIN_TOOL_ID
+  return class extends PinTool {
     static override initial = "idle"
     static override children = () => [PinIdle, PinPointing]
     override shapeType = PIN_SHAPE
+
+    override onEnter() {
+      if (claimFirstUseHint()) this.hint.set(true)
+    }
+
+    override onExit() {
+      this.hint.set(false)
+    }
   }
 }

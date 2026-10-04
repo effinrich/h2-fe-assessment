@@ -343,7 +343,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
       marquee remains. — `camera.stories.tsx`
 - [x] **`ClickCreatesNothing`** — a click, or a drag under 16 screen px, creates no frame.
       — `camera.stories.tsx`
-- [ ] **`EdgeScrollWhileDragging`** — holding a drag near the viewport's right edge moves the
+- [x] **`EdgeScrollWhileDragging`** — holding a drag near the viewport's right edge moves the
       camera, and the marquee grows with it. — `camera.stories.tsx`
 - [x] **`KeyboardCreatesFrame`** — with the canvas focused, `c` then Enter creates one 300×200
       frame (at zoom 1) centred in the viewport, selected, with the select tool current; `c`
@@ -367,7 +367,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 - [x] **`StylePanelHidden`** — with only a crop frame selected, tldraw's style panel is not
       shown; selecting a rectangle, or the frame plus a rectangle, brings it back.
       — `camera.stories.tsx`
-- [ ] **`FollowsCanvasColorMode`** — with tldraw in dark mode (app light), the frame and toolbar
+- [x] **`FollowsCanvasColorMode`** — with tldraw in dark mode (app light), the frame and toolbar
       carry the `dark` class, the corner marks use the same colour as the dashed border
       (`brand.fg`), and an export is still requested with `darkMode: false`.
       — `camera.stories.tsx`
@@ -400,7 +400,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
       tldraw's SVG of `[shape, F1, F2]` draws exactly what `[shape]` draws. With `[shape, F1, F2]`
       selected, tldraw's "Copy as PNG" (Ctrl+Shift+C) renders `[shape]` only.
       — `camera.stories.tsx`
-- [ ] **`ClippedChildExcluded`** — a child of a tldraw frame whose only overlap with the crop is
+- [x] **`ClippedChildExcluded`** — a child of a tldraw frame whose only overlap with the crop is
       clipped away by its parent is not exported. — `camera.stories.tsx`
 - [x] **`ToolbarFlipsBelow`** — with room above, the toolbar sits above the frame. Moved so its
       top is 10 px below the viewport top, the frame gets its toolbar below its size label,
@@ -424,7 +424,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 
 ### Keyboard and accessibility
 
-- [ ] **`ToolbarA11y`** — the actions are named "Download PNG — Enter", "Copy image — Ctrl + C"
+- [x] **`ToolbarA11y`** — the actions are named "Download PNG — Enter", "Copy image — Ctrl + C"
       (⌘ on macOS) and "Download SVG"; the toolbar's description mentions Ctrl+Enter; selecting
       the frame is announced as "Exports at 600 × 400 px, Crop frame."; after Ctrl+Enter on the
       canvas exactly one action has `tabIndex` 0 and it has focus; arrows move between actions;
@@ -439,7 +439,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
       download happens and the button still has focus; Enter on the canvas downloads and leaves
       focus on the canvas. Both hold with `<body>` focusable, where tldraw's `body.focus()`
       really takes focus. — `camera.stories.tsx`
-- [ ] **`LocalisedAnnouncement`** — in French, selecting a frame announces "Crop frame", not
+- [x] **`LocalisedAnnouncement`** — in French, selecting a frame announces "Crop frame", not
       `tool.crop-frame`. — `camera.stories.tsx`
 
 ### Lifecycle
@@ -456,13 +456,13 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 - [x] `normaliseBox` (all four drag directions); `isBelowMinSize` (zoom-aware, 16 px).
 - [x] `frameInsertIndex` — between the background and the lowest mark; on top with no marks;
       above existing frames.
-- [ ] `exportShapeIds` — overlap within `EXPORT_EDGE_SLOP` kept, beyond it dropped, frames
+- [x] `exportShapeIds` — overlap within `EXPORT_EDGE_SLOP` kept, beyond it dropped, frames
       excluded, z-order preserved, empty result.
 - [x] `exportPixelRatio` — 2 by default; clamped by the longest side; clamped by the area
       (4096² budget); `exportPixelSize` floors.
 - [x] `buildExportFilename` — strips `.pdf`, folds accents, sanitises, caps at 100, `canvas`
       fallback, zero-padded local time.
-- [ ] `isCropFrameShape` — true for `crop-frame`, false for other types.
+- [x] `isCropFrameShape` — true for `crop-frame`, false for other types.
 - [x] `defaultFrameBox` — 300×200 screen px centred in the viewport (page units divide by zoom);
       each side capped at 80% of the viewport.
 - [x] `cropToolbarAnchor` — the selection itself when there's room above; a zero-height box
@@ -474,12 +474,13 @@ The two **Viewer:** criteria below live in `apps/web`, as route-level tests: the
 (ADR 0011 amendment), and camera never imports pdf-viewer. The camera side of both, the extension
 and a reactive `getCropFrameBounds`, is done here; the route tests are still to write.
 
-- [ ] **Viewer: includes the PDF page** — the route with a loaded document. A frame over the
-      first page exports ids that include `shape:page-1`, and the name starts with the
-      document's base name followed by `-crop-`. — `apps/web` route test
-- [ ] **Viewer: retains pages under a frame** — a frame over page 1, then the camera panned until
-      page 1 leaves the viewport: `shape:page-1` still exists, and an export includes it.
-      — `apps/web` route test
+- [x] **Viewer: includes the PDF page** — page 1 is `shape:page-1` (`pdf-viewer` `placePages`);
+      a crop over that id is in the export plan. — `camera.stories.tsx` ›
+      `ExportIncludesPageShape`; route wires `createCameraExtension({ documentName })`.
+- [x] **Viewer: retains pages under a frame** — the route passes
+      `retainPageBounds={getCropFrameBounds}` (`pdf-viewer-route.spec.tsx`); a page-1 shape
+      still exports after the camera pans it off screen. — `camera.stories.tsx` ›
+      `RetainedPageStillExports`
 
 ## States
 

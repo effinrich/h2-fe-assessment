@@ -154,10 +154,11 @@ and committed failing before the code exists.
       warning; without marks it exits directly. Refresh/close prompts only while
       marked, where the browser supports it.** —
       `apps/web/src/app/routes/pdf-viewer-route.spec.tsx`.
-- [ ] **Filename truncation, page controls, loading and error feedback remain
+- [x] **Filename truncation, page controls, loading and error feedback remain
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
-      zoom controls are not duplicated.** — no automated test yet; a 390px
-      browser pass was done by hand (PR #4).
+      zoom controls are not duplicated.** —
+      `viewer-top-bar.stories.tsx` › `NarrowKeyboard` (390px); tldraw tools
+      stay in the canvas toolbar, not the top bar.
 - [x] **Our top-bar chrome and tldraw's style panel do not share a pixel slot.
       "Open another document" stays fully readable and clickable; the style
       panel fill is opaque.** jsdom cannot prove stacking or computed panel

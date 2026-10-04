@@ -28,6 +28,8 @@ interface CropFrameOutlineProps {
   selected?: boolean
   /** Show the label even when the frame is narrower than it. */
   revealLabel?: boolean
+  /** tldraw color mode: dark corners use `brand.fg` for contrast. */
+  colorMode?: "light" | "dark"
 }
 
 /**
@@ -40,7 +42,8 @@ export function CropFrameOutline({
   unit,
   label,
   selected = false,
-  revealLabel = false
+  revealLabel = false,
+  colorMode = "light"
 }: CropFrameOutlineProps) {
   const px = (screenPx: number) => screenPx * unit
   const corners = cornerMarksPath(w, h, Math.min(px(FRAME_CORNER_PX), w / 3, h / 3))
@@ -72,13 +75,13 @@ export function CropFrameOutline({
           <rect width={w} height={h} />
         </Box>
         <Box asChild visibility={selected ? "hidden" : undefined}>
-          <g data-crop-corners="">
+          <g data-crop-corners="" data-corner-token={colorMode === "dark" ? "fg" : "solid"}>
             <Box asChild stroke="bg" strokeWidth={px(6)} strokeLinecap="square" fill="none">
               <path d={corners} />
             </Box>
             <Box
               asChild
-              stroke="brand.solid"
+              stroke={colorMode === "dark" ? "brand.fg" : "brand.solid"}
               strokeWidth={px(3)}
               strokeLinecap="square"
               fill="none"
