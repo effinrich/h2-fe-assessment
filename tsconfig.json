@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/web/features/pin"
+    },
+    {
+      "path": "./libs/web/features/camera"
     }
   ]
 }
