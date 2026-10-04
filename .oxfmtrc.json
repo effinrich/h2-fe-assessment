@@ -4,11 +4,20 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": false,
-  "singleQuote": true,
+  "singleQuote": false,
   "jsxSingleQuote": false,
   "trailingComma": "none",
   "bracketSpacing": true,
-  "arrowParens": "avoid",
+  "arrowParens": "always",
   "endOfLine": "lf",
-  "ignorePatterns": ["node_modules", "dist", ".output", ".expo/**", ".nitro", "storybook-static/**"]
+  "sortImports": true,
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    ".output",
+    ".vinxi",
+    ".vercel/",
+    "storybook-static/**",
+    "bun.lock",
+  ]
 }

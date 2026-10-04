@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { Tldraw, type Editor } from 'tldraw'
-import 'tldraw/tldraw.css'
-import { Box, Button, Flex, Heading, Spinner, Text } from '@h2-fe/ui'
-import { ViewerTopBar } from '@h2-fe/web-ui'
+import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
+import { ViewerTopBar } from "@h2-fe/web-ui"
+
+import "tldraw/tldraw.css"
+import { useEffect, useRef, useState } from "react"
+import { Tldraw, type Editor } from "tldraw"
+
+import type { PdfViewerScreenProps, RenderedPdfPage } from "./types"
 import {
   activePageNumber,
   hasUserMarks,
@@ -10,10 +13,9 @@ import {
   placePagesOnCanvas,
   syncVisiblePages,
   visiblePageNumbers
-} from './utils'
-import type { PdfViewerScreenProps, RenderedPdfPage } from './types'
+} from "./utils"
 
-type PageState = 'loading' | 'error'
+type PageState = "loading" | "error"
 type PageOverlay = { page: number; state: PageState; x: number; y: number; w: number; h: number }
 
 export function PdfViewerScreen({
@@ -33,7 +35,7 @@ export function PdfViewerScreen({
   useEffect(() => {
     if (!editor || !onMarksChange) return
     const updateMarks = () => onMarksChange(hasUserMarks(editor.getCurrentPageShapes()))
-    const stop = editor.store.listen(updateMarks, { scope: 'document' })
+    const stop = editor.store.listen(updateMarks, { scope: "document" })
     updateMarks()
     return stop
   }, [editor, onMarksChange])
@@ -61,7 +63,7 @@ export function PdfViewerScreen({
 
         syncVisiblePages(editor, document.pages, visible, [])
         const nextPage = activePageNumber(document.pages, bounds)
-        setPage(previous => (previous === nextPage ? previous : nextPage))
+        setPage((previous) => (previous === nextPage ? previous : nextPage))
         for (const pageNumber of visible) {
           if (
             renderedPages.has(pageNumber) ||
@@ -72,13 +74,13 @@ export function PdfViewerScreen({
           renderingPages.add(pageNumber)
           void document
             .renderPages([pageNumber])
-            .then(pages => {
+            .then((pages) => {
               if (!active) return
               const currentVisible = visiblePageNumbers(
                 document.pages,
                 editor.getViewportPageBounds()
               )
-              const rendered = pages.filter(page => currentVisible.includes(page.pageNumber))
+              const rendered = pages.filter((page) => currentVisible.includes(page.pageNumber))
               for (const page of rendered) renderedPages.set(page.pageNumber, page)
               syncVisiblePages(editor, document.pages, currentVisible, rendered)
             })
@@ -92,7 +94,7 @@ export function PdfViewerScreen({
             })
         }
         setOverlays(
-          visible.flatMap(pageNumber => {
+          visible.flatMap((pageNumber) => {
             if (!renderingPages.has(pageNumber) && !failedPages.has(pageNumber)) return []
             const pageBox = pageBounds(document.pages, pageNumber)
             if (!pageBox) return []
@@ -100,7 +102,7 @@ export function PdfViewerScreen({
             return [
               {
                 page: pageNumber,
-                state: failedPages.has(pageNumber) ? ('error' as const) : ('loading' as const),
+                state: failedPages.has(pageNumber) ? ("error" as const) : ("loading" as const),
                 x: topLeft.x,
                 y: topLeft.y,
                 w: pageBox.w * editor.getZoomLevel(),
@@ -114,11 +116,11 @@ export function PdfViewerScreen({
       }
     }
 
-    retryPage.current = pageNumber => {
+    retryPage.current = (pageNumber) => {
       failedPages.delete(pageNumber)
       updateVisiblePages()
     }
-    const stopListening = editor.store.listen(updateVisiblePages, { scope: 'session' })
+    const stopListening = editor.store.listen(updateVisiblePages, { scope: "session" })
     queueMicrotask(updateVisiblePages)
     return () => {
       active = false
@@ -136,7 +138,7 @@ export function PdfViewerScreen({
   }
 
   return (
-    <div style={{ position: 'absolute', inset: 0 }}>
+    <div style={{ position: "absolute", inset: 0 }}>
       <Tldraw onMount={setEditor} />
 
       {isLoading ? (
@@ -168,7 +170,7 @@ export function PdfViewerScreen({
         </Flex>
       ) : null}
 
-      {overlays.map(overlay => (
+      {overlays.map((overlay) => (
         <Flex
           align="center"
           bg="bg.panel"
@@ -176,10 +178,10 @@ export function PdfViewerScreen({
           key={overlay.page}
           pointerEvents="none"
           position="absolute"
-          role={overlay.state === 'error' ? 'alert' : 'status'}
+          role={overlay.state === "error" ? "alert" : "status"}
           style={{ left: overlay.x, top: overlay.y, width: overlay.w, height: overlay.h }}
         >
-          {overlay.state === 'loading' ? (
+          {overlay.state === "loading" ? (
             <Spinner aria-label={`Loading page ${overlay.page}`} />
           ) : (
             <Box pointerEvents="auto" textAlign="center">

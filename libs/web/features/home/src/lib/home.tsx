@@ -1,6 +1,7 @@
-import { useRef } from 'react'
-import { Box, Button, Flex, Heading, Text } from '@h2-fe/ui'
-import type { HomeScreenProps } from './types'
+import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
+import { useRef } from "react"
+
+import type { HomeScreenProps } from "./types"
 
 // The route's own composition: teach what the canvas is for and offer two ways
 // in. The route provides callbacks; this screen holds only markup and the
@@ -32,7 +33,7 @@ export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeS
           w="full"
           onClick={() => inputRef.current?.click()}
         >
-          {isBusy ? 'Opening' : 'Open PDF'}
+          {isBusy ? "Opening" : "Open PDF"}
         </Button>
         <Button disabled={isBusy} marginTop="2" variant="outline" w="full" onClick={onUseExample}>
           Use an example

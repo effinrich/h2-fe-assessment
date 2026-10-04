@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { Box, Button, Flex, Text } from '@h2-fe/ui'
+import { Box, Button, Flex, Text } from "@h2-fe/ui"
+import { useRef } from "react"
 
 interface ViewerTopBarProps {
   filename?: string
@@ -64,7 +64,7 @@ export function ViewerTopBar({
           title={filename}
           whiteSpace="nowrap"
         >
-          {filename ?? 'Document'}
+          {filename ?? "Document"}
         </Text>
         {totalPages > 0 && (
           <Flex align="center" gap="1">
@@ -78,7 +78,7 @@ export function ViewerTopBar({
               Previous
             </Button>
             <form
-              onSubmit={event => {
+              onSubmit={(event) => {
                 event.preventDefault()
                 jump()
               }}
@@ -92,7 +92,7 @@ export function ViewerTopBar({
                 min={1}
                 onBlur={abandonJump}
                 ref={pageInput}
-                style={{ width: '3.5em', textAlign: 'center' }}
+                style={{ width: "3.5em", textAlign: "center" }}
                 type="number"
               />
             </form>

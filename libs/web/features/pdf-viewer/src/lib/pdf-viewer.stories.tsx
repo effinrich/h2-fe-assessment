@@ -1,12 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { fn } from 'storybook/test'
-import { PdfViewerScreen } from './pdf-viewer'
-import type { RenderedPdfPage } from './types'
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { fn } from "storybook/test"
+
+import { PdfViewerScreen } from "./pdf-viewer"
+import type { RenderedPdfPage } from "./types"
 
 // Storybook is the test surface for screen-level compositions; these stories
 // carry the states the viewer owns.
 const meta = {
-  title: 'Features/PdfViewer',
+  title: "Features/PdfViewer",
   component: PdfViewerScreen
 } satisfies Meta<typeof PdfViewerScreen>
 
@@ -20,7 +21,7 @@ const examplePage: RenderedPdfPage = {
   width: 200,
   height: 283,
   dataUrl:
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
 }
 
 const exampleDocument = {
@@ -39,6 +40,6 @@ export const Error: Story = {
 
 export const Ready: Story = {
   // A long filename so the truncated label is what the story captures.
-  args: { filename: 'sample-annotated-report-2026-q3.pdf', onOpenAnother: fn() },
-  render: args => <PdfViewerScreen {...args} document={exampleDocument} />
+  args: { filename: "sample-annotated-report-2026-q3.pdf", onOpenAnother: fn() },
+  render: (args) => <PdfViewerScreen {...args} document={exampleDocument} />
 }

@@ -19,8 +19,20 @@
         "cwd": "{projectRoot}"
       }
     },
-    "format": {},
-    "format:fix": {},
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt .",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt . --fix",
+        "cwd": "{projectRoot}"
+      }
+    },
     "storybook": {
       "executor": "@nx/storybook:storybook",
       "options": {

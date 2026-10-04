@@ -1,14 +1,15 @@
-import { PDF_PAGE_GAP } from './consts'
-import * as pdfjs from 'pdfjs-dist'
-import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url'
-import { type Editor, type TLAssetId, type TLShapeId } from 'tldraw'
-import { AssetRecordType } from 'tldraw'
-import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from './types'
+import * as pdfjs from "pdfjs-dist"
+import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
+import { type Editor, type TLAssetId, type TLShapeId } from "tldraw"
+import { AssetRecordType } from "tldraw"
+
+import { PDF_PAGE_GAP } from "./consts"
+import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from "./types"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
 
-const PAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+const PAGE_PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 
 export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocumentSummary> {
   const loadingTask = pdfjs.getDocument({ data })
@@ -40,16 +41,16 @@ export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocument
       pages,
       renderPages: async (pageNumbers: number[]) => {
         return Promise.all(
-          [...new Set(pageNumbers)].map(async pageNumber => {
+          [...new Set(pageNumbers)].map(async (pageNumber) => {
             const page = await pdfDocument.getPage(pageNumber)
             const viewport = page.getViewport({ scale })
-            const canvas = window.document.createElement('canvas')
+            const canvas = window.document.createElement("canvas")
             canvas.width = Math.ceil(viewport.width)
             canvas.height = Math.ceil(viewport.height)
 
             try {
-              const canvasContext = canvas.getContext('2d')
-              if (!canvasContext) throw new Error('Could not get a 2D context for the page')
+              const canvasContext = canvas.getContext("2d")
+              if (!canvasContext) throw new Error("Could not get a 2D context for the page")
 
               await page.render({ canvas, viewport, canvasContext }).promise
 
@@ -57,7 +58,7 @@ export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocument
                 pageNumber,
                 width: canvas.width,
                 height: canvas.height,
-                dataUrl: canvas.toDataURL('image/png')
+                dataUrl: canvas.toDataURL("image/png")
               }
             } finally {
               canvas.width = 0
@@ -106,7 +107,7 @@ export function activePageNumber(
 }
 
 export function hasUserMarks(shapes: ReadonlyArray<{ id: string }>): boolean {
-  return shapes.some(shape => !/^shape:page-\d+$/.test(shape.id))
+  return shapes.some((shape) => !/^shape:page-\d+$/.test(shape.id))
 }
 
 export function visiblePageNumbers(
@@ -143,20 +144,20 @@ export function syncVisiblePages(
   renderedPages: RenderedPdfPage[]
 ): void {
   const visible = new Set(visiblePageNumbers)
-  const offscreenPages = pages.filter(page => !visible.has(page.pageNumber))
+  const offscreenPages = pages.filter((page) => !visible.has(page.pageNumber))
   const offscreenShapeIds = offscreenPages
-    .map(page => `shape:page-${page.pageNumber}` as TLShapeId)
-    .filter(id => editor.getShape(id))
+    .map((page) => `shape:page-${page.pageNumber}` as TLShapeId)
+    .filter((id) => editor.getShape(id))
   const offscreenAssetIds = offscreenPages
-    .map(page => `asset:page-${page.pageNumber}` as TLAssetId)
-    .filter(id => editor.getAsset(id))
+    .map((page) => `asset:page-${page.pageNumber}` as TLAssetId)
+    .filter((id) => editor.getAsset(id))
 
   editor.run(
     () => {
       if (offscreenShapeIds.length) editor.deleteShapes(offscreenShapeIds)
       if (offscreenAssetIds.length) editor.deleteAssets(offscreenAssetIds)
 
-      const renderedByPage = new Map(renderedPages.map(page => [page.pageNumber, page]))
+      const renderedByPage = new Map(renderedPages.map((page) => [page.pageNumber, page]))
       let y = 0
 
       for (const page of pages) {
@@ -169,14 +170,14 @@ export function syncVisiblePages(
           if (!existingAsset || renderedPage) {
             const asset = AssetRecordType.create({
               id: assetId,
-              type: 'image',
+              type: "image",
               meta: {},
               props: {
                 name: `page-${page.pageNumber}.png`,
                 src: renderedPage?.dataUrl ?? PAGE_PLACEHOLDER,
                 w: page.width,
                 h: page.height,
-                mimeType: 'image/png',
+                mimeType: "image/png",
                 isAnimated: false
               }
             })
@@ -188,7 +189,7 @@ export function syncVisiblePages(
             editor.createShapes([
               {
                 id: shapeId,
-                type: 'image',
+                type: "image",
                 x: 0,
                 y,
                 isLocked: true,
@@ -200,6 +201,6 @@ export function syncVisiblePages(
         y += page.height + PDF_PAGE_GAP
       }
     },
-    { history: 'ignore' }
+    { history: "ignore" }
   )
 }

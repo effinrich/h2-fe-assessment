@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
-import { openPdf } from './utils'
-import type { FileToken } from './types'
+import { useQuery } from "@tanstack/react-query"
+
+import type { FileToken } from "./types"
+import { openPdf } from "./utils"
 
 const fileTokens = new WeakMap<File, string>()
 let nextFileToken = 0
@@ -28,7 +29,7 @@ export function usePdfPages(file: File | null) {
       if (signal.aborted) await document.destroy()
       return document
     },
-    queryKey: ['pdf-pages', pdfFileToken(file)],
+    queryKey: ["pdf-pages", pdfFileToken(file)],
     retry: false,
     staleTime: Infinity,
     gcTime: 0

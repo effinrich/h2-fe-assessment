@@ -1,6 +1,6 @@
-import type { Preview } from '@storybook/react-vite'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { UiProvider } from '@h2-fe/ui'
+import { UiProvider } from "@h2-fe/ui"
+import type { Preview } from "@storybook/react-vite"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 // A stub client for every story: no story touches the network, and Chromatic
 // snapshots stay deterministic. retry:false so a deliberate error story fails
@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
 
 const preview: Preview = {
   decorators: [
-    Story => (
+    (Story) => (
       <UiProvider>
         <QueryClientProvider client={queryClient}>
           <Story />
@@ -23,13 +23,13 @@ const preview: Preview = {
   ],
   parameters: {
     options: {
-      autodocs: 'tag'
+      autodocs: "tag"
     },
     controls: {
       matchers: { color: /(background|color)$/i, date: /Date$/i }
     },
     a11y: {
-      test: 'error'
+      test: "error"
     },
     chromatic: {
       pauseAnimationAtEnd: true,

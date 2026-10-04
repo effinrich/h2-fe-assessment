@@ -23,5 +23,8 @@
     "**/dist": true,
     "**/bun.lock": true
   },
-  "json.schemaDownload.enable": true
+  "json.schemaDownload.enable": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }

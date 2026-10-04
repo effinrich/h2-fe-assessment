@@ -14,25 +14,35 @@
       "default": "./dist/index.js"
     }
   },
+  "scripts": {
+    "storybook-web": "nx run storybook-web",
+    "build-storybook-web": "nx run build-storybook-web",
+    "lint": "oxlint . --type-aware",
+    "lint:fix": "oxlint . --type-aware --fix",
+    "format": "oxfmt .",
+    "format:fix": "oxfmt . --fix",
+    "build": "nx run build"
+  },
   "nx": {
     "tags": [
       "scope:web",
       "type:ui"
     ],
     "targets": {
-      "lint": {
+      "storybook-web": {
+        "executor": "@nx/storybook:storybook",
         "options": {
-          "args": [
-            "--type-aware"
-          ]
+          "port": 4400,
+          "open": true,
+          "configDir": "libs/web/ui/.storybook"
+        },
+        "configurations": {
+          "ci": {
+            "quiet": true
+          }
         }
       },
-      "build": {
-        "dependsOn": []
-      },
-      "format": {},
-      "format:fix": {},
-      "build-storybook": {
+      "build-storybook-web": {
         "inputs": [
           "production",
           "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
@@ -40,12 +50,6 @@
           "{projectRoot}/tsconfig.storybook.json",
           "{workspaceRoot}/libs/web/features/**/src/lib/**/*.stories.@(js|jsx|ts|tsx)"
         ]
-      },
-      "lint:fix": {
-        "command": "oxlint . --type-aware --fix",
-        "options": {
-          "cwd": "libs/web/ui"
-        }
       }
     }
   }

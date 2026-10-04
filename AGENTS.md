@@ -43,6 +43,12 @@ made during this project's setup.
 - **Target names are `lint` and `format`.** `oxlint` and `oxfmt` are only the
   binaries behind those targets — never target names. `format` / `format:fix`
   live in nx.json `targetDefaults`; root scripts mirror `lint` / `lint:fix`.
+- **Nested ox configs.** Projects carry their own `.oxlintrc.json` /
+  `.oxfmtrc.json`. Setting `oxc.configPath` / `oxc.fmt.configPath` disables
+  nested configs, so the editor diverges from the gate.
+- **Editor config is cross-platform** (teammates on macOS): no absolute or
+  OS-specific binary paths in `.vscode/`. Official `oxc.oxc-vscode` only; it
+  resolves `oxlint` / `oxfmt` from `node_modules/.bin` itself.
 - LF line endings (`.gitattributes`). Every Action in every workflow is pinned
   to a full commit SHA with a `# vX.Y.Z` comment. `ci.yml` runs `bun run gate`
   after `nrwl/nx-set-shas`.

@@ -1,9 +1,23 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "jsPlugins": ["@nx/oxlint/boundaries-plugin"],
-  "plugins": ["typescript", "unicorn", "oxc"],
+  "plugins": ["react", "typescript", "import", "jsx-a11y", "unicorn", "vitest", "react-perf"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": false
+  },
   "categories": {
-    "correctness": "error"
+    "correctness": "error",
+    "perf": "warn",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "style": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true,
+    "builtin": true
   },
   "rules": {
     "@nx/enforce-module-boundaries": [
@@ -20,9 +34,37 @@
           }
         ]
       }
+    ],
+    "no-console": "off",
+    "no-unused-vars": "warn",
+    "typescript/no-unused-vars": "warn",
+    "typescript/no-explicit-any": "error",
+    "react/jsx-key": "error",
+    "react/no-array-index-key": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/no-unassigned-import": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase",
+        "ignore": [
+          "^(AGENTS|README|CHANGELOG)\\.md$",
+          "^LICENSE$",
+          "^__root\\.tsx$",
+          "^routeTree\\.gen\\.ts$",
+          "^\\d{14}_[a-f0-9-]+\\.sql$"
+        ]
+      }
     ]
   },
-  "env": {
-    "builtin": true
-  }
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    ".output",
+    ".vinxi",
+    ".nitro",
+    ".vercel/",
+    "storybook-static/**",
+    "bun.lock"
+  ]
 }
