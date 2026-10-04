@@ -49,7 +49,8 @@
           "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
           "{projectRoot}/.storybook/**/*",
           "{projectRoot}/tsconfig.storybook.json",
-          "{workspaceRoot}/libs/web/features/**/src/lib/**/*.stories.@(js|jsx|ts|tsx)"
+          "{workspaceRoot}/libs/web/features/*/src/**/*",
+          "!{workspaceRoot}/libs/web/features/*/src/**/*.spec.@(ts|tsx)"
         ]
       }
     }

@@ -46,6 +46,11 @@ made during this project's setup.
   `targetDefaults`; a project opts in with `"test-storybook": {}`. Feature
   stories run in the `@h2-fe/web-ui` stage. Locally, run
   `bunx playwright install chromium` once.
+- **Feature stories and `affected`.** web-ui doesn't import the features (and
+  `implicitDependencies` would cycle), so its `test-storybook` /
+  `build-storybook` inputs list `{workspaceRoot}/libs/web/features/*/src/**/*`.
+  Nx treats `{workspaceRoot}` inputs as implicit dependencies: a feature-only
+  change marks web-ui affected and busts both caches. Keep those inputs.
 - **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
   inferred target (`args: ["--type-aware"]` in `project.json`); never write
   `@nx/oxlint:lint`. Two plugins must not claim the same target name.
