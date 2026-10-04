@@ -40,6 +40,12 @@
           "{projectRoot}/tsconfig.storybook.json",
           "{workspaceRoot}/libs/web/features/**/src/lib/**/*.stories.@(js|jsx|ts|tsx)"
         ]
+      },
+      "lint:fix": {
+        "command": "oxlint . --type-aware --fix",
+        "options": {
+          "cwd": "libs/web/ui"
+        }
       }
     }
   }

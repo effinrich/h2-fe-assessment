@@ -28,7 +28,13 @@
         }
       },
       "format": {},
-      "format:fix": {}
+      "format:fix": {},
+      "lint:fix": {
+        "command": "oxlint . --type-aware --fix",
+        "options": {
+          "cwd": "libs/web/features/home"
+        }
+      }
     }
   }
 }
