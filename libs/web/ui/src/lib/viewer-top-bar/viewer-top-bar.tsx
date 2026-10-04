@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from "@h2-fe/ui"
+import { Box, Button, Flex, Input, Text } from "@h2-fe/ui"
 import { useRef } from "react"
 
 interface ViewerTopBarProps {
