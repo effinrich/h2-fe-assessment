@@ -1,40 +1,42 @@
-import { useCallback, useRef } from "react"
-
-import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
+import { Button, FileUpload, Flex, Heading, Stack, Text } from "@h2-fe/ui"
 
 import type { HomeScreenProps } from "./types"
 
 // The route's own composition: teach what the canvas is for and offer two ways
-// in. The route provides callbacks; this screen holds only markup and the
-// file input's ref.
+// in. The route provides callbacks; this screen holds only markup.
 export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeScreenProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const handleOpenPdf = useCallback(() => inputRef.current?.click(), [])
-
   return (
-    <Flex align="center" justify="center" minH="100dvh" p="8">
-      <Box
+    <Flex align="center" justify="center" minH="100dvh" p={{ base: "4", md: "8" }}>
+      <Stack
         bg="bg.panel"
         borderColor="border"
         borderRadius="lg"
         borderWidth="1px"
         boxShadow="lg"
         color="fg"
-        p="8"
+        gap="6"
         maxW="sm"
+        p={{ base: "6", md: "8" }}
+        w="full"
       >
-        <Heading size="lg">Open a document</Heading>
-        <Text marginTop="2">A PDF lands on the canvas, ready to mark up.</Text>
-
-        <Button disabled={isBusy} marginTop="6" variant="solid" w="full" onClick={handleOpenPdf}>
-          {isBusy ? "Opening" : "Open PDF"}
-        </Button>
-        <Button disabled={isBusy} marginTop="2" variant="outline" w="full" onClick={onUseExample}>
-          Use an example
-        </Button>
-      </Box>
-
-      <input accept="application/pdf" hidden onChange={onFileChange} ref={inputRef} type="file" />
+        <Stack gap="2">
+          <Heading size="lg">Open a document</Heading>
+          <Text>A PDF lands on the canvas, ready to mark up.</Text>
+        </Stack>
+        <Stack gap="2">
+          <FileUpload.Root accept="application/pdf" disabled={isBusy} maxFiles={1} w="full">
+            <FileUpload.HiddenInput onChange={onFileChange} />
+            <FileUpload.Trigger asChild>
+              <Button disabled={isBusy} variant="solid" w="full">
+                {isBusy ? "Opening" : "Open PDF"}
+              </Button>
+            </FileUpload.Trigger>
+          </FileUpload.Root>
+          <Button disabled={isBusy} variant="outline" w="full" onClick={onUseExample}>
+            Use an example
+          </Button>
+        </Stack>
+      </Stack>
     </Flex>
   )
 }

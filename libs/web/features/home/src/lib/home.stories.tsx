@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { fn } from "storybook/test"
+import { expect, fn } from "storybook/test"
 
 import { HomeScreen } from "./home"
 
@@ -16,8 +16,26 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Idle: Story = {}
+export const Idle: Story = {
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const openPdf = canvas.getByRole("button", { name: "Open PDF" })
+    await expect(openPdf).toBeEnabled()
+    await expect(canvas.getByRole("button", { name: "Use an example" })).toBeEnabled()
+
+    const input = canvasElement.querySelector('input[type="file"]')
+    if (!(input instanceof HTMLInputElement)) {
+      throw new Error("expected a file input inside FileUpload")
+    }
+    const file = new File(["%PDF-1.4"], "pick.pdf", { type: "application/pdf" })
+    await userEvent.upload(input, file)
+    await expect(args.onFileChange).toHaveBeenCalled()
+  }
+}
 
 export const Busy: Story = {
-  args: { isBusy: true }
+  args: { isBusy: true },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("button", { name: "Opening" })).toBeDisabled()
+    await expect(canvas.getByRole("button", { name: "Use an example" })).toBeDisabled()
+  }
 }

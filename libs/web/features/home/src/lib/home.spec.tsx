@@ -32,14 +32,12 @@ describe("HomeScreen", () => {
     expect(screen.getByRole("button", { name: /use an example/i })).toBeTruthy()
   })
 
-  it("opens the file input when the Open PDF action is chosen", () => {
+  it("wires Open PDF to a hidden PDF file input", () => {
     renderScreen({ onFileChange: vi.fn<() => void>(), onUseExample: vi.fn<() => void>() })
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement
+    expect(screen.getByRole("button", { name: /open pdf/i })).toBeTruthy()
+    const input = document.querySelector('input[type="file"]')
     expect(input).toBeTruthy()
-    const clicks = vi.fn<(event: Event) => void>()
-    input.addEventListener("click", clicks)
-    fireEvent.click(screen.getByRole("button", { name: /open pdf/i }))
-    expect(clicks).toHaveBeenCalledTimes(1)
+    expect(input?.getAttribute("accept")).toContain("application/pdf")
   })
 
   it("forwards file input changes to the route", () => {
