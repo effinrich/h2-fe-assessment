@@ -38,6 +38,7 @@ export const Error: Story = {
 }
 
 export const Ready: Story = {
-  args: { onOpenAnother: fn() },
+  // A long filename so the truncated label is what the story captures.
+  args: { filename: 'sample-annotated-report-2026-q3.pdf', onOpenAnother: fn() },
   render: args => <PdfViewerScreen {...args} document={exampleDocument} />
 }

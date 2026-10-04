@@ -22,9 +22,9 @@ its own entry here, written as it lands.
 5. Full `bun run gate` (lint, format, typecheck, test, build, build-storybook);
    the gate's `shared-ui:build-storybook` run doubles as the explicit
    babel/storybook probe.
-6. For `generators."@nx/react"` edits: `bunx nx g @nx/react:lib tmp-probe
---dry-run` (names with leading underscores are invalid; dry-run makes no
-   changes) — the plan must still show `.oxlintrc.json` and `vite.config.mts`.
+6. For `generators."@nx/react"` edits: `bunx nx g @nx/react:lib tmp-probe --dry-run`
+   (names with leading underscores are invalid; dry-run makes no changes) — the
+   plan must still show `.oxlintrc.json` and `vite.config.mts`.
 
 ## Entries
 

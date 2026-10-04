@@ -26,6 +26,13 @@ export function ViewerTopBar({
     }
   }
 
+  // Blur abandons a half-typed jump instead of performing it: clicking Next
+  // blurs this field first, so committing on blur would navigate to the typed
+  // page instead of the button's target.
+  const abandonJump = () => {
+    if (pageInput.current) pageInput.current.value = String(page)
+  }
+
   return (
     <Flex
       align="start"
@@ -83,7 +90,7 @@ export function ViewerTopBar({
                 key={page}
                 max={totalPages}
                 min={1}
-                onBlur={jump}
+                onBlur={abandonJump}
                 ref={pageInput}
                 style={{ width: '3.5em', textAlign: 'center' }}
                 type="number"

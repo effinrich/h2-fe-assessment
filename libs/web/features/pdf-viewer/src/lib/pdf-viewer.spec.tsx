@@ -128,6 +128,8 @@ describe('PdfViewerScreen', () => {
     const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async numbers =>
       numbers.map(number => (number === 1 ? page : page2))
     )
+    // A mark the user drew, to prove page virtualisation leaves it alone.
+    stub.createShapes([{ id: 'shape:mark-1' }])
     renderScreen({
       document: { pages: [page, page2], renderPages, destroy: async () => {} },
       filename: 'example.pdf',
@@ -145,7 +147,7 @@ describe('PdfViewerScreen', () => {
     await waitFor(() => expect(renderPages).toHaveBeenCalledWith([2]))
     expect(stub.deleteShapes).toHaveBeenCalledWith(['shape:page-1'])
     expect(stub.run).toHaveBeenCalledWith(expect.any(Function), { history: 'ignore' })
-    expect(stub.deleteShapes).not.toHaveBeenCalledWith(['shape:mark-1'])
+    expect(stub.getShape('shape:mark-1')).toBeDefined()
   })
 
   it('shows a page-sized loading indicator until its raster completes', async () => {
