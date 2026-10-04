@@ -77,6 +77,13 @@ The architecture choice and its alternatives are recorded in
 - **Bundle.** The `/viewer` route is `React.lazy`, so tldraw, pdfjs and
   `tldraw.css` are not in the initial chunk (ADR 0011). Chunk sizes have not
   been measured or budgeted.
+- **Theme.** tldraw and Chakra stay two styling systems
+  ([ADR 0013](../decisions/0013-tldraw-chakra-theme-bridge.md)). Chakra owns
+  our chrome (top bar, modal, overlays). tldraw keeps its built-in UI. A
+  scoped wrapper maps Chakra semantic tokens onto tldraw's `--tl-color-*`
+  variables after `tldraw/tldraw.css`. Color mode is synced through
+  `editor.setColorMode` so a live `colorScheme` prop does not remount the
+  editor.
 
 An earlier draft of this spec claimed the document "mounts once" through
 tldraw's `ShapeUtil.getAppOwnedElement`. That was a plan, never built: no code
@@ -151,6 +158,11 @@ and committed failing before the code exists.
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** — no automated test yet; a 390px
       browser pass was done by hand (PR #4).
+- [ ] **The canvas theme follows the app color mode and reads Chakra semantic
+      tokens through `--app-*` → `--tl-color-*`.** tldraw's built-in UI stays
+      visible (`hideUi` is not set). Shape StyleProps are not used as a token
+      bridge. — `pdf-viewer.stories.tsx` › `FollowsAppColorMode`;
+      `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode".
 
 Dropped: **"The renderer element is mounted exactly once across pan, zoom,
 resize and reparent."** It described the `getAppOwnedElement` design that was
