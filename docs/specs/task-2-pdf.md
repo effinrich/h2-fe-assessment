@@ -158,6 +158,14 @@ and committed failing before the code exists.
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** — no automated test yet; a 390px
       browser pass was done by hand (PR #4).
+- [x] **Our top-bar chrome and tldraw's style panel do not share a pixel slot.
+      "Open another document" stays fully readable and clickable; the style
+      panel fill is opaque.** jsdom cannot prove stacking or computed panel
+      alpha. — `pdf-viewer.stories.tsx` › `ChromeClearsStylePanel` (real
+      tldraw; red before the offset). Tooltip placement over the opacity
+      slider is stock tldraw. `--chakra-colors-bg-panel` is already opaque
+      (`#FFFFFF` / `gray.950`); the show-through was the outline button on
+      the panel, not a translucent token.
 - [x] **The canvas theme follows the app color mode and reads Chakra semantic
       tokens through `--app-*` → `--tl-color-*`.** tldraw's built-in UI stays
       visible (`hideUi` is not set). Shape StyleProps are not used as a token

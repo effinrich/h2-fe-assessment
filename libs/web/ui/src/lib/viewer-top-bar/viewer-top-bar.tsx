@@ -119,7 +119,7 @@ export function ViewerTopBar({
           </Flex>
         )}
       </Flex>
-      <Flex gap="2" marginLeft="auto" pointerEvents="auto">
+      <Flex flexShrink="0" gap="2" marginLeft="auto" pointerEvents="auto" whiteSpace="nowrap">
         <ColorModeButton />
         <Button onClick={onOpenAnother} variant="outline">
           Open another document

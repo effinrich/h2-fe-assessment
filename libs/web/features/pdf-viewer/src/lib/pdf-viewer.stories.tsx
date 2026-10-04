@@ -306,3 +306,49 @@ export const FollowsAppColorMode: Story = {
     )
   }
 }
+
+function stylePanel(canvasElement: HTMLElement) {
+  return canvasElement.querySelector<HTMLElement>("[data-testid='style.panel']")
+}
+
+function boxesOverlap(a: DOMRect, b: DOMRect) {
+  return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom)
+}
+
+function cssColorAlpha(color: string) {
+  const value = color.trim()
+  if (!value || value === "transparent") return 0
+  const slashAlpha = value.match(/\/\s*([\d.]+%?)\s*\)/)
+  if (slashAlpha?.[1]) {
+    const raw = slashAlpha[1]
+    return raw.endsWith("%") ? Number.parseFloat(raw) / 100 : Number.parseFloat(raw)
+  }
+  const rgba = value.match(/rgba?\(([^)]+)\)/)
+  if (rgba?.[1]) {
+    const parts = rgba[1].split(",").map((part) => part.trim())
+    if (parts.length === 4) return Number.parseFloat(parts[3] ?? "1")
+  }
+  return 1
+}
+
+// Spec: docs/specs/task-2-pdf.md — Open another document stays off tldraw's
+// style panel, and the panel fill is opaque. Only a real browser can prove
+// stacking and computed background alpha; the jsdom stub never mounts tldraw UI.
+export const ChromeClearsStylePanel: Story = {
+  args: { filename: "example.pdf", onOpenAnother: fn() },
+  parameters: { layout: "fullscreen" },
+  render: (args) => <PdfViewerScreen {...args} document={exampleDocument} />,
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const openAnother = await canvas.findByRole("button", { name: "Open another document" })
+    await waitFor(() => expect(stylePanel(canvasElement)).not.toBeNull())
+    const panel = stylePanel(canvasElement)!
+
+    await userEvent.click(openAnother)
+    await expect(args.onOpenAnother).toHaveBeenCalled()
+    await expect(openAnother.getClientRects()).toHaveLength(1)
+    await expect(
+      boxesOverlap(openAnother.getBoundingClientRect(), panel.getBoundingClientRect())
+    ).toBe(false)
+    await expect(cssColorAlpha(getComputedStyle(panel).backgroundColor)).toBe(1)
+  }
+}

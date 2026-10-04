@@ -30,3 +30,12 @@
   --tl-color-focus: var(--app-focus);
   --tl-color-primary: var(--app-accent);
 }
+
+/* Stock tldraw parks the style panel in the top-right (tldraw.css
+   .tlui-style-panel__wrapper { margin-top: 4px } / :only-child { 8px },
+   z-index: var(--tl-layer-panels) = 300). ViewerTopBar is a sibling at
+   z-index 400, so "Open another document" paints on the panel. Drop the
+   whole right column below one chrome row: p=4 + md control + gap. */
+.h2-canvas-theme .tlui-layout__top__right {
+  padding-top: 5rem;
+}
