@@ -1,8 +1,7 @@
-import { IconButton, type IconButtonProps } from "@chakra-ui/react"
+import { Icon, IconButton, type IconButtonProps } from "@chakra-ui/react"
+import { Moon, Sun } from "lucide-react"
 
 import { useColorMode } from "./hooks"
-import { MoonIcon } from "./partials/moon-icon"
-import { SunIcon } from "./partials/sun-icon"
 
 export type ColorModeButtonProps = Omit<IconButtonProps, "aria-label" | "onClick">
 
@@ -18,7 +17,7 @@ export function ColorModeButton(props: ColorModeButtonProps) {
       onClick={toggleColorMode}
       {...props}
     >
-      {isDark ? <MoonIcon /> : <SunIcon />}
+      <Icon asChild>{isDark ? <Moon /> : <Sun />}</Icon>
     </IconButton>
   )
 }

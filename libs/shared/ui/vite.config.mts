@@ -41,6 +41,7 @@ export default defineConfig(() => ({
         "react/jsx-runtime",
         "@chakra-ui/react",
         "@emotion/react",
+        "lucide-react",
         "next-themes"
       ]
     }

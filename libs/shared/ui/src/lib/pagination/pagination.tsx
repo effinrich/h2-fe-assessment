@@ -1,7 +1,5 @@
-import { HStack, IconButton, Pagination as ChakraPagination } from "@chakra-ui/react"
-
-import { ChevronLeftIcon } from "./partials/chevron-left-icon"
-import { ChevronRightIcon } from "./partials/chevron-right-icon"
+import { HStack, Icon, IconButton, Pagination as ChakraPagination } from "@chakra-ui/react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export interface PaginationProps extends Omit<
   ChakraPagination.RootProps,
@@ -19,7 +17,9 @@ export function Pagination({ buttonSize = "sm", onPageChange, ...rootProps }: Pa
       <HStack gap="1">
         <ChakraPagination.PrevTrigger asChild>
           <IconButton variant="ghost" size={buttonSize}>
-            <ChevronLeftIcon />
+            <Icon asChild>
+              <ChevronLeft />
+            </Icon>
           </IconButton>
         </ChakraPagination.PrevTrigger>
         <ChakraPagination.Items
@@ -31,7 +31,9 @@ export function Pagination({ buttonSize = "sm", onPageChange, ...rootProps }: Pa
         />
         <ChakraPagination.NextTrigger asChild>
           <IconButton variant="ghost" size={buttonSize}>
-            <ChevronRightIcon />
+            <Icon asChild>
+              <ChevronRight />
+            </Icon>
           </IconButton>
         </ChakraPagination.NextTrigger>
       </HStack>

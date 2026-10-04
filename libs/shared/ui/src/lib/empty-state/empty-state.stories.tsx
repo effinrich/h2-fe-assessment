@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
 import { Button } from "@chakra-ui/react"
+import { Moon } from "lucide-react"
 
-import { MoonIcon } from "../color-mode-button/partials/moon-icon"
 import { EmptyState } from "./empty-state"
 
 const meta = {
@@ -21,7 +21,7 @@ export const Default: Story = {}
 
 export const WithIconAndAction: Story = {
   args: {
-    icon: <MoonIcon />,
+    icon: <Moon />,
     children: <Button size="sm">Import file</Button>
   }
 }
