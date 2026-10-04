@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UiProvider } from "@h2-fe/ui";
 import { MemoryRouter } from "react-router-dom";
@@ -26,6 +26,15 @@ describe("App route table", () => {
   it("renders the home surface at '/'", () => {
     renderAt("/");
     expect(screen.getByRole("heading", { name: "Open a document" })).toBeTruthy();
+  });
+
+  it("passes a picked PDF from the home route to the viewer", async () => {
+    renderAt("/");
+    const file = new File(["%PDF-1.4 truncated"], "pick.pdf", { type: "application/pdf" });
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { files: [file] } });
+    await waitFor(() => expect(screen.getByRole("alert")).toBeTruthy());
+    expect(screen.getByRole("button", { name: /open another document/i })).toBeTruthy();
   });
 
   it("redirects '/viewer' with no handoff to home", async () => {

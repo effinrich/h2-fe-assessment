@@ -20,7 +20,9 @@ export function Tabs({ items, value, defaultValue, onValueChange, ...rootProps }
       {...rootProps}
       value={value}
       defaultValue={
-        value === undefined ? (defaultValue ?? items.find(item => !item.disabled)?.value) : undefined
+        value === undefined
+          ? (defaultValue ?? items.find((item) => !item.disabled)?.value)
+          : undefined
       }
       onValueChange={(details) => onValueChange?.(details.value)}
     >

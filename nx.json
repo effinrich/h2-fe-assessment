@@ -84,7 +84,7 @@
     "typecheck": {
       "dependsOn": ["build", "^build"]
     },
-    "oxfmt": {
+    "format": {
       "executor": "nx:run-commands",
       "options": {
         "command": "oxfmt --check .",
@@ -93,7 +93,7 @@
       "cache": true,
       "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json", { "externalDependencies": ["oxfmt"] }]
     },
-    "oxfmt:fix": {
+    "format:fix": {
       "executor": "nx:run-commands",
       "options": {
         "command": "oxfmt --write .",

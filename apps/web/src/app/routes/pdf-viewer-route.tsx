@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer";
 import type { PdfDocumentSummary } from "@h2-fe/pdf-viewer";
@@ -14,9 +15,31 @@ export default function PdfViewerRoute() {
   const result = usePdfPages(file);
   const document = result.data;
   const activeDocument = useRef<PdfDocumentSummary | null>(null);
+  const [hasMarks, setHasMarks] = useState(false);
+  const [confirmExit, setConfirmExit] = useState(false);
+  const confirmDialog = useRef<HTMLDialogElement>(null);
 
-  // Hooks before branching; the early return below is presentation-only.
-  const onOpenAnother = useCallback(() => navigate("/", { replace: true }), [navigate]);
+  useEffect(() => {
+    const dialog = confirmDialog.current;
+    if (!dialog) return;
+    if (confirmExit && !dialog.open) dialog.showModal();
+    if (!confirmExit && dialog.open) dialog.close();
+  }, [confirmExit]);
+
+  const onOpenAnother = useCallback(() => {
+    if (hasMarks) setConfirmExit(true);
+    else navigate("/", { replace: true });
+  }, [hasMarks, navigate]);
+
+  useEffect(() => {
+    if (!hasMarks) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasMarks]);
   useEffect(() => {
     activeDocument.current = document ?? null;
     if (!document) return;
@@ -34,14 +57,43 @@ export default function PdfViewerRoute() {
   if (!file) return null;
 
   return (
-    <PdfViewerScreen
-      isLoading={result.isLoading}
-      isError={result.isError}
-      onOpenAnother={onOpenAnother}
-      onRetry={() => {
-        void result.refetch();
-      }}
-      document={document}
-    />
+    <>
+      <PdfViewerScreen
+        filename={file.name}
+        onMarksChange={setHasMarks}
+        isLoading={result.isLoading}
+        isError={result.isError}
+        onOpenAnother={onOpenAnother}
+        onRetry={() => {
+          void result.refetch();
+        }}
+        document={document}
+      />
+      <dialog
+        aria-labelledby="discard-title"
+        onCancel={() => setConfirmExit(false)}
+        ref={confirmDialog}
+        style={{
+          border: 0,
+          borderRadius: 12,
+          margin: "auto",
+          maxWidth: 380,
+          width: "calc(100% - 32px)",
+        }}
+      >
+        <Box bg="bg.panel" p="6">
+          <Heading id="discard-title" size="md">
+            Leave this document?
+          </Heading>
+          <Text mt="2">Your marks aren't saved and will be lost.</Text>
+          <Flex gap="3" mt="6">
+            <Button onClick={() => setConfirmExit(false)} variant="outline">
+              Keep working
+            </Button>
+            <Button onClick={() => navigate("/", { replace: true })}>Discard marks</Button>
+          </Flex>
+        </Box>
+      </dialog>
+    </>
   );
 }

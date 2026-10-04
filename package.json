@@ -15,11 +15,11 @@
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
-    "oxfmt": "nx run-many -t oxfmt",
-    "oxfmt:fix": "nx run-many -t oxfmt:fix",
+    "format": "nx run-many -t format",
+    "format:fix": "nx run-many -t format:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
-    "gate": "nx affected -t lint,oxfmt,typecheck,test,build,build-storybook"
+    "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",

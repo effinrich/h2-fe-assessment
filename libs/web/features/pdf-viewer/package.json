@@ -27,8 +27,14 @@
           ]
         }
       },
-      "oxfmt": {},
-      "oxfmt:fix": {}
+      "format": {},
+      "format:fix": {},
+      "lint:fix": {
+        "command": "oxlint . --type-aware --fix",
+        "options": {
+          "cwd": "libs/web/features/pdf-viewer"
+        }
+      }
     }
   }
 }

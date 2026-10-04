@@ -36,12 +36,13 @@ made during this project's setup.
   in the root `.oxlintrc.json` enforces them. An illegal import fails lint
   before tests run.
 - `nx affected` over `--all` on any branch. `bun run gate` =
-  `nx affected -t lint,oxfmt,typecheck,test,build,build-storybook`.
+  `nx affected -t lint,format,typecheck,test,build,build-storybook`.
 - **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
   inferred target (`args: ["--type-aware"]` in `project.json`); never write
   `@nx/oxlint:lint`. Two plugins must not claim the same target name.
-- **oxfmt** formats via `oxfmt` / `oxfmt:fix` (nx.json `targetDefaults`); root
-  scripts mirror `lint` / `lint:fix`.
+- **Target names are `lint` and `format`.** `oxlint` and `oxfmt` are only the
+  binaries behind those targets — never target names. `format` / `format:fix`
+  live in nx.json `targetDefaults`; root scripts mirror `lint` / `lint:fix`.
 - LF line endings (`.gitattributes`). Every Action in every workflow is pinned
   to a full commit SHA with a `# vX.Y.Z` comment. `ci.yml` runs `bun run gate`
   after `nrwl/nx-set-shas`.

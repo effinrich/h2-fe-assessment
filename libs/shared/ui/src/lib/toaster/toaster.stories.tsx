@@ -83,6 +83,8 @@ export const WithAction: Story = {
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Delete shape" }));
     await userEvent.click(await screen.findByRole("button", { name: "Undo" }));
-    await expect(await screen.findByText("Restored")).toBeInTheDocument();
+    // The toaster is a shared store, so a re-run of the story can leave more
+    // than one toast with this title mounted. Assert presence, not uniqueness.
+    await expect((await screen.findAllByText("Restored")).length).toBeGreaterThan(0);
   },
 };

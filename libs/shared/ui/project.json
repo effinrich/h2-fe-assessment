@@ -19,8 +19,8 @@
         "cwd": "{projectRoot}"
       }
     },
-    "oxfmt": {},
-    "oxfmt:fix": {},
+    "format": {},
+    "format:fix": {},
     "storybook": {
       "executor": "@nx/storybook:storybook",
       "options": {

@@ -19,12 +19,12 @@ its own entry here, written as it lands.
 3. `bunx nx graph --file=...` still parses.
 4. Targeted greps across `nx.json`, all project/package jsons, vite configs,
    and workflows.
-5. Full `bun run gate` (lint, oxfmt, typecheck, test, build, build-storybook);
+5. Full `bun run gate` (lint, format, typecheck, test, build, build-storybook);
    the gate's `shared-ui:build-storybook` run doubles as the explicit
    babel/storybook probe.
-6. For `generators."@nx/react"` edits: `bunx nx g @nx/react:lib tmp-probe
-   --dry-run` (names with leading underscores are invalid; dry-run makes no
-   changes) — the plan must still show `.oxlintrc.json` and `vite.config.mts`.
+6. For `generators."@nx/react"` edits: `bunx nx g @nx/react:lib tmp-probe --dry-run`
+   (names with leading underscores are invalid; dry-run makes no changes) — the
+   plan must still show `.oxlintrc.json` and `vite.config.mts`.
 
 ## Entries
 
@@ -136,4 +136,22 @@ its own entry here, written as it lands.
 - Consequence: the audit's "importers feature" is gone from the graph; the
   intended tier set is in its place.
 
+### Entry 5 — remove reverse web UI dependencies
 
+- Date: 2026-10-03
+- Change: remove `@h2-fe/web-ui`'s implicit dependencies on `home` and
+  `pdf-viewer`. Its `build-storybook` inputs already include feature stories.
+- Cause: `pdf-viewer` imports `web-ui`; the reverse implicit edge creates a
+  circular project dependency and makes boundary lint fail.
+- Verification: graph shows `pdf-viewer → web-ui → shared-ui` with no reverse
+  feature edges; all-project lint, format, typecheck, and tests pass. Full gate
+  must also pass before merging this branch.
+
+### Entry 6 — align formatter target names
+
+- Date: 2026-10-03
+- Change: rename the `oxfmt` and `oxfmt:fix` Nx targets to `format` and
+  `format:fix` in target defaults, project declarations, root scripts, and the
+  affected gate. The executable remains oxfmt; `lint` remains oxlint.
+- Verification: `nx show project` resolves both format targets across the
+  projects; run the full gate with the new target before merging.

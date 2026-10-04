@@ -3,16 +3,10 @@ import { Box, Button, Flex, Heading, Text } from '@h2-fe/ui'
 import type { HomeScreenProps } from './types'
 
 // The route's own composition: teach what the canvas is for and offer two ways
-// in. Everything stateful is a callback the route wrapper provides — this file
-// holds nothing but markup, the file input's own ref, and the busy flag.
-export function HomeScreen({ onFileChosen, onUseExample, isBusy = false }: HomeScreenProps) {
+// in. The route provides callbacks; this screen holds only markup and the
+// file input's ref.
+export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeScreenProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const handlePick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    event.target.value = ''
-    if (file) onFileChosen(file)
-  }
 
   return (
     <Flex align="center" justify="center" minH="100dvh" p="8">
@@ -45,7 +39,7 @@ export function HomeScreen({ onFileChosen, onUseExample, isBusy = false }: HomeS
         </Button>
       </Box>
 
-      <input accept="application/pdf" hidden onChange={handlePick} ref={inputRef} type="file" />
+      <input accept="application/pdf" hidden onChange={onFileChange} ref={inputRef} type="file" />
     </Flex>
   )
 }

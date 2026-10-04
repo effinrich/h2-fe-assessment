@@ -98,6 +98,16 @@ Honest about what can be proven where, because jsdom cannot rasterise a PDF:
 - **Visual (Chromatic):** the empty, loading, error and success states, so a
   regression in any of them is a diff rather than a discovery.
 
+## Viewer workspace acceptance (product review)
+
+- [x] A visible multi-page PDF identifies its filename and shows the current page out of the total; previous, next, and a bounded 1-based page jump move the canvas without rasterising the entire PDF. — `viewer-top-bar.stories.tsx` play tests; `pdf-viewer.spec.tsx` next-page test.
+- [x] A visible page shows loading feedback until its image is ready. A failed page has a page-specific retry that succeeds without clearing other pages, unmounting tldraw, or destroying the document; an invalid PDF retains the document-level error and retry. — `pdf-viewer.spec.tsx` loading-indicator and page-retry tests.
+- [x] Independent canvas marks survive page virtualization and page retry. PDF placeholder shapes and assets alone never count as unsaved marks. — `pdf-viewer.spec.tsx` seeded-mark test.
+- [x] With unsaved marks, “Open another document” offers a cancelable warning; without marks it exits directly. Browser refresh/close prompts only while marked, where the browser supports it. Neither flow claims marks are persisted. — `pdf-viewer-route.spec.tsx`.
+- [ ] Filename truncation, page controls, loading and error feedback remain legible and keyboard-accessible at narrow widths; tldraw's own tool and zoom controls are not duplicated.
+
+These are enhancements, not controls mandated by the demo. Persistence across refresh, thumbnails, outline, and annotated-PDF export are deferred.
+
 ## Out of scope
 
 - **Editing or annotating the PDF.** The brief asks to display it; tldraw's own

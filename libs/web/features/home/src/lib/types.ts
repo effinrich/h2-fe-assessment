@@ -1,5 +1,7 @@
+import type { ChangeEventHandler } from 'react'
+
 export interface HomeScreenProps {
-  onFileChosen: (file: File) => void
+  onFileChange: ChangeEventHandler<HTMLInputElement>
   onUseExample: () => void
   isBusy?: boolean
 }

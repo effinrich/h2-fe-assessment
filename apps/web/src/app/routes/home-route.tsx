@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { createExamplePdf, HomeScreen } from "@h2-fe/home";
 
@@ -13,6 +13,12 @@ export default function HomeRoute() {
     navigate("/viewer", { state: { file } });
   };
 
+  const handlePick = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (file) openViewerWith(file);
+  };
+
   const onUseExample = async () => {
     setIsBusy(true);
     try {
@@ -22,5 +28,5 @@ export default function HomeRoute() {
     }
   };
 
-  return <HomeScreen isBusy={isBusy} onFileChosen={openViewerWith} onUseExample={onUseExample} />;
+  return <HomeScreen isBusy={isBusy} onFileChange={handlePick} onUseExample={onUseExample} />;
 }
