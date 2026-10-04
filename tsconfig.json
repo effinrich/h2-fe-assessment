@@ -17,6 +17,9 @@
     },
     {
       "path": "./libs/web/ui"
+    },
+    {
+      "path": "./libs/web/features/pin"
     }
   ]
 }

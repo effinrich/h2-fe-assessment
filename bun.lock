@@ -69,6 +69,10 @@
       "name": "@h2-fe/pdf-viewer",
       "version": "0.0.1",
     },
+    "libs/web/features/pin": {
+      "name": "@h2-fe/pin",
+      "version": "0.0.1",
+    },
     "libs/web/ui": {
       "name": "@h2-fe/web-ui",
       "version": "0.0.1",
@@ -408,6 +412,8 @@
     "@h2-fe/home": ["@h2-fe/home@workspace:libs/web/features/home"],
 
     "@h2-fe/pdf-viewer": ["@h2-fe/pdf-viewer@workspace:libs/web/features/pdf-viewer"],
+
+    "@h2-fe/pin": ["@h2-fe/pin@workspace:libs/web/features/pin"],
 
     "@h2-fe/ui": ["@h2-fe/ui@workspace:libs/shared/ui"],
 
