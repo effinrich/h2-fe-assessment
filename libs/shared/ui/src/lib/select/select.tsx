@@ -1,21 +1,21 @@
-import { createListCollection, Portal, Select as ChakraSelect } from "@chakra-ui/react";
-import { type ReactNode, useMemo } from "react";
+import { createListCollection, Portal, Select as ChakraSelect } from '@chakra-ui/react'
+import { type ReactNode, useMemo } from 'react'
 
 export interface SelectOption {
-  value: string;
-  label: string;
-  disabled?: boolean;
+  value: string
+  label: string
+  disabled?: boolean
 }
 
 export interface SelectProps extends Omit<
   ChakraSelect.RootProps<SelectOption>,
-  "collection" | "children" | "onValueChange"
+  'collection' | 'children' | 'onValueChange'
 > {
-  items: SelectOption[];
-  label?: ReactNode;
-  placeholder?: string;
+  items: SelectOption[]
+  label?: ReactNode
+  placeholder?: string
   /** Selected values; holds at most one entry unless `multiple` is set. */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: string[]) => void
 }
 
 export function Select({
@@ -26,14 +26,14 @@ export function Select({
   positioning,
   ...rootProps
 }: SelectProps) {
-  const collection = useMemo(() => createListCollection({ items }), [items]);
+  const collection = useMemo(() => createListCollection({ items }), [items])
 
   return (
     <ChakraSelect.Root
       {...rootProps}
       collection={collection}
       positioning={{ sameWidth: true, ...positioning }}
-      onValueChange={(details) => onValueChange?.(details.value)}
+      onValueChange={details => onValueChange?.(details.value)}
     >
       <ChakraSelect.HiddenSelect />
       {label ? <ChakraSelect.Label>{label}</ChakraSelect.Label> : null}
@@ -48,7 +48,7 @@ export function Select({
       <Portal>
         <ChakraSelect.Positioner>
           <ChakraSelect.Content>
-            {collection.items.map((item) => (
+            {collection.items.map(item => (
               <ChakraSelect.Item key={item.value} item={item}>
                 {item.label}
                 <ChakraSelect.ItemIndicator />
@@ -58,5 +58,5 @@ export function Select({
         </ChakraSelect.Positioner>
       </Portal>
     </ChakraSelect.Root>
-  );
+  )
 }

@@ -1,18 +1,18 @@
-import { CloseButton, Drawer as ChakraDrawer, Portal } from "@chakra-ui/react";
-import type { ReactElement, ReactNode } from "react";
+import { CloseButton, Drawer as ChakraDrawer, Portal } from '@chakra-ui/react'
+import type { ReactElement, ReactNode } from 'react'
 
 export interface DrawerProps {
-  title: ReactNode;
-  children: ReactNode;
-  footer?: ReactNode;
+  title: ReactNode
+  children: ReactNode
+  footer?: ReactNode
   /** A single element that opens the drawer; omit it to control `open` yourself. */
-  trigger?: ReactElement;
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  placement?: ChakraDrawer.RootProps["placement"];
-  size?: ChakraDrawer.RootProps["size"];
-  closeLabel?: string;
+  trigger?: ReactElement
+  open?: boolean
+  defaultOpen?: boolean
+  onOpenChange?: (open: boolean) => void
+  placement?: ChakraDrawer.RootProps['placement']
+  size?: ChakraDrawer.RootProps['size']
+  closeLabel?: string
 }
 
 export function Drawer({
@@ -23,15 +23,15 @@ export function Drawer({
   open,
   defaultOpen,
   onOpenChange,
-  placement = "end",
+  placement = 'end',
   size,
-  closeLabel = "Close",
+  closeLabel = 'Close'
 }: DrawerProps) {
   return (
     <ChakraDrawer.Root
       open={open}
       defaultOpen={defaultOpen}
-      onOpenChange={(details) => onOpenChange?.(details.open)}
+      onOpenChange={details => onOpenChange?.(details.open)}
       placement={placement}
       size={size}
       lazyMount
@@ -54,5 +54,5 @@ export function Drawer({
         </ChakraDrawer.Positioner>
       </Portal>
     </ChakraDrawer.Root>
-  );
+  )
 }

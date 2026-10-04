@@ -1,37 +1,37 @@
-import { Menu as ChakraMenu, Portal } from "@chakra-ui/react";
-import type { ReactElement, ReactNode } from "react";
+import { Menu as ChakraMenu, Portal } from '@chakra-ui/react'
+import type { ReactElement, ReactNode } from 'react'
 
 export interface MenuOption {
-  value: string;
-  label: ReactNode;
+  value: string
+  label: ReactNode
   /** Keyboard hint shown at the end of the item, e.g. "⌘E". */
-  command?: string;
-  disabled?: boolean;
+  command?: string
+  disabled?: boolean
   /** Styles the item as destructive. */
-  danger?: boolean;
+  danger?: boolean
 }
 
-export interface MenuProps extends Omit<ChakraMenu.RootProps, "children" | "onSelect"> {
+export interface MenuProps extends Omit<ChakraMenu.RootProps, 'children' | 'onSelect'> {
   /** A single button element that opens the menu. */
-  trigger: ReactElement;
-  items: MenuOption[];
-  onSelect?: (value: string) => void;
+  trigger: ReactElement
+  items: MenuOption[]
+  onSelect?: (value: string) => void
 }
 
 export function Menu({ trigger, items, onSelect, ...rootProps }: MenuProps) {
   return (
-    <ChakraMenu.Root {...rootProps} onSelect={(details) => onSelect?.(details.value)}>
+    <ChakraMenu.Root {...rootProps} onSelect={details => onSelect?.(details.value)}>
       <ChakraMenu.Trigger asChild>{trigger}</ChakraMenu.Trigger>
       <Portal>
         <ChakraMenu.Positioner>
           <ChakraMenu.Content>
-            {items.map((item) => (
+            {items.map(item => (
               <ChakraMenu.Item
                 key={item.value}
                 value={item.value}
                 disabled={item.disabled}
-                color={item.danger ? "fg.error" : undefined}
-                _hover={item.danger ? { bg: "bg.error", color: "fg.error" } : undefined}
+                color={item.danger ? 'fg.error' : undefined}
+                _hover={item.danger ? { bg: 'bg.error', color: 'fg.error' } : undefined}
               >
                 {item.label}
                 {item.command ? (
@@ -43,5 +43,5 @@ export function Menu({ trigger, items, onSelect, ...rootProps }: MenuProps) {
         </ChakraMenu.Positioner>
       </Portal>
     </ChakraMenu.Root>
-  );
+  )
 }

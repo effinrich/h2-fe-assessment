@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Stack } from "./layout";
-import { Code, Heading, Link, Text } from "./typography";
+import { Stack } from './layout'
+import { Code, Heading, Link, Text } from './typography'
 
 const meta = {
-  title: "Primitives/Typography",
-} satisfies Meta;
+  title: 'Primitives/Typography'
+} satisfies Meta
 
-export default meta;
-type Story = StoryObj;
+export default meta
+type Story = StoryObj
 
 export const Headings: Story = {
   render: () => (
@@ -26,20 +26,20 @@ export const Headings: Story = {
         Heading lg
       </Heading>
     </Stack>
-  ),
-};
+  )
+}
 
 export const Body: Story = {
   render: () => (
     <Stack gap="3" maxW="prose">
       <Text textStyle="lg">Large body text for introductions.</Text>
       <Text>
-        Default body text with an inline <Link href="https://chakra-ui.com">link</Link> and a{" "}
+        Default body text with an inline <Link href="https://chakra-ui.com">link</Link> and a{' '}
         <Code>code</Code> snippet.
       </Text>
       <Text textStyle="sm" color="fg.muted">
         Small muted text for supporting detail.
       </Text>
     </Stack>
-  ),
-};
+  )
+}

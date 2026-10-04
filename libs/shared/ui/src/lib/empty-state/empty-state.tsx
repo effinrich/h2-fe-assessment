@@ -1,12 +1,12 @@
-import { EmptyState as ChakraEmptyState, VStack } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { EmptyState as ChakraEmptyState, VStack } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 
-export interface EmptyStateProps extends Omit<ChakraEmptyState.RootProps, "title"> {
-  title: ReactNode;
-  description?: ReactNode;
-  icon?: ReactNode;
+export interface EmptyStateProps extends Omit<ChakraEmptyState.RootProps, 'title'> {
+  title: ReactNode
+  description?: ReactNode
+  icon?: ReactNode
   /** Actions shown under the text, e.g. a "Create" button. */
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 export function EmptyState({ title, description, icon, children, ...rootProps }: EmptyStateProps) {
@@ -23,5 +23,5 @@ export function EmptyState({ title, description, icon, children, ...rootProps }:
         {children}
       </ChakraEmptyState.Content>
     </ChakraEmptyState.Root>
-  );
+  )
 }

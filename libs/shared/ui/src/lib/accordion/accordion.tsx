@@ -1,20 +1,20 @@
-import { Accordion as ChakraAccordion, Span } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { Accordion as ChakraAccordion, Span } from '@chakra-ui/react'
+import type { ReactNode } from 'react'
 
 export interface AccordionItemData {
-  value: string;
-  title: ReactNode;
-  content: ReactNode;
-  disabled?: boolean;
+  value: string
+  title: ReactNode
+  content: ReactNode
+  disabled?: boolean
 }
 
 export interface AccordionProps extends Omit<
   ChakraAccordion.RootProps,
-  "children" | "onValueChange"
+  'children' | 'onValueChange'
 > {
-  items: AccordionItemData[];
+  items: AccordionItemData[]
   /** Values of the open items. */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: string[]) => void
 }
 
 /** Unlike Chakra's default, an open item can be closed again (`collapsible` defaults to true). */
@@ -28,9 +28,9 @@ export function Accordion({
     <ChakraAccordion.Root
       {...rootProps}
       collapsible={collapsible}
-      onValueChange={(details) => onValueChange?.(details.value)}
+      onValueChange={details => onValueChange?.(details.value)}
     >
-      {items.map((item) => (
+      {items.map(item => (
         <ChakraAccordion.Item key={item.value} value={item.value} disabled={item.disabled}>
           <ChakraAccordion.ItemTrigger>
             <Span flex="1">{item.title}</Span>
@@ -42,5 +42,5 @@ export function Accordion({
         </ChakraAccordion.Item>
       ))}
     </ChakraAccordion.Root>
-  );
+  )
 }

@@ -24,8 +24,8 @@ made during this project's setup.
   (`The "path" argument must be of type string`).
 - **Install at the root.** Every dependency goes in the root `package.json`
   (`bun install` from the repo root, no `-w`). Workspace `package.json` files
-  list no dependencies and no proxy scripts. The root `package.json` has no
-  `nx` key.
+  list no dependencies and no proxy scripts. The root `package.json`'s `nx`
+  block holds only `includedScripts: []`.
 - **No manual linking.** Nx infers project edges from imports and bun workspaces
   resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
   Tags restrict imports; they don't link.

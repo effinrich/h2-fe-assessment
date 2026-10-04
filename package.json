@@ -19,7 +19,9 @@
     "format:fix": "nx run-many -t format:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
-    "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook"
+    "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook",
+    "storybook:web": "nx run @h2-fe/web-ui:storybook",
+    "build-storybook:web": "nx run @h2-fe/web-ui:build-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",

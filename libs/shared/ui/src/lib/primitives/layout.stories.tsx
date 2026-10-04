@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { ReactNode } from "react";
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ReactNode } from 'react'
 
 import {
   Box,
@@ -12,22 +12,22 @@ import {
   Separator,
   SimpleGrid,
   Stack,
-  VStack,
-} from "./layout";
+  VStack
+} from './layout'
 
 const meta = {
-  title: "Primitives/Layout",
-} satisfies Meta;
+  title: 'Primitives/Layout'
+} satisfies Meta
 
-export default meta;
-type Story = StoryObj;
+export default meta
+type Story = StoryObj
 
 function Tile({ children }: { children: ReactNode }) {
   return (
     <Box bg="brand.subtle" color="brand.fg" px="4" py="3" rounded="md" textAlign="center">
       {children}
     </Box>
-  );
+  )
 }
 
 export const Stacks: Story = {
@@ -46,8 +46,8 @@ export const Stacks: Story = {
         <Tile>VStack 2</Tile>
       </VStack>
     </Stack>
-  ),
-};
+  )
+}
 
 export const FlexRow: Story = {
   render: () => (
@@ -56,13 +56,13 @@ export const FlexRow: Story = {
       <Tile>Middle</Tile>
       <Tile>End</Tile>
     </Flex>
-  ),
-};
+  )
+}
 
 export const Grids: Story = {
   render: () => (
     <Stack gap="6">
-      <Grid templateColumns={{ base: "1fr", md: "200px 1fr" }} gap="3">
+      <Grid templateColumns={{ base: '1fr', md: '200px 1fr' }} gap="3">
         <GridItem>
           <Tile>Sidebar</Tile>
         </GridItem>
@@ -76,8 +76,8 @@ export const Grids: Story = {
         <Tile>Three</Tile>
       </SimpleGrid>
     </Stack>
-  ),
-};
+  )
+}
 
 export const ContainerAndCenter: Story = {
   render: () => (
@@ -86,8 +86,8 @@ export const ContainerAndCenter: Story = {
         Centered in a container
       </Center>
     </Container>
-  ),
-};
+  )
+}
 
 export const Separators: Story = {
   render: () => (
@@ -100,5 +100,5 @@ export const Separators: Story = {
         <span>Right</span>
       </HStack>
     </Stack>
-  ),
-};
+  )
+}

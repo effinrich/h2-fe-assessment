@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Avatar } from "../avatar/avatar";
-import { Stat } from "../stat/stat";
-import { AvatarGroup, Badge, Card, List, StatGroup, Table } from "./data-display";
-import { HStack, Stack } from "./layout";
-import { Text } from "./typography";
+import { Avatar } from '../avatar/avatar'
+import { Stat } from '../stat/stat'
+import { AvatarGroup, Badge, Card, List, StatGroup, Table } from './data-display'
+import { HStack, Stack } from './layout'
+import { Text } from './typography'
 
 const meta = {
-  title: "Primitives/Data display",
-} satisfies Meta;
+  title: 'Primitives/Data display'
+} satisfies Meta
 
-export default meta;
-type Story = StoryObj;
+export default meta
+type Story = StoryObj
 
 export const Badges: Story = {
   render: () => (
@@ -25,8 +25,8 @@ export const Badges: Story = {
         Archived
       </Badge>
     </HStack>
-  ),
-};
+  )
+}
 
 export const Cards: Story = {
   render: () => (
@@ -42,8 +42,8 @@ export const Cards: Story = {
         <Badge colorPalette="green">Ready</Badge>
       </Card.Footer>
     </Card.Root>
-  ),
-};
+  )
+}
 
 export const Lists: Story = {
   render: () => (
@@ -57,13 +57,13 @@ export const Lists: Story = {
         <List.Item>Second step</List.Item>
       </List.Root>
     </Stack>
-  ),
-};
+  )
+}
 
 const rows = [
-  { id: 1, name: "shapes.json", size: "12 KB" },
-  { id: 2, name: "pins.csv", size: "3 KB" },
-];
+  { id: 1, name: 'shapes.json', size: '12 KB' },
+  { id: 2, name: 'pins.csv', size: '3 KB' }
+]
 
 export const Tables: Story = {
   render: () => (
@@ -75,7 +75,7 @@ export const Tables: Story = {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {rows.map((row) => (
+        {rows.map(row => (
           <Table.Row key={row.id}>
             <Table.Cell>{row.name}</Table.Cell>
             <Table.Cell textAlign="end">{row.size}</Table.Cell>
@@ -83,8 +83,8 @@ export const Tables: Story = {
         ))}
       </Table.Body>
     </Table.Root>
-  ),
-};
+  )
+}
 
 export const AvatarGroups: Story = {
   render: () => (
@@ -93,14 +93,14 @@ export const AvatarGroups: Story = {
       <Avatar name="Grace Hopper" />
       <Avatar name="Alan Turing" />
     </AvatarGroup>
-  ),
-};
+  )
+}
 
 export const StatGroups: Story = {
   render: () => (
     <StatGroup gap="8">
       <Stat label="Shapes" value="1,284" />
-      <Stat label="Pins" value="312" trend={{ direction: "up", value: "4%" }} />
+      <Stat label="Pins" value="312" trend={{ direction: 'up', value: '4%' }} />
     </StatGroup>
-  ),
-};
+  )
+}

@@ -9,8 +9,8 @@ export {
   Separator,
   SimpleGrid,
   Stack,
-  VStack,
-} from "@chakra-ui/react";
+  VStack
+} from '@chakra-ui/react'
 export type {
   BoxProps,
   CenterProps,
@@ -20,5 +20,5 @@ export type {
   GridProps,
   SeparatorProps,
   SimpleGridProps,
-  StackProps,
-} from "@chakra-ui/react";
+  StackProps
+} from '@chakra-ui/react'

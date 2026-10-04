@@ -1,16 +1,16 @@
-import { Breadcrumb as ChakraBreadcrumb } from "@chakra-ui/react";
-import { Fragment, type ReactNode } from "react";
+import { Breadcrumb as ChakraBreadcrumb } from '@chakra-ui/react'
+import { Fragment, type ReactNode } from 'react'
 
 export interface BreadcrumbItemData {
-  label: ReactNode;
+  label: ReactNode
   /** Ignored on the last item, which renders as the current page. */
-  href?: string;
+  href?: string
 }
 
-export interface BreadcrumbProps extends Omit<ChakraBreadcrumb.RootProps, "children"> {
-  items: BreadcrumbItemData[];
+export interface BreadcrumbProps extends Omit<ChakraBreadcrumb.RootProps, 'children'> {
+  items: BreadcrumbItemData[]
   /** Replaces the default chevron. */
-  separator?: ReactNode;
+  separator?: ReactNode
 }
 
 export function Breadcrumb({ items, separator, ...rootProps }: BreadcrumbProps) {
@@ -18,7 +18,7 @@ export function Breadcrumb({ items, separator, ...rootProps }: BreadcrumbProps) 
     <ChakraBreadcrumb.Root {...rootProps}>
       <ChakraBreadcrumb.List>
         {items.map((item, index) => {
-          const last = index === items.length - 1;
+          const last = index === items.length - 1
           return (
             <Fragment key={index}>
               <ChakraBreadcrumb.Item>
@@ -34,9 +34,9 @@ export function Breadcrumb({ items, separator, ...rootProps }: BreadcrumbProps) 
                 <ChakraBreadcrumb.Separator />
               )}
             </Fragment>
-          );
+          )
         })}
       </ChakraBreadcrumb.List>
     </ChakraBreadcrumb.Root>
-  );
+  )
 }
