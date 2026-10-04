@@ -35,8 +35,9 @@ export default defineConfig(() => ({
     },
     rolldownOptions: {
       // External packages that should not be bundled into your library.
-      // tldraw and lucide-react are shared with the app.
-      external: ["react", "react-dom", "react/jsx-runtime", "tldraw", "lucide-react"]
+      // tldraw and lucide-react are shared with the app; @h2-fe/ui resolves
+      // through the workspace source condition.
+      external: ["react", "react-dom", "react/jsx-runtime", "tldraw", "lucide-react", "@h2-fe/ui"]
     }
   },
   test: {
@@ -46,8 +47,6 @@ export default defineConfig(() => ({
     environment: "jsdom",
     setupFiles: ["../../../../tools/vitest-setup.ts"],
     include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    // Scaffold only: remove once `utils.spec.ts` lands.
-    passWithNoTests: true,
     reporters: ["default"],
     coverage: {
       reportsDirectory: "./test-output/vitest/coverage",
