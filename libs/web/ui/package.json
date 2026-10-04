@@ -14,35 +14,28 @@
       "default": "./dist/index.js"
     }
   },
-  "scripts": {
-    "storybook-web": "nx run storybook-web",
-    "build-storybook-web": "nx run build-storybook-web",
-    "lint": "oxlint . --type-aware",
-    "lint:fix": "oxlint . --type-aware --fix",
-    "format": "oxfmt .",
-    "format:fix": "oxfmt . --fix",
-    "build": "nx run build"
-  },
   "nx": {
     "tags": [
       "scope:web",
       "type:ui"
     ],
     "targets": {
-      "storybook-web": {
-        "executor": "@nx/storybook:storybook",
+      "lint": {
         "options": {
-          "port": 4400,
-          "open": true,
-          "configDir": "libs/web/ui/.storybook"
-        },
-        "configurations": {
-          "ci": {
-            "quiet": true
-          }
+          "args": [
+            "--type-aware"
+          ]
         }
       },
-      "build-storybook-web": {
+      "lint:fix": {
+        "command": "oxlint . --type-aware --fix",
+        "options": {
+          "cwd": "libs/web/ui"
+        }
+      },
+      "format": {},
+      "format:fix": {},
+      "build-storybook": {
         "inputs": [
           "production",
           "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",

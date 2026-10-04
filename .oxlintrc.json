@@ -57,6 +57,14 @@
       }
     ]
   },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "rules": {
+        "import/default": "off"
+      }
+    }
+  ],
   "ignorePatterns": [
     "node_modules",
     "dist",

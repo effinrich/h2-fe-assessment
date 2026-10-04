@@ -10,8 +10,8 @@
     "libs/web/**"
   ],
   "scripts": {
-    "start": "nx serve web",
-    "build": "nx build web",
+    "start": "nx serve @h2-fe/web",
+    "build": "nx build @h2-fe/web",
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
     "lint:fix": "nx run-many -t lint:fix",
@@ -19,8 +19,10 @@
     "format:fix": "nx run-many -t format:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
-    "storybook-web": "nx run web-ui:storybook-web",
-    "build-storybook-web": "nx run web-ui:build-storybook-web",
+    "storybook:web": "nx run @h2-fe/web-ui:storybook",
+    "build-storybook:web": "nx run @h2-fe/web-ui:build-storybook",
+    "storybook-web": "bun run storybook:web",
+    "build-storybook-web": "bun run build-storybook:web",
     "gate": "nx affected -t lint,format,typecheck,test,build,build-storybook"
   },
   "dependencies": {

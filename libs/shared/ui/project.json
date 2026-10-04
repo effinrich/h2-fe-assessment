@@ -19,45 +19,29 @@
         "cwd": "{projectRoot}"
       }
     },
-    "format": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "oxfmt .",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "format:fix": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "oxfmt . --fix",
-        "cwd": "{projectRoot}"
-      }
-    },
+    "format": {},
+    "format:fix": {},
     "storybook": {
-      "executor": "@nx/storybook:storybook",
       "options": {
         "port": 4400,
-        "open": true,
-        "configDir": "libs/shared/ui/.storybook"
+        "config-dir": ".storybook"
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "args": ["--quiet"]
         }
       }
     },
     "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "outputs": ["{workspaceRoot}/dist/storybook/shared-ui"],
       "options": {
-        "framework": "@storybook/react-vite",
-        "outputDir": "dist/storybook/shared-ui",
-        "configDir": "libs/shared/ui/.storybook",
-        "webpackStatsJson": true
+        "config-dir": ".storybook",
+        "output-dir": "../../../dist/storybook/shared-ui",
+        "args": ["--stats-json"]
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "args": ["--stats-json", "--quiet"]
         }
       }
     }

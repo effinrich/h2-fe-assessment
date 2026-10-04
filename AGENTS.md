@@ -1,8 +1,7 @@
 # Agent instructions
 
-Canonical. Mirrors live in `.cursor/rules/` and `.windsurf/rules/`; when you edit
-a rule here, edit those in the same change. `CLAUDE.md` carries the Nx-generated
-block only.
+Canonical. Cursor and Windsurf read this file natively; no mirrors. `CLAUDE.md`
+carries the Nx-generated block only.
 
 ## Nx: never infer, always ask the graph
 
@@ -24,8 +23,10 @@ made during this project's setup.
   (`The "path" argument must be of type string`).
 - **Install at the root.** Every dependency goes in the root `package.json`
   (`bun install` from the repo root, no `-w`). Workspace `package.json` files
-  list no dependencies and no proxy scripts. The root `package.json`'s `nx`
-  block holds only `includedScripts: []`.
+  list no dependencies and no proxy scripts. The root `package.json`'s only
+  `nx` key is `"includedScripts": []`, and it is load-bearing: without it the
+  root scripts (`lint` = `nx run-many -t lint`) become targets on
+  `@h2-fe/source` and `run-many` calls itself.
 - **No manual linking.** Nx infers project edges from imports and bun workspaces
   resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
   Tags restrict imports; they don't link.
@@ -42,10 +43,13 @@ made during this project's setup.
   `@nx/oxlint:lint`. Two plugins must not claim the same target name.
 - **Target names are `lint` and `format`.** `oxlint` and `oxfmt` are only the
   binaries behind those targets — never target names. `format` / `format:fix`
-  live in nx.json `targetDefaults`; root scripts mirror `lint` / `lint:fix`.
-- **Nested ox configs.** Projects carry their own `.oxlintrc.json` /
-  `.oxfmtrc.json`. Setting `oxc.configPath` / `oxc.fmt.configPath` disables
-  nested configs, so the editor diverges from the gate.
+  live only in nx.json `targetDefaults` (`@nx/oxlint` has no oxfmt support);
+  root scripts mirror `lint` / `lint:fix`.
+- **Nested ox configs.** Projects carry their own `.oxlintrc.json` (`extends`
+  the root) but no `.oxfmtrc.json`: oxfmt has no `extends`, so a nested one
+  replaces the root config wholesale; without one, oxfmt walks up to the root.
+  Never set `oxc.configPath` / `oxc.fmt.configPath`: they disable nested
+  configs, so the editor diverges from the gate.
 - **Editor config is cross-platform** (teammates on macOS): no absolute or
   OS-specific binary paths in `.vscode/`. Official `oxc.oxc-vscode` only; it
   resolves `oxlint` / `oxfmt` from `node_modules/.bin` itself.
@@ -79,3 +83,5 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 4. **Never guess a CLI flag.** Check `--help` first.
 5. **Be terse.** The user is a long-time Nx user; don't over-explain. Re-read a
    file before editing it — never overwrite the user's concurrent edits.
+6. **Ask before deleting any config file**, even when deletion looks like the
+   obvious fix (nested rc files, dead config, `git rm --cached`).

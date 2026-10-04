@@ -1,27 +1,27 @@
-import { fileURLToPath } from 'node:url'
-import { dirname } from 'node:path'
+import type { StorybookConfig } from "@storybook/react-vite"
 
-import type { StorybookConfig } from '@storybook/react-vite'
+import { dirname } from "node:path"
+import { fileURLToPath } from "node:url"
 
 const config: StorybookConfig = {
-  stories: ['../src/lib/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+  stories: ["../src/lib/**/*.@(mdx|stories.@(js|jsx|ts|tsx))"],
   addons: [
-    getAbsolutePath('@storybook/addon-a11y'),
-    getAbsolutePath('@storybook/addon-docs'),
-    getAbsolutePath('@chromatic-com/storybook')
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("@chromatic-com/storybook")
   ],
   framework: {
-    name: '@storybook/react-vite',
+    name: "@storybook/react-vite",
     options: {
       builder: {
-        viteConfigPath: './libs/shared/ui/vite.config.mts'
+        viteConfigPath: `${import.meta.dirname}/../vite.config.mts`
       }
     }
   }
 }
 
 function getAbsolutePath(value: string): string {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)))
 }
 
 export default config

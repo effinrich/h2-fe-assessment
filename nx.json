@@ -45,7 +45,7 @@
         "devTargetName": "dev",
         "previewTargetName": "preview",
         "serveStaticTargetName": "serve-static",
-        "typecheckTargetName": "typecheck",
+        "typecheckTargetName": "vite:typecheck",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
@@ -82,7 +82,8 @@
       "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": ["build", "^build"]
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default", "^production", { "externalDependencies": ["typescript"] }]
     },
     "format": {
       "executor": "nx:run-commands",
