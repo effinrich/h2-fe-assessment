@@ -15,10 +15,6 @@
     }
   },
   "nx": {
-    "implicitDependencies": [
-      "home",
-      "pdf-viewer"
-    ],
     "tags": [
       "scope:web",
       "type:ui"
@@ -34,8 +30,8 @@
       "build": {
         "dependsOn": []
       },
-      "oxfmt": {},
-      "oxfmt:fix": {},
+      "format": {},
+      "format:fix": {},
       "build-storybook": {
         "inputs": [
           "production",

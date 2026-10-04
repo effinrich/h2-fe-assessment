@@ -30,7 +30,5 @@
       "path": "./tsconfig.lib.json"
     }
   ],
-  "files": [
-
-  ]
+  "files": []
 }

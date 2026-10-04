@@ -17,6 +17,8 @@ export interface PdfDocumentSummary {
 export type FileToken = string
 
 export interface PdfViewerScreenProps {
+  filename?: string
+  onMarksChange?: (hasMarks: boolean) => void
   document?: PdfDocumentSummary
   isLoading?: boolean
   isError?: boolean

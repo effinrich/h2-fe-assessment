@@ -1,23 +1,109 @@
-import { Box, Button, Flex } from '@h2-fe/ui'
+import { useRef } from 'react'
+import { Box, Button, Flex, Text } from '@h2-fe/ui'
 
 interface ViewerTopBarProps {
+  filename?: string
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
   onOpenAnother: () => void
 }
 
-// The viewer's only chrome: one exit back to the home route, sitting above the
-// canvas. The overlay is pointer-events:none so the canvas stays fully
-// interactive; only the button receives events.
-export function ViewerTopBar({ onOpenAnother }: ViewerTopBarProps) {
+export function ViewerTopBar({
+  filename,
+  page,
+  totalPages,
+  onPageChange,
+  onOpenAnother
+}: ViewerTopBarProps) {
+  const pageInput = useRef<HTMLInputElement>(null)
+  const jump = () => {
+    const requested = Number(pageInput.current?.value)
+    if (Number.isInteger(requested) && requested >= 1 && requested <= totalPages) {
+      if (requested !== page) onPageChange(requested)
+    } else if (pageInput.current) {
+      pageInput.current.value = String(page)
+    }
+  }
+
   return (
     <Flex
-      padding="4"
+      align="start"
+      gap="2"
+      flexWrap="wrap"
+      left="0"
+      p="4"
       pointerEvents="none"
       position="absolute"
-      top="0"
-      left="0"
       right="0"
+      top="0"
       zIndex={1}
     >
+      <Flex
+        align="center"
+        bg="bg.panel"
+        borderRadius="md"
+        boxShadow="md"
+        gap="2"
+        maxW="full"
+        p="2"
+        pointerEvents="auto"
+      >
+        <Text
+          fontSize="sm"
+          maxW="36"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          title={filename}
+          whiteSpace="nowrap"
+        >
+          {filename ?? 'Document'}
+        </Text>
+        {totalPages > 0 && (
+          <Flex align="center" gap="1">
+            <Button
+              aria-label="Previous page"
+              disabled={page <= 1}
+              onClick={() => onPageChange(page - 1)}
+              size="sm"
+              variant="outline"
+            >
+              Previous
+            </Button>
+            <form
+              onSubmit={event => {
+                event.preventDefault()
+                jump()
+              }}
+            >
+              <input
+                aria-label="Page number"
+                defaultValue={page}
+                inputMode="numeric"
+                key={page}
+                max={totalPages}
+                min={1}
+                onBlur={jump}
+                ref={pageInput}
+                style={{ width: '3.5em', textAlign: 'center' }}
+                type="number"
+              />
+            </form>
+            <Text fontSize="sm" whiteSpace="nowrap">
+              of {totalPages}
+            </Text>
+            <Button
+              aria-label="Next page"
+              disabled={page >= totalPages}
+              onClick={() => onPageChange(page + 1)}
+              size="sm"
+              variant="outline"
+            >
+              Next
+            </Button>
+          </Flex>
+        )}
+      </Flex>
       <Box marginLeft="auto" pointerEvents="auto">
         <Button onClick={onOpenAnother} variant="outline">
           Open another document

@@ -8,7 +8,7 @@ import { HomeScreen } from './home'
 const meta = {
   title: 'Features/Home',
   component: HomeScreen,
-  args: { onFileChosen: fn(), onUseExample: fn() }
+  args: { onFileChange: fn(), onUseExample: fn() }
 } satisfies Meta<typeof HomeScreen>
 
 export default meta

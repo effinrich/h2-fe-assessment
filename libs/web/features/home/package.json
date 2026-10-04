@@ -27,8 +27,8 @@
           ]
         }
       },
-      "oxfmt": {},
-      "oxfmt:fix": {}
+      "format": {},
+      "format:fix": {}
     }
   }
 }
