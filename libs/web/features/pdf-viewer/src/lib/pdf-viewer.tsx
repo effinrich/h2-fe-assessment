@@ -172,7 +172,7 @@ export function PdfViewerScreen({
         <Flex
           align="center"
           aria-label="Opening the document"
-          aria-live="polite"
+          as="output"
           inset="0"
           justify="center"
           pointerEvents="auto"

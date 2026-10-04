@@ -29,7 +29,10 @@ export const JumpToPage: Story = {
   play: async ({ args, canvas, userEvent }) => {
     const input = canvas.getByRole("spinbutton", { name: "Page number" })
     await userEvent.clear(input)
-    await userEvent.type(input, "3{enter}")
+    await userEvent.type(input, "3")
+    // Browsers submit a lone number field on Enter; user-event leaves `number`
+    // out of its implicit-submission types, so submit the way the browser does.
+    input.closest("form")?.requestSubmit()
     await expect(args.onPageChange).toHaveBeenCalledWith(3)
   }
 }

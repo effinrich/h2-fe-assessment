@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { fn } from "storybook/test"
+import { expect, fn } from "storybook/test"
 
 import type { RenderedPdfPage } from "./types"
 
@@ -33,7 +33,10 @@ const exampleDocument = {
 }
 
 export const Loading: Story = {
-  args: { isLoading: true, onOpenAnother: fn() }
+  args: { isLoading: true, onOpenAnother: fn() },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("status", { name: "Opening the document" })).toBeInTheDocument()
+  }
 }
 
 export const Error: Story = {
