@@ -59,3 +59,27 @@ lives in a lib, and screens are Storybook-tested as compositions.
 - jsdom needed three polyfills for tldraw-mounted surfaces (`image.decode`,
   `FontFace`, `document.fonts`); they live in `tools/vitest-setup.ts` since
   three projects include it.
+
+## Amendment (2026-10-04): canvas extensions
+
+Not every feature is a route. Pin (task 3) and camera (task 4) add editor
+behaviour to the viewer's canvas and have no screen of their own.
+
+- They are still feature libs (`libs/web/features/<name>`, tags
+  `["scope:web","type:feature"]`). Instead of a screen, each exports a factory
+  returning an object that structurally matches pdf-viewer's
+  `CanvasExtension` (`types.ts`, tldraw types only). The siblings never import
+  each other: pdf-viewer doesn't import them, and they don't import
+  pdf-viewer.
+- The route composes them. `pdf-viewer-route.tsx` builds the `extensions`
+  array (memoised) and passes it to `PdfViewerScreen`, which type-checks the
+  structural match where the libs meet. Predicates that need viewer
+  knowledge (`isPdfPageShape`) and viewer hooks (`retainPageBounds`) are
+  wired there too.
+- `PdfViewerScreen` owns `<Tldraw>`, so it merges extensions: arrays are
+  concatenated, overrides are passed as an array, `onMount` handlers are
+  composed, and one toolbar and one shortcuts dialog live in its `partials/`.
+- Their acceptance stories live in their own lib (`Features/<Name>`, staged
+  by web-ui's feature glob) and mount a plain `<Tldraw>` with their
+  extension. The viewer's generic seam is covered in pdf-viewer's specs and
+  stories with a stand-in extension.
