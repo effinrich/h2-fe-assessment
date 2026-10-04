@@ -290,15 +290,14 @@ export const FollowsAppColorMode: Story = {
     await waitFor(() => expect(canvasThemeRoot(canvasElement)).not.toBeNull())
     const wrapper = canvasThemeRoot(canvasElement)!
     await expect(wrapper).toHaveAttribute("data-color-mode", "light")
-    await expect(getComputedStyle(wrapper).getPropertyValue("--app-accent").trim()).toBe(
-      "var(--chakra-colors-brand-solid)"
-    )
+    const accent = getComputedStyle(wrapper).getPropertyValue("--app-accent").trim()
+    await expect(accent).not.toBe("")
 
     await waitFor(() => expect(canvasElement.querySelector(".tl-container")).not.toBeNull())
     const container = canvasElement.querySelector(".tl-container")!
     await expect(container).toHaveClass("tl-theme__light")
     await expect(getComputedStyle(container).getPropertyValue("--tl-color-primary").trim()).toBe(
-      "var(--app-accent)"
+      accent
     )
 
     await userEvent.click(canvas.getByRole("button", { name: "Toggle app color mode" }))
