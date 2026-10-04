@@ -5,7 +5,7 @@ import { expect, fn } from "storybook/test"
 import { ViewerTopBar } from "./viewer-top-bar"
 
 // Spec: the viewer's "Open another document" affordance stays above the
-// canvas. The button is the only receiving surface in the bar.
+// canvas. Color mode is the other control in this strip; both receive events.
 const meta = {
   title: "Chrome/ViewerTopBar",
   component: ViewerTopBar,

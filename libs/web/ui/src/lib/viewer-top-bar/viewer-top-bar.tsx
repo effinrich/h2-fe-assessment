@@ -1,6 +1,6 @@
 import { useRef } from "react"
 
-import { Button, Field, Flex, Input, Text } from "@h2-fe/ui"
+import { Button, ColorModeButton, Field, Flex, Input, Text } from "@h2-fe/ui"
 
 interface ViewerTopBarProps {
   filename?: string
@@ -119,9 +119,12 @@ export function ViewerTopBar({
           </Flex>
         )}
       </Flex>
-      <Button marginLeft="auto" onClick={onOpenAnother} pointerEvents="auto" variant="outline">
-        Open another document
-      </Button>
+      <Flex gap="2" marginLeft="auto" pointerEvents="auto">
+        <ColorModeButton />
+        <Button onClick={onOpenAnother} variant="outline">
+          Open another document
+        </Button>
+      </Flex>
     </Flex>
   )
 }

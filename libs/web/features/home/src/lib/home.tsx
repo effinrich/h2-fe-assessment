@@ -1,4 +1,4 @@
-import { Button, FileUpload, Flex, Heading, Stack, Text } from "@h2-fe/ui"
+import { Button, ColorModeButton, FileUpload, Flex, Heading, Stack, Text } from "@h2-fe/ui"
 
 import type { HomeScreenProps } from "./types"
 
@@ -6,7 +6,14 @@ import type { HomeScreenProps } from "./types"
 // in. The route provides callbacks; this screen holds only markup.
 export function HomeScreen({ onFileChange, onUseExample, isBusy = false }: HomeScreenProps) {
   return (
-    <Flex align="center" justify="center" minH="100dvh" p={{ base: "4", md: "8" }}>
+    <Flex
+      align="center"
+      justify="center"
+      minH="100dvh"
+      p={{ base: "4", md: "8" }}
+      position="relative"
+    >
+      <ColorModeButton position="absolute" right="4" top="4" />
       <Stack
         bg="bg.panel"
         borderColor="border"
