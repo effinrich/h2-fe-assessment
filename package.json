@@ -60,6 +60,7 @@
     "@vitest/browser-playwright": "~4.1.0",
     "@vitest/coverage-v8": "~4.1.0",
     "jsdom": "~22.1.0",
+    "lefthook": "^2.1.16",
     "nx": "23.2.1",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.75.0",

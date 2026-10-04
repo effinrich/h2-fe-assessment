@@ -66,6 +66,12 @@ made during this project's setup.
 - **Editor config is cross-platform** (teammates on macOS): no absolute or
   OS-specific binary paths in `.vscode/`. Official `oxc.oxc-vscode` only; it
   resolves `oxlint` / `oxfmt` from `node_modules/.bin` itself.
+- **Git hooks: lefthook** (`lefthook.yml`), installed by its own postinstall
+  on `bun install` (bun trusts it by default; skipped when `CI` is set).
+  pre-commit: `oxlint --type-aware --fix` then `oxfmt` on staged files
+  (re-staged), plus `nx affected -t typecheck --uncommitted`. pre-push:
+  `bun run gate`. CI still runs the gate, so hooks are a fast path, not the
+  check. `LEFTHOOK=0` bypasses them.
 - LF line endings (`.gitattributes`). Every Action in every workflow is pinned
   to a full commit SHA with a `# vX.Y.Z` comment. `ci.yml` runs `bun run gate`
   after `nrwl/nx-set-shas`.
