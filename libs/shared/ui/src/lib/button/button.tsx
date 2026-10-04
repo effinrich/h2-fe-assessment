@@ -1,9 +1,17 @@
 import { Button as ChakraButton, type ButtonProps as ChakraButtonProps } from "@chakra-ui/react"
+import { forwardRef, type ReactNode } from "react"
 
 export interface ButtonProps extends ChakraButtonProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
-export function Button({ children, ...props }: ButtonProps) {
-  return <ChakraButton {...props}>{children}</ChakraButton>
-}
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { children, ...props },
+  ref
+) {
+  return (
+    <ChakraButton ref={ref} {...props}>
+      {children}
+    </ChakraButton>
+  )
+})

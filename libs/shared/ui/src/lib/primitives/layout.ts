@@ -1,6 +1,7 @@
 export {
   Box,
   Center,
+  chakra,
   Container,
   Flex,
   Grid,
@@ -18,6 +19,7 @@ export type {
   FlexProps,
   GridItemProps,
   GridProps,
+  HTMLChakraProps,
   SeparatorProps,
   SimpleGridProps,
   StackProps
