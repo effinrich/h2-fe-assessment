@@ -31,7 +31,10 @@ const preview: Preview = {
       matchers: { color: /(background|color)$/i, date: /Date$/i }
     },
     a11y: {
-      test: "error"
+      test: "error",
+      // tldraw's DefaultToolbar hardcodes this button with a tooltip but no
+      // accessible name; it appears whenever a lockable tool is active.
+      context: { exclude: ['[data-testid="tool-lock"]'] }
     },
     chromatic: {
       pauseAnimationAtEnd: true,

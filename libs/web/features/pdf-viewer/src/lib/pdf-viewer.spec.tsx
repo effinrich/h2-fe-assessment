@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { UiProvider } from "@h2-fe/ui"
 
-import type { PdfPage, PdfViewerScreenProps, RenderedPdfPage } from "./types"
+import type { CanvasExtension, PdfPage, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
 import { PDF_PAGE_GAP } from "./consts"
 import { pdfFileToken } from "./hooks"
@@ -16,6 +16,7 @@ import { PdfViewerScreen } from "./pdf-viewer"
 import {
   activePageNumber,
   hasUserMarks,
+  isPdfPageShape,
   openPdf,
   pageBounds,
   placePagesOnCanvas,
@@ -38,15 +39,19 @@ vi.mock("tldraw", async () => {
     react,
     unsafe__withoutCapture,
     AssetRecordType: { create: (input: Record<string, unknown>) => input },
-    Tldraw: ({ onMount }: { onMount?: (editor: object) => void }) => {
+    Tldraw: (props: TldrawModule.TldrawProps) => {
+      tldraw.props = props
+      // Like tldraw: the latest onMount runs once per mount.
       useEffect(() => {
-        if (onMount && mountedEditor) onMount(mountedEditor)
-      }, [onMount])
+        if (!mountedEditor) return undefined
+        return tldraw.props?.onMount?.(mountedEditor as TldrawModule.Editor) ?? undefined
+      }, [])
       return <div data-testid="tldraw" />
     }
   }
 })
 
+const tldraw = vi.hoisted(() => ({ props: null as TldrawModule.TldrawProps | null }))
 let mountedEditor: object | null = null
 let finish: (pages: RenderedPdfPage[]) => void = () => {}
 
@@ -99,6 +104,7 @@ function renderScreen(props: PdfViewerScreenProps, onRender: () => void = () => 
 
 afterEach(() => {
   mountedEditor = null
+  tldraw.props = null
   vi.restoreAllMocks()
   vi.clearAllMocks()
   vi.mocked(pdfjs.getDocument).mockReset()
@@ -287,6 +293,97 @@ describe("PdfViewerScreen", () => {
   })
 })
 
+describe("canvas extensions", () => {
+  // tldraw is stubbed, so utils are identity tokens: the screen only forwards them.
+  const shapeA = { type: "shape-a" } as unknown as TldrawModule.TLAnyShapeUtilConstructor
+  const shapeB = { type: "shape-b" } as unknown as TldrawModule.TLAnyShapeUtilConstructor
+  const bindingA = { type: "binding-a" } as unknown as TldrawModule.TLAnyBindingUtilConstructor
+  const overlayA = { type: "overlay-a" } as unknown as TldrawModule.TLAnyOverlayUtilConstructor
+  const toolA = { id: "tool-a" } as unknown as TldrawModule.TLStateNodeConstructor
+  const toolB = { id: "tool-b" } as unknown as TldrawModule.TLStateNodeConstructor
+  const overridesA: TldrawModule.TLUiOverrides = { translations: { en: { "tool.a": "A" } } }
+  const overridesB: TldrawModule.TLUiOverrides = { translations: { en: { "tool.b": "B" } } }
+
+  it("passes every extension's contributions to the editor, in order", () => {
+    mountedEditor = {}
+    const teardownA = vi.fn<() => void>()
+    const onMountA = vi.fn<TldrawModule.TLOnMountHandler>(() => teardownA)
+    const onMountB = vi.fn<TldrawModule.TLOnMountHandler>()
+    const extensions: CanvasExtension[] = [
+      {
+        toolIds: ["tool-a"],
+        shapeUtils: [shapeA],
+        bindingUtils: [bindingA],
+        tools: [toolA],
+        overlayUtils: [overlayA],
+        overrides: overridesA,
+        InFrontOfTheCanvas: () => null,
+        onMount: onMountA
+      },
+      {
+        toolIds: ["tool-b"],
+        shapeUtils: [shapeB],
+        tools: [toolB],
+        overrides: overridesB,
+        onMount: onMountB
+      }
+    ]
+
+    const { unmount } = renderScreen({ extensions, onOpenAnother: vi.fn<() => void>() })
+
+    const props = tldraw.props
+    expect(props?.shapeUtils).toEqual([shapeA, shapeB])
+    expect(props?.bindingUtils).toEqual([bindingA])
+    expect(props?.tools).toEqual([toolA, toolB])
+    expect(props?.overlayUtils).toEqual([overlayA])
+    expect(props?.overrides).toEqual(expect.arrayContaining([overridesA, overridesB]))
+    expect(props?.components?.Toolbar).toBeTypeOf("function")
+    expect(props?.components?.KeyboardShortcutsDialog).toBeTypeOf("function")
+    expect(props?.components?.InFrontOfTheCanvas).toBeTypeOf("function")
+    expect(onMountA).toHaveBeenCalledWith(mountedEditor)
+    expect(onMountB).toHaveBeenCalledWith(mountedEditor)
+
+    unmount()
+    expect(teardownA).toHaveBeenCalledTimes(1)
+  })
+
+  it("keeps tldraw's stock toolbar and dialogs when no extension adds a tool", () => {
+    renderScreen({
+      extensions: [{ shapeUtils: [shapeA] }],
+      onOpenAnother: vi.fn<() => void>()
+    })
+
+    expect(tldraw.props?.shapeUtils).toEqual([shapeA])
+    expect(tldraw.props?.components?.Toolbar).toBeUndefined()
+    expect(tldraw.props?.components?.KeyboardShortcutsDialog).toBeUndefined()
+    expect(tldraw.props?.components?.InFrontOfTheCanvas).toBeUndefined()
+  })
+
+  it("keeps merged contributions referentially stable across re-renders", () => {
+    const extensions: CanvasExtension[] = [
+      { toolIds: ["tool-a"], shapeUtils: [shapeA], tools: [toolA] }
+    ]
+    const onOpenAnother = vi.fn<() => void>()
+    const { rerender } = renderScreen({ extensions, filename: "a.pdf", onOpenAnother })
+    const first = tldraw.props
+    expect(first?.shapeUtils).toEqual([shapeA])
+
+    rerender(
+      <UiProvider>
+        <Profiler id="pdf-viewer" onRender={() => {}}>
+          <PdfViewerScreen extensions={extensions} filename="b.pdf" onOpenAnother={onOpenAnother} />
+        </Profiler>
+      </UiProvider>
+    )
+
+    expect(tldraw.props).not.toBe(first)
+    expect(tldraw.props?.shapeUtils).toBe(first?.shapeUtils)
+    expect(tldraw.props?.tools).toBe(first?.tools)
+    expect(tldraw.props?.overrides).toBe(first?.overrides)
+    expect(tldraw.props?.components).toBe(first?.components)
+  })
+})
+
 describe("placePagesOnCanvas", () => {
   it("starts with the first page so zoom-to-fit does not rasterise the full document", () => {
     const editorStub = createEditorStub()
@@ -392,6 +489,15 @@ describe("page workspace geometry", () => {
   it("ignores PDF page shapes when checking for user marks", () => {
     expect(hasUserMarks([{ id: "shape:page-1" }])).toBe(false)
     expect(hasUserMarks([{ id: "shape:page-1" }, { id: "shape:mark-1" }])).toBe(true)
+  })
+
+  it("identifies PDF page shapes by their id pattern and image type", () => {
+    expect(isPdfPageShape({ id: "shape:page-1", type: "image" })).toBe(true)
+    expect(isPdfPageShape({ id: "shape:page-12", type: "image" })).toBe(true)
+    expect(isPdfPageShape({ id: "shape:page-1", type: "geo" })).toBe(false)
+    expect(isPdfPageShape({ id: "shape:mark-1", type: "image" })).toBe(false)
+    expect(isPdfPageShape({ id: "shape:page-1a", type: "image" })).toBe(false)
+    expect(isPdfPageShape({ id: "shape:page-", type: "image" })).toBe(false)
   })
 })
 

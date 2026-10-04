@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react"
 import { react, Tldraw, unsafe__withoutCapture, type Editor } from "tldraw"
 import "tldraw/tldraw.css"
 
 import { Box, Button, Flex, Heading, Spinner, Text } from "@h2-fe/ui"
 import { ViewerTopBar } from "@h2-fe/web-ui"
 
-import type { PageOverlay, PdfViewerScreenProps, RenderedPdfPage } from "./types"
+import type { CanvasExtension, PageOverlay, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
+import { createCanvasComponents } from "./partials/canvas-components"
 import {
   activePageNumber,
   hasUserMarks,
+  mergeCanvasExtensions,
   pageBounds,
   placePagesOnCanvas,
   sameOverlays,
@@ -19,6 +21,7 @@ import {
 } from "./utils"
 
 const viewerStyle = { position: "absolute", inset: 0 } as const
+const NO_EXTENSIONS: readonly CanvasExtension[] = []
 
 export function PdfViewerScreen({
   filename,
@@ -27,9 +30,22 @@ export function PdfViewerScreen({
   isLoading,
   isError,
   onRetry,
-  onOpenAnother
+  onOpenAnother,
+  extensions = NO_EXTENSIONS
 }: PdfViewerScreenProps) {
   const [editor, setEditor] = useState<Editor | null>(null)
+  const merged = useMemo(() => mergeCanvasExtensions(extensions), [extensions])
+  const components = useMemo(() => createCanvasComponents(merged), [merged])
+  const handleMount = useCallback(
+    (mountedEditor: Editor) => {
+      setEditor(mountedEditor)
+      const teardowns = merged.onMount.map((onMount) => onMount(mountedEditor))
+      return () => {
+        for (const teardown of teardowns) teardown?.()
+      }
+    },
+    [merged]
+  )
   const [page, setPage] = useState(1)
   const [overlays, setOverlays] = useState<PageOverlay[]>([])
   const retryPage = useRef<(pageNumber: number) => void>(() => {})
@@ -170,7 +186,15 @@ export function PdfViewerScreen({
 
   return (
     <div style={viewerStyle}>
-      <Tldraw onMount={setEditor} />
+      <Tldraw
+        bindingUtils={merged.bindingUtils}
+        components={components}
+        onMount={handleMount}
+        overlayUtils={merged.overlayUtils}
+        overrides={merged.overrides}
+        shapeUtils={merged.shapeUtils}
+        tools={merged.tools}
+      />
 
       {isLoading ? (
         <Flex

@@ -3,9 +3,16 @@ import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
 import { type Editor, type TLAssetId, type TLShapeId } from "tldraw"
 import { AssetRecordType } from "tldraw"
 
-import type { PageOverlay, PdfDocumentSummary, PdfPage, RenderedPdfPage } from "./types"
+import type {
+  CanvasExtension,
+  MergedCanvasExtensions,
+  PageOverlay,
+  PdfDocumentSummary,
+  PdfPage,
+  RenderedPdfPage
+} from "./types"
 
-import { PDF_PAGE_GAP } from "./consts"
+import { PDF_PAGE_GAP, PDF_PAGE_SHAPE_ID, VIEWER_OVERRIDES } from "./consts"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
@@ -108,7 +115,31 @@ export function activePageNumber(
 }
 
 export function hasUserMarks(shapes: ReadonlyArray<{ id: string }>): boolean {
-  return shapes.some((shape) => !/^shape:page-\d+$/.test(shape.id))
+  return shapes.some((shape) => !PDF_PAGE_SHAPE_ID.test(shape.id))
+}
+
+export function isPdfPageShape(shape: { id: string; type: string }): boolean {
+  return shape.type === "image" && PDF_PAGE_SHAPE_ID.test(shape.id)
+}
+
+export function mergeCanvasExtensions(
+  extensions: readonly CanvasExtension[]
+): MergedCanvasExtensions {
+  return {
+    toolIds: extensions.flatMap((extension) => extension.toolIds ?? []),
+    shapeUtils: extensions.flatMap((extension) => extension.shapeUtils ?? []),
+    bindingUtils: extensions.flatMap((extension) => extension.bindingUtils ?? []),
+    tools: extensions.flatMap((extension) => extension.tools ?? []),
+    overlayUtils: extensions.flatMap((extension) => extension.overlayUtils ?? []),
+    overrides: [
+      ...extensions.flatMap((extension) => (extension.overrides ? [extension.overrides] : [])),
+      VIEWER_OVERRIDES
+    ],
+    inFrontOfTheCanvas: extensions.flatMap((extension) =>
+      extension.InFrontOfTheCanvas ? [extension.InFrontOfTheCanvas] : []
+    ),
+    onMount: extensions.flatMap((extension) => (extension.onMount ? [extension.onMount] : []))
+  }
 }
 
 export function visiblePageNumbers(

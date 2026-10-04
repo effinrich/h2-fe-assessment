@@ -9,7 +9,10 @@ import PdfViewerRoute from "./pdf-viewer-route"
 const originalShowModal = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "showModal")
 const originalClose = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "close")
 
-const viewer = vi.hoisted(() => ({ marks: null as null | ((value: boolean) => void) }))
+const viewer = vi.hoisted(() => ({
+  marks: null as null | ((value: boolean) => void),
+  extensions: undefined as readonly object[] | undefined
+}))
 
 vi.mock("@h2-fe/pdf-viewer", () => ({
   usePdfPages: () => ({
@@ -18,16 +21,20 @@ vi.mock("@h2-fe/pdf-viewer", () => ({
     isError: false,
     refetch: vi.fn<() => void>()
   }),
+  isPdfPageShape: () => false,
   PdfViewerScreen: ({
     filename,
     onMarksChange,
-    onOpenAnother
+    onOpenAnother,
+    extensions
   }: {
     filename: string
     onMarksChange: (value: boolean) => void
     onOpenAnother: () => void
+    extensions?: readonly object[]
   }) => {
     viewer.marks = onMarksChange
+    viewer.extensions = extensions
     return (
       <>
         <span>{filename}</span>
@@ -54,6 +61,7 @@ function renderRoute() {
 
 afterEach(() => {
   viewer.marks = null
+  viewer.extensions = undefined
   if (originalShowModal)
     Object.defineProperty(HTMLDialogElement.prototype, "showModal", originalShowModal)
   else delete (HTMLDialogElement.prototype as { showModal?: () => void }).showModal
@@ -95,5 +103,17 @@ describe("PdfViewerRoute exit protection", () => {
     const afterExit = new Event("beforeunload", { cancelable: true })
     window.dispatchEvent(afterExit)
     expect(afterExit.defaultPrevented).toBe(false)
+  })
+})
+
+describe("PdfViewerRoute canvas extensions", () => {
+  it("passes the pin and camera extensions, stable across re-renders", () => {
+    renderRoute()
+    const first = viewer.extensions
+    expect(first).toHaveLength(2)
+
+    act(() => viewer.marks?.(true))
+
+    expect(viewer.extensions).toBe(first)
   })
 })

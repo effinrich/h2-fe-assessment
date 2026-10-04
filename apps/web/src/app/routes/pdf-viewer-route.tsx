@@ -1,9 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
-import type { PdfDocumentSummary } from "@h2-fe/pdf-viewer"
+import { createCameraExtension } from "@h2-fe/camera"
+import { isPdfPageShape, PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
+import type { CanvasExtension, PdfDocumentSummary } from "@h2-fe/pdf-viewer"
+import { createPinExtension } from "@h2-fe/pin"
 import { Box, Button, Flex, Heading, Text } from "@h2-fe/ui"
+
+const pinExtension = createPinExtension({ canAttach: (shape) => !isPdfPageShape(shape) })
 
 // The route that owns the document: it reads the file home handed off through
 // the navigation state, rasterises it through the lib's query hook, and
@@ -19,6 +23,11 @@ export default function PdfViewerRoute() {
   const [hasMarks, setHasMarks] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
   const confirmDialog = useRef<HTMLDialogElement>(null)
+  const documentName = file?.name
+  const extensions = useMemo<readonly CanvasExtension[]>(
+    () => [pinExtension, createCameraExtension({ documentName })],
+    [documentName]
+  )
 
   useEffect(() => {
     const dialog = confirmDialog.current
@@ -69,6 +78,7 @@ export default function PdfViewerRoute() {
           void result.refetch()
         }}
         document={document}
+        extensions={extensions}
       />
       <dialog
         aria-describedby="discard-body"
