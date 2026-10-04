@@ -158,11 +158,12 @@ and committed failing before the code exists.
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** — no automated test yet; a 390px
       browser pass was done by hand (PR #4).
-- [ ] **The canvas theme follows the app color mode and reads Chakra semantic
+- [x] **The canvas theme follows the app color mode and reads Chakra semantic
       tokens through `--app-*` → `--tl-color-*`.** tldraw's built-in UI stays
       visible (`hideUi` is not set). Shape StyleProps are not used as a token
       bridge. — `pdf-viewer.stories.tsx` › `FollowsAppColorMode`;
-      `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode".
+      `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode"
+      (red `e59f932`).
 
 Dropped: **"The renderer element is mounted exactly once across pan, zoom,
 resize and reparent."** It described the `getAppOwnedElement` design that was

@@ -2,11 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } fr
 import { react, Tldraw, unsafe__withoutCapture, type BoxModel, type Editor } from "tldraw"
 import "tldraw/tldraw.css"
 
-import { Button, Heading, Spinner, Stack, Text } from "@h2-fe/ui"
+import "./tldraw-theme.css"
+
+import { Button, Heading, Spinner, Stack, Text, useColorMode } from "@h2-fe/ui"
 import { ViewerTopBar } from "@h2-fe/web-ui"
 
 import type { CanvasExtension, PageOverlay, PdfViewerScreenProps, RenderedPdfPage } from "./types"
 
+import { CANVAS_THEME_CLASS } from "./consts"
 import { createCanvasComponents } from "./partials/canvas-components"
 import { PageOverlayCard, ViewerCover, ViewerPanel, ViewerRoot } from "./partials/viewer-chrome"
 import {
@@ -36,6 +39,8 @@ export function PdfViewerScreen({
   extensions = NO_EXTENSIONS,
   retainPageBounds
 }: PdfViewerScreenProps) {
+  const { colorMode } = useColorMode()
+  const [initialColorScheme] = useState(colorMode)
   const [editor, setEditor] = useState<Editor | null>(null)
   const retainPageBoundsRef = useRef(retainPageBounds)
   useEffect(() => {
@@ -45,14 +50,18 @@ export function PdfViewerScreen({
   const components = useMemo(() => createCanvasComponents(merged), [merged])
   const handleMount = useCallback(
     (mountedEditor: Editor) => {
+      mountedEditor.setColorMode(colorMode)
       setEditor(mountedEditor)
       const teardowns = merged.onMount.map((onMount) => onMount(mountedEditor))
       return () => {
         for (const teardown of teardowns) teardown?.()
       }
     },
-    [merged]
+    [colorMode, merged]
   )
+  useEffect(() => {
+    editor?.setColorMode(colorMode)
+  }, [colorMode, editor])
   const [page, setPage] = useState(1)
   const [overlays, setOverlays] = useState<PageOverlay[]>([])
   const retryPage = useRef<(pageNumber: number) => void>(() => {})
@@ -199,9 +208,10 @@ export function PdfViewerScreen({
   }, [])
 
   return (
-    <ViewerRoot>
+    <ViewerRoot className={CANVAS_THEME_CLASS} data-canvas-theme="" data-color-mode={colorMode}>
       <Tldraw
         bindingUtils={merged.bindingUtils}
+        colorScheme={initialColorScheme}
         components={components}
         onMount={handleMount}
         overlayUtils={merged.overlayUtils}

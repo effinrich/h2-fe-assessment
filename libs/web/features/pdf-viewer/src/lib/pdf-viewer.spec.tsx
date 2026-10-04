@@ -105,6 +105,7 @@ function createEditorStub() {
     getAssets: vi.fn<() => StubRecord[]>(() => [...assets.values()]),
     getShape: vi.fn<(id: string) => StubRecord | undefined>((id) => shapes.get(id)),
     zoomToFit: vi.fn<(opts?: unknown) => void>(),
+    setColorMode: vi.fn<(mode: "dark" | "light") => unknown>(),
     run: vi.fn<(callback: () => void, options?: RunOptions) => void>((callback, options) => {
       const previous = ignoreShapeLock
       ignoreShapeLock = options?.ignoreShapeLock ?? previous
@@ -437,7 +438,7 @@ describe("canvas extensions", () => {
   const overridesB: TldrawModule.TLUiOverrides = { translations: { en: { "tool.b": "B" } } }
 
   it("passes every extension's contributions to the editor, in order", () => {
-    mountedEditor = {}
+    mountedEditor = { setColorMode: vi.fn<(mode: "dark" | "light") => unknown>() }
     const teardownA = vi.fn<() => void>()
     const onMountA = vi.fn<TldrawModule.TLOnMountHandler>(() => teardownA)
     const onMountB = vi.fn<TldrawModule.TLOnMountHandler>()

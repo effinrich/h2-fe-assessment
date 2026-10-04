@@ -2,12 +2,15 @@ import { chakra } from "@h2-fe/ui"
 
 // chakra() so viewer chrome we own participates in the app system (tokens,
 // color mode). DefaultToolbar drops className, so the toolbar slot is a
-// contents wrapper — it does not restyle tldraw's internals or map --tl-*
-// variables (no existing plan for that).
+// contents wrapper — tldraw internals are themed via --tl-* on this root
+// (tldraw-theme.css), not by wrapping stock chrome in chakra().
 export const ViewerRoot = chakra("div", {
   base: {
+    h: "100dvh",
+    inset: "0",
+    minW: "0",
     position: "absolute",
-    inset: "0"
+    w: "full"
   }
 })
 
