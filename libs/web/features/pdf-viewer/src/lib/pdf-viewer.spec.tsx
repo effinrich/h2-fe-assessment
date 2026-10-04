@@ -68,29 +68,56 @@ const exampleDocument = {
   destroy: vi.fn<() => Promise<void>>(async () => {})
 }
 
+type StubRecord = { id: string; isLocked?: boolean; props?: Record<string, unknown> }
+type RunOptions = { history?: string; ignoreShapeLock?: boolean }
+
 function createEditorStub() {
-  const assets = new Map<string, object>()
-  const shapes = new Map<string, object>()
+  const assets = new Map<string, StubRecord>()
+  const shapes = new Map<string, StubRecord>()
+  // Like tldraw's Editor: updateShapes and deleteShapes skip locked shapes
+  // unless an enclosing run ignores the shape lock.
+  let ignoreShapeLock = false
+  const isWritable = (id: string) => ignoreShapeLock || !shapes.get(id)?.isLocked
   return {
-    createAssets: vi.fn<(items: { id: string }[]) => void>((items) =>
+    createAssets: vi.fn<(items: StubRecord[]) => void>((items) =>
       items.forEach((asset) => assets.set(asset.id, asset))
     ),
-    createShapes: vi.fn<(items: { id: string }[]) => void>((items) =>
+    createShapes: vi.fn<(items: StubRecord[]) => void>((items) =>
       items.forEach((shape) => shapes.set(shape.id, shape))
     ),
     deleteAssets: vi.fn<(ids: string[]) => void>((ids) => ids.forEach((id) => assets.delete(id))),
-    deleteShapes: vi.fn<(ids: string[]) => void>((ids) => ids.forEach((id) => shapes.delete(id))),
-    updateAssets: vi.fn<(items: { id: string }[]) => void>((items) =>
+    deleteShapes: vi.fn<(ids: string[]) => void>((ids) =>
+      ids.filter(isWritable).forEach((id) => shapes.delete(id))
+    ),
+    updateAssets: vi.fn<(items: StubRecord[]) => void>((items) =>
       items.forEach((asset) => assets.set(asset.id, asset))
     ),
-    getAsset: vi.fn<(id: string) => object | undefined>((id) => assets.get(id)),
-    getShape: vi.fn<(id: string) => object | undefined>((id) => shapes.get(id)),
+    updateShapes: vi.fn<(items: StubRecord[]) => void>((items) =>
+      items
+        .filter((item) => isWritable(item.id))
+        .forEach((item) => {
+          const shape = shapes.get(item.id)
+          if (shape)
+            shapes.set(item.id, { ...shape, ...item, props: { ...shape.props, ...item.props } })
+        })
+    ),
+    getAsset: vi.fn<(id: string) => StubRecord | undefined>((id) => assets.get(id)),
+    getAssets: vi.fn<() => StubRecord[]>(() => [...assets.values()]),
+    getShape: vi.fn<(id: string) => StubRecord | undefined>((id) => shapes.get(id)),
     zoomToFit: vi.fn<(opts?: unknown) => void>(),
-    run: vi.fn<(callback: () => void, options: { history: string }) => void>((callback) =>
-      callback()
-    )
+    run: vi.fn<(callback: () => void, options?: RunOptions) => void>((callback, options) => {
+      const previous = ignoreShapeLock
+      ignoreShapeLock = options?.ignoreShapeLock ?? previous
+      try {
+        callback()
+      } finally {
+        ignoreShapeLock = previous
+      }
+    })
   }
 }
+
+const PAGE_RUN_OPTIONS: RunOptions = { history: "ignore", ignoreShapeLock: true }
 
 function renderScreen(props: PdfViewerScreenProps, onRender: () => void = () => {}) {
   return render(
@@ -165,9 +192,40 @@ describe("PdfViewerScreen", () => {
       )
     )
     await waitFor(() => expect(renderPages).toHaveBeenCalledWith([2]))
-    expect(stub.deleteShapes).toHaveBeenCalledWith(["shape:page-1"])
-    expect(stub.run).toHaveBeenCalledWith(expect.any(Function), { history: "ignore" })
+    expect(stub.getShape("shape:page-1")).toBeUndefined()
+    expect(stub.run).toHaveBeenCalledWith(expect.any(Function), PAGE_RUN_OPTIONS)
     expect(stub.getShape("shape:mark-1")).toBeDefined()
+  })
+
+  it("replaces page shapes and assets when the document changes", async () => {
+    const stub = createEditorStub()
+    mountedEditor = {
+      ...stub,
+      getViewportPageBounds: () => ({ x: 0, y: 0, w: 300, h: 300 }),
+      getZoomLevel: () => 1,
+      pageToViewport: (point: { x: number; y: number }) => point,
+      store: { listen: () => () => {} }
+    }
+    const wide: RenderedPdfPage = { pageNumber: 1, width: 300, height: 150, dataUrl: "" }
+    const first = { pages: [page], renderPages: async () => [page], destroy: async () => {} }
+    const second = { pages: [wide], renderPages: async () => [wide], destroy: async () => {} }
+    const onOpenAnother = vi.fn<() => void>()
+    const { rerender, unmount } = renderScreen({ document: first, onOpenAnother })
+    await waitFor(() => expect(stub.getShape("shape:page-1")?.props?.w).toBe(100))
+
+    rerender(
+      <UiProvider>
+        <Profiler id="pdf-viewer" onRender={() => {}}>
+          <PdfViewerScreen document={second} onOpenAnother={onOpenAnother} />
+        </Profiler>
+      </UiProvider>
+    )
+    await waitFor(() => expect(stub.getShape("shape:page-1")?.props?.w).toBe(300))
+    expect(stub.getAssets().map((asset) => asset.props?.w)).toEqual([300])
+
+    unmount()
+    expect(stub.getShape("shape:page-1")).toBeUndefined()
+    expect(stub.getAssets()).toEqual([])
   })
 
   it("shows a page-sized loading indicator until its raster completes", async () => {
@@ -320,6 +378,9 @@ describe("PdfViewerScreen", () => {
     })
     expect(stub.getShape("shape:page-1")).toBeUndefined()
     expect(stub.getShape("shape:page-2")).toBeDefined()
+    expect(stub.getAssets().map((asset) => asset.id)).toEqual([
+      expect.stringMatching(/^asset:page-2-/)
+    ])
   })
 
   it("rasterises a retained page that is outside the viewport", async () => {
@@ -457,23 +518,61 @@ describe("placePagesOnCanvas", () => {
       x: 0,
       y: 0,
       isLocked: true,
-      props: { assetId: "asset:page-1", w: 100, h: 140 }
+      props: { assetId: "asset:page-1-pending", w: 100, h: 140 }
     })
-    expect(editorStub.createAssets.mock.calls[0][0]).toHaveLength(1)
+    expect(editorStub.createAssets.mock.calls[0][0]).toEqual([
+      expect.objectContaining({
+        id: "asset:page-1-pending",
+        props: expect.objectContaining({ src: null, w: 100, h: 140 })
+      })
+    ])
     expect(editorStub.zoomToFit).toHaveBeenCalledTimes(1)
+  })
+
+  it("lands each raster on a fresh asset and repoints the page shape", () => {
+    const editorStub = createEditorStub()
+    const pages = [page, page2]
+    const shownAsset = () => {
+      const assetId = editorStub.getShape("shape:page-1")?.props?.assetId
+      return typeof assetId === "string" ? editorStub.getAsset(assetId) : undefined
+    }
+    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, pages])
+
+    const firstRaster = { ...page, dataUrl: "data:image/png;base64,first" }
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [firstRaster]])
+    const first = shownAsset()
+    expect(first?.id).toMatch(/^asset:page-1-r\d+$/)
+    expect(first?.props?.src).toBe(firstRaster.dataUrl)
+    expect(editorStub.getAsset("asset:page-1-pending")).toBeUndefined()
+
+    const secondRaster = { ...page, dataUrl: "data:image/png;base64,second" }
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [secondRaster]])
+    const second = shownAsset()
+    expect(second?.id).toMatch(/^asset:page-1-r\d+$/)
+    expect(second?.id).not.toBe(first?.id)
+    expect(second?.props?.src).toBe(secondRaster.dataUrl)
+    expect(editorStub.getAssets().map((asset) => asset.id)).toEqual([second?.id])
+
+    expect(editorStub.updateAssets).not.toHaveBeenCalled()
+    for (const [, options] of editorStub.run.mock.calls) expect(options).toEqual(PAGE_RUN_OPTIONS)
   })
 
   it("releases page shapes and assets when they leave the viewport", () => {
     const editorStub = createEditorStub()
-    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, [page, page2]])
+    const pages = [page, page2]
+    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, pages])
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [page]])
 
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, [page, page2], [2], [page2]])
-    expect(editorStub.deleteShapes).toHaveBeenCalledWith(["shape:page-1"])
-    expect(editorStub.deleteAssets).toHaveBeenCalledWith(["asset:page-1"])
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [2], [page2]])
+    expect(editorStub.getShape("shape:page-1")).toBeUndefined()
+    expect(editorStub.getShape("shape:page-2")).toBeDefined()
+    expect(editorStub.getAssets().map((asset) => asset.id)).toEqual([
+      expect.stringMatching(/^asset:page-2-r\d+$/)
+    ])
 
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, [page, page2], [], []])
-    expect(editorStub.deleteShapes).toHaveBeenLastCalledWith(["shape:page-2"])
-    expect(editorStub.deleteAssets).toHaveBeenLastCalledWith(["asset:page-2"])
+    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [], []])
+    expect(editorStub.getShape("shape:page-2")).toBeUndefined()
+    expect(editorStub.getAssets()).toEqual([])
   })
 })
 

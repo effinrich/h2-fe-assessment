@@ -55,13 +55,23 @@ The architecture choice and its alternatives are recorded in
   (`hooks.ts`).
 - **Raster.** A page is rendered to an offscreen `<canvas>` at a fixed scale of
   2, encoded as a PNG data URL, and the canvas is released.
-- **Place.** Each visible page becomes a tldraw `image` asset plus a locked
-  `image` shape (`shape:page-N` / `asset:page-N`), stacked vertically with a
-  fixed gap. Until its raster lands, a visible page's asset points at a 1×1
-  placeholder GIF.
-- **Evict.** Pages that leave the viewport have their shape, asset and raster
-  deleted (`syncVisiblePages`), in a history-ignored `editor.run`, so eviction
-  never enters undo.
+- **Place.** Each visible page becomes a locked tldraw `image` shape
+  (`shape:page-N`), stacked vertically with a fixed gap. Until its raster lands
+  the shape shows `asset:page-N-pending`, whose `src` is `null`, so tldraw draws
+  a page-sized placeholder box. A landed raster is stored under a fresh asset id
+  (`asset:page-N-r<seq>`); the shape is repointed to it and the previous asset
+  deleted. A shown asset's `src` is never updated in place: tldraw
+  (`useImageOrVideoAsset`) shows an in-place `src` change only after more than
+  32 animation frames without a further change, which delayed pages by ~33s
+  when the frame rate dropped to 1fps.
+- **Evict.** Pages that leave the viewport, and are not under a retained box
+  (`retainPageBounds`), have their shape and every asset of that page deleted
+  (`syncVisiblePages`). Unmounting the viewer or changing document runs the
+  same path with no page visible. Every page write runs in one `editor.run`
+  that ignores history, so paging never enters undo, and ignores the shape
+  lock, because tldraw silently skips locked shapes in `updateShapes` and
+  `deleteShapes`. Pins never attach to page shapes
+  ([Task 3 spec](./task-3-pin.md), §4), so deleting one loses no bindings.
 - **Overlays.** Per-page loading spinners and per-page retry cards are React
   elements positioned in viewport coordinates over the page's bounds.
 - **Bundle.** The `/viewer` route is `React.lazy`, so tldraw, pdfjs and
@@ -104,10 +114,28 @@ and committed failing before the code exists.
 - [x] **Only pages intersecting the viewport are selected for raster.** —
       `pdf-viewer.spec.tsx` › "selects only pages intersecting the viewport"
       (100 synthetic pages, pure selector). No real 100-page PDF is tested.
-- [x] **Off-screen pages release their shape and asset; user marks are
-      untouched.** — `pdf-viewer.spec.tsx` › "releases page shapes and assets
-      when they leave the viewport"; "tracks page position, jumps without
-      rasterising all pages, and preserves marks".
+- [ ] **Off-screen pages release their locked shape and every asset of the
+      page; pages under a retained box stay until the box goes; user marks are
+      untouched.** Previously ticked against an editor stub that ignored
+      tldraw's lock rule: in the real editor `deleteShapes` skipped the locked
+      page shape, so nothing was evicted. The stub now applies the rule. —
+      `pdf-viewer.stories.tsx` › `EvictsOffscreenPages` play test (real
+      tldraw); `pdf-viewer.spec.tsx` › "releases page shapes and assets when
+      they leave the viewport"; "keeps pages under a retained box after they
+      leave the viewport, until the box goes"; "tracks page position, jumps
+      without rasterising all pages, and preserves marks".
+- [ ] **A landed raster is on screen within a few animation frames of its
+      render completing, whatever the frame rate.** Before: the page's asset
+      `src` was updated in place, which tldraw shows only after more than 32
+      frames without a further change — ~0.5s at 60fps, ~33s measured at 1fps.
+      — `pdf-viewer.stories.tsx` › `RasterLandsPromptly` play test (fewer than
+      8 frames, real tldraw); `pdf-viewer.spec.tsx` › "lands each raster on a
+      fresh asset and repoints the page shape".
+- [ ] **Unmounting the viewer or changing document removes the previous
+      document's page shapes and assets**, so the new document's pages take
+      their own sizes. — `pdf-viewer.stories.tsx` › `SwitchesDocument` play
+      test (real tldraw); `pdf-viewer.spec.tsx` › "replaces page shapes and
+      assets when the document changes".
 - [x] **Page navigation tracks the visible page and jumps without rasterising
       pages that are not visible.** — `pdf-viewer.spec.tsx` › "tracks page
       position…"; `libs/web/ui/src/lib/viewer-top-bar/viewer-top-bar.stories.tsx`
@@ -206,7 +234,9 @@ jsdom cannot rasterise a PDF, so:
 - **Vitest + jsdom** (`pdf-viewer.spec.tsx`): tldraw and pdf.js are stubbed;
   tests assert our behaviour — state transitions, page selection, eviction,
   retry, render counts — not pdf.js correctness.
-- **Storybook play tests**: screen states and the top bar's navigation.
+- **Storybook play tests**: screen states and the top bar's navigation, plus
+  the page lifecycle against the real tldraw editor (raster timing, eviction of
+  locked shapes, document change), which a stub can only approximate.
 - **By hand in a browser**: actual pixels, pan/zoom feel. Recorded as such, not
   as automated coverage.
 
@@ -225,10 +255,5 @@ jsdom cannot rasterise a PDF, so:
 
 ## Open questions
 
-- **Pins (Task 3) vs eviction.** Evicting a page deletes its shape, and tldraw
-  removes bindings to a deleted shape (`BindingOnShapeIsolateOptions`,
-  `@tldraw/editor/dist-cjs/index.d.ts:357-380`). Pins must therefore bind
-  between user shapes, not to page shapes — or eviction must keep page shapes
-  and swap only the asset. ADR 0012 records this.
 - **Drag-and-drop.** Whether a dropped PDF should go through tldraw's asset
   pipeline instead of the picker. Not started.
