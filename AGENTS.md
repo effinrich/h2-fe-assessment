@@ -110,8 +110,9 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 - Quality over speed: do not rush; stay calm; best work over finishing fast.
 - Do not harp on the oxc/editor lint-fix extension or chase flaky editor
   diagnostics; the gate is authoritative.
-- Style third-party chrome with Chakra's `chakra()` factory onto app tokens.
-  Use Chakra the attribute/recipe way, not Tailwind-like utility soup.
+- Use Chakra the attribute/recipe way, not Tailwind-like utility soup.
+  Wrap our chrome with `chakra()` onto app tokens; do not wrap tldraw
+  internals in `chakra()`.
 - bun only — never `npm install` or `npx` for workspace deps or Nx
   (`bun` / `bunx nx`).
 - Commit and push regularly on your own (do not wait for the user to ask), with smaller PRs so progress is easier to track. Do not leave `LEFTHOOK=0` on.
@@ -129,3 +130,8 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
   (ADR 0012).
 - `ShapeUtil.indicator` is deprecated and not rendered; use
   `getCurrentPagePoint()` instead of `inputs.currentPagePoint`.
+- tldraw and Chakra are two styling systems (ADR 0013): Chakra for app
+  chrome; tldraw CSS variables and component overrides for canvas UI;
+  tldraw StyleProps only for persisted shape data. Bridge tokens with
+  scoped CSS vars after `tldraw.css`. Sync color mode with
+  `editor.setColorMode` after mount — do not remount `Tldraw`.
