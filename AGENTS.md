@@ -104,3 +104,28 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
    file before editing it — never overwrite the user's concurrent edits.
 6. **Ask before deleting any config file**, even when deletion looks like the
    obvious fix (nested rc files, dead config, `git rm --cached`).
+
+## Learned User Preferences
+
+- Quality over speed: do not rush; stay calm; best work over finishing fast.
+- Do not harp on the oxc/editor lint-fix extension or chase flaky editor
+  diagnostics; the gate is authoritative.
+- Style third-party chrome with Chakra's `chakra()` factory onto app tokens.
+  Use Chakra the attribute/recipe way, not Tailwind-like utility soup.
+- bun only — never `npm install` or `npx` for workspace deps or Nx
+  (`bun` / `bunx nx`).
+- Commit and push regularly on your own (do not wait for the user to ask), with smaller PRs so progress is easier to track. Do not leave `LEFTHOOK=0` on.
+- Do not stage local-only junk: the user's `.gitignore` edits,
+  `.github/agents/`, `firebase-debug.log`, `docs/*.zip`.
+
+## Learned Workspace Facts
+
+- Pin, camera, and pdf-viewer must not import each other; only `apps/web`
+  (the viewer route) composes canvas extensions (ADR 0011 amendment).
+- Locked tldraw shapes: `updateShapes` / `deleteShapes` silently no-op unless
+  `editor.run(..., { ignoreShapeLock: true })`.
+- Never update `src` in-place on a tldraw image asset a shape is already
+  showing (32-frame debounce); create a new asset id and repoint the shape
+  (ADR 0012).
+- `ShapeUtil.indicator` is deprecated and not rendered; use
+  `getCurrentPagePoint()` instead of `inputs.currentPagePoint`.
