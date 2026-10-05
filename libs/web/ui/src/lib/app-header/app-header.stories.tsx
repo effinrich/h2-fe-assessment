@@ -10,7 +10,7 @@ const PHONE_VIEWPORT = {
   phone: { name: "Phone", styles: { width: "390px", height: "844px" }, type: "mobile" }
 } as const
 
-
+// Spec: one in-flow chrome row; the brand is decoration, never a tab stop.
 const meta = {
   title: "Chrome/AppHeader",
   component: AppHeader,
