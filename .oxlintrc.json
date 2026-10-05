@@ -87,10 +87,7 @@
       "files": [
         "**/routes/home/home-screen/home-screen.tsx",
         "**/routes/pdf-viewer-route.tsx",
-        "**/viewer-top-bar/viewer-top-bar.tsx",
-        "**/src/lib/pdf-viewer.tsx",
-        "**/src/lib/pdf-viewer.spec.tsx",
-        "**/partials/canvas-components.tsx"
+        "**/viewer-top-bar/viewer-top-bar.tsx"
       ],
       "rules": {
         "react/no-multi-comp": "off",
