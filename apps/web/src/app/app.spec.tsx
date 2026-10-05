@@ -32,7 +32,7 @@ function renderAt(path: string, state?: unknown) {
 describe("App route table", () => {
   it("renders the home surface at '/'", () => {
     renderAt("/")
-    expect(screen.getByRole("heading", { name: "Open a document" })).toBeTruthy()
+    expect(screen.getByRole("heading", { name: "Open a PDF to start marking up" })).toBeTruthy()
   })
 
   it(
@@ -51,7 +51,7 @@ describe("App route table", () => {
   it("redirects '/viewer' with no handoff to home", async () => {
     renderAt("/viewer")
     await waitFor(() =>
-      expect(screen.getByRole("heading", { name: "Open a document" })).toBeTruthy()
+      expect(screen.getByRole("heading", { name: "Open a PDF to start marking up" })).toBeTruthy()
     )
   })
 

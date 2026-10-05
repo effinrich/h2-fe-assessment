@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { expect, fireEvent, fn } from "storybook/test"
+import { expect, fn, waitFor } from "storybook/test"
 
 import { HomeScreen } from "./home-screen"
 
@@ -45,19 +45,22 @@ export const Busy: Story = {
   }
 }
 
-// A real DataTransfer through the browser's drag events, not a stubbed object.
+// Native DragEvents carrying a real DataTransfer. fireEvent would copy the
+// DataTransfer's own properties onto a new one, and a real one has none.
 export const DropAPdf: Story = {
   play: async ({ args, canvas }) => {
     const target = canvas.getByRole("main")
     const file = new File(["%PDF-1.4"], "dropped.pdf", { type: "application/pdf" })
     const dataTransfer = new DataTransfer()
     dataTransfer.items.add(file)
+    const drag = (type: string) =>
+      target.dispatchEvent(new DragEvent(type, { bubbles: true, cancelable: true, dataTransfer }))
 
-    await fireEvent.dragOver(target, { dataTransfer })
+    drag("dragover")
     await expect(await canvas.findByText("Drop to open")).toBeVisible()
 
-    await fireEvent.drop(target, { dataTransfer })
+    drag("drop")
     await expect(args.onDropFile).toHaveBeenCalledWith(file)
-    await expect(canvas.queryByText("Drop to open")).toBeNull()
+    await waitFor(() => expect(canvas.queryByText("Drop to open")).toBeNull())
   }
 }
