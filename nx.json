@@ -2,7 +2,10 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "analytics": false,
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.oxlintrc.json",
@@ -91,11 +94,24 @@
       ]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "typecheck": {
-      "dependsOn": ["build", "^build"],
-      "inputs": ["default", "^production", { "externalDependencies": ["typescript"] }]
+      "dependsOn": [
+        "build",
+        "^build"
+      ],
+      "inputs": [
+        "default",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ]
     },
     "format": {
       "executor": "nx:run-commands",
@@ -104,7 +120,15 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json", { "externalDependencies": ["oxfmt"] }]
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.oxfmtrc.json",
+        {
+          "externalDependencies": [
+            "oxfmt"
+          ]
+        }
+      ]
     },
     "format:fix": {
       "executor": "nx:run-commands",
@@ -121,8 +145,14 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["default", "^production", "storybookTestRunner"],
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+      "inputs": [
+        "default",
+        "^production",
+        "storybookTestRunner"
+      ],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ]
     }
   },
   "generators": {
@@ -146,5 +176,6 @@
     "version": {
       "preVersionCommand": "bunx nx run-many -t build"
     }
-  }
+  },
+  "nxCloudId": "6ac3d4c6d0bf89bef46ccee2"
 }
