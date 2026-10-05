@@ -29,7 +29,7 @@ jobs:
             exit 1
           fi
 
-          if ! printf '%s\n' "$PR_BODY" | grep -iE 'bun run gate|bun test|bun lint|bun run|bunx|nx|gate|test|lint|typecheck|format' > /dev/null; then
+          if ! printf '%s\n' "$PR_BODY" | grep -iE '(^|[[:space:]`$])(bun run [[:alnum:]_:-]+|bun (test|lint)|bunx nx [[:alnum:]_:-]+)([[:space:]`]|$)' > /dev/null; then
             echo "::error::PR description does not include evidence of command execution. Please update the PR description to include evidence of executed commands (e.g., citing 'bun run gate' or test/lint execution)."
             exit 1
           fi
