@@ -1,141 +1,40 @@
-import type * as TldrawModule from "tldraw"
+import type * as pdfjs from "pdfjs-dist"
 
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import * as pdfjs from "pdfjs-dist"
-import { Profiler, useEffect } from "react"
+import { act, fireEvent, screen, waitFor } from "@testing-library/react"
+import { Profiler } from "react"
 import { atom } from "tldraw"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { UiProvider } from "@h2-fe/ui"
 
-import type { CanvasExtension, PdfPage, PdfViewerScreenProps, RenderedPdfPage } from "./types"
+import type { RenderedPdfPage } from "./types"
 
 import { PDF_PAGE_GAP } from "./consts"
 import { pdfFileToken } from "./hooks"
 import { PdfViewerScreen } from "./pdf-viewer"
 import {
-  activePageNumber,
-  hasUserMarks,
-  isPdfPageShape,
-  openPdf,
-  pageBounds,
-  placePagesOnCanvas,
-  syncVisiblePages,
-  visiblePageNumbers
-} from "./utils"
+  createEditorStub,
+  exampleDocument,
+  page,
+  page2,
+  PAGE_RUN_OPTIONS,
+  renderScreen
+} from "./spec-helpers"
+import { resetTldrawStub, tldrawStub } from "./tldraw-stub"
 
-// jsdom cannot rasterise real PDFs, so PDF.js and tldraw are stubbed. These
-// tests cover the screen states, file identity, viewport selection, cleanup,
-// and canvas placement. tldraw's signals stay real so reactive viewport code
-// is exercised as it runs in the app.
-vi.mock("tldraw", async () => {
-  const {
-    atom: realAtom,
-    react,
-    unsafe__withoutCapture
-  } = await vi.importActual<typeof TldrawModule>("tldraw")
-  return {
-    atom: realAtom,
-    react,
-    unsafe__withoutCapture,
-    AssetRecordType: { create: (input: Record<string, unknown>) => input },
-    Tldraw: (props: TldrawModule.TldrawProps) => {
-      tldraw.props = props
-      // Like tldraw: the latest onMount runs once per mount.
-      useEffect(() => {
-        if (!mountedEditor) return undefined
-        return tldraw.props?.onMount?.(mountedEditor as TldrawModule.Editor) ?? undefined
-      }, [])
-      return <div data-testid="tldraw" />
-    }
-  }
-})
-
-const tldraw = vi.hoisted(() => ({ props: null as TldrawModule.TldrawProps | null }))
-let mountedEditor: object | null = null
-let finish: (pages: RenderedPdfPage[]) => void = () => {}
-
+// jsdom cannot rasterise real PDFs, so PDF.js and tldraw are stubbed.
+vi.mock("tldraw", async () => (await import("./tldraw-stub")).createTldrawStub())
 vi.mock("pdfjs-dist", () => ({
   GlobalWorkerOptions: {},
   getDocument: vi.fn<typeof pdfjs.getDocument>()
 }))
 
-const page: RenderedPdfPage = { pageNumber: 1, width: 100, height: 140, dataUrl: "" }
-const page2: RenderedPdfPage = { pageNumber: 2, width: 100, height: 140, dataUrl: "" }
-const exampleDocument = {
-  pages: [page],
-  renderPages: vi.fn<() => Promise<RenderedPdfPage[]>>(async () => [page]),
-  destroy: vi.fn<() => Promise<void>>(async () => {})
-}
-
-type StubRecord = { id: string; isLocked?: boolean; props?: Record<string, unknown> }
-type RunOptions = { history?: string; ignoreShapeLock?: boolean }
-
-function createEditorStub() {
-  const assets = new Map<string, StubRecord>()
-  const shapes = new Map<string, StubRecord>()
-  // Like tldraw's Editor: updateShapes and deleteShapes skip locked shapes
-  // unless an enclosing run ignores the shape lock.
-  let ignoreShapeLock = false
-  const isWritable = (id: string) => ignoreShapeLock || !shapes.get(id)?.isLocked
-  return {
-    createAssets: vi.fn<(items: StubRecord[]) => void>((items) =>
-      items.forEach((asset) => assets.set(asset.id, asset))
-    ),
-    createShapes: vi.fn<(items: StubRecord[]) => void>((items) =>
-      items.forEach((shape) => shapes.set(shape.id, shape))
-    ),
-    deleteAssets: vi.fn<(ids: string[]) => void>((ids) => ids.forEach((id) => assets.delete(id))),
-    deleteShapes: vi.fn<(ids: string[]) => void>((ids) =>
-      ids.filter(isWritable).forEach((id) => shapes.delete(id))
-    ),
-    updateAssets: vi.fn<(items: StubRecord[]) => void>((items) =>
-      items.forEach((asset) => assets.set(asset.id, asset))
-    ),
-    updateShapes: vi.fn<(items: StubRecord[]) => void>((items) =>
-      items
-        .filter((item) => isWritable(item.id))
-        .forEach((item) => {
-          const shape = shapes.get(item.id)
-          if (shape)
-            shapes.set(item.id, { ...shape, ...item, props: { ...shape.props, ...item.props } })
-        })
-    ),
-    getAsset: vi.fn<(id: string) => StubRecord | undefined>((id) => assets.get(id)),
-    getAssets: vi.fn<() => StubRecord[]>(() => [...assets.values()]),
-    getShape: vi.fn<(id: string) => StubRecord | undefined>((id) => shapes.get(id)),
-    zoomToFit: vi.fn<(opts?: unknown) => void>(),
-    setColorMode: vi.fn<(mode: "dark" | "light") => unknown>(),
-    run: vi.fn<(callback: () => void, options?: RunOptions) => void>((callback, options) => {
-      const previous = ignoreShapeLock
-      ignoreShapeLock = options?.ignoreShapeLock ?? previous
-      try {
-        callback()
-      } finally {
-        ignoreShapeLock = previous
-      }
-    })
-  }
-}
-
-const PAGE_RUN_OPTIONS: RunOptions = { history: "ignore", ignoreShapeLock: true }
-
-function renderScreen(props: PdfViewerScreenProps, onRender: () => void = () => {}) {
-  return render(
-    <UiProvider>
-      <Profiler id="pdf-viewer" onRender={onRender}>
-        <PdfViewerScreen {...props} />
-      </Profiler>
-    </UiProvider>
-  )
-}
+let finish: (pages: RenderedPdfPage[]) => void = () => {}
 
 afterEach(() => {
-  mountedEditor = null
-  tldraw.props = null
+  resetTldrawStub()
   vi.restoreAllMocks()
   vi.clearAllMocks()
-  vi.mocked(pdfjs.getDocument).mockReset()
 })
 
 describe("PdfViewerScreen", () => {
@@ -171,7 +70,7 @@ describe("PdfViewerScreen", () => {
       },
       store: { listen: () => () => {} }
     }
-    mountedEditor = editor
+    tldrawStub.editor = editor
     const onMarksChange = vi.fn<(hasMarks: boolean) => void>()
     const renderPages = vi.fn<(numbers: number[]) => Promise<RenderedPdfPage[]>>(async (numbers) =>
       numbers.map((number) => (number === 1 ? page : page2))
@@ -200,7 +99,7 @@ describe("PdfViewerScreen", () => {
 
   it("replaces page shapes and assets when the document changes", async () => {
     const stub = createEditorStub()
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => ({ x: 0, y: 0, w: 300, h: 300 }),
       getZoomLevel: () => 1,
@@ -231,7 +130,7 @@ describe("PdfViewerScreen", () => {
 
   it("shows a page-sized loading indicator until its raster completes", async () => {
     const stub = createEditorStub()
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => ({ x: 0, y: 0, w: 100, h: 140 }),
       getZoomLevel: () => 1,
@@ -258,7 +157,7 @@ describe("PdfViewerScreen", () => {
   it("retries a failed page without reopening the document", async () => {
     const stub = createEditorStub()
     let notify = () => {}
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => ({ x: 0, y: 0, w: 100, h: 140 }),
       getZoomLevel: () => 1,
@@ -296,7 +195,7 @@ describe("PdfViewerScreen", () => {
       viewport.set(next)
       emitSessionChange()
     }
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => viewport.get(),
       getZoomLevel: () => 1,
@@ -348,7 +247,7 @@ describe("PdfViewerScreen", () => {
     const stub = createEditorStub()
     const viewport = atom("viewport", { x: 0, y: 0, w: 100, h: 140 })
     const retained = atom<{ x: number; y: number; w: number; h: number }[]>("retained", [])
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => viewport.get(),
       getZoomLevel: () => 1,
@@ -386,7 +285,7 @@ describe("PdfViewerScreen", () => {
 
   it("rasterises a retained page that is outside the viewport", async () => {
     const stub = createEditorStub()
-    mountedEditor = {
+    tldrawStub.editor = {
       ...stub,
       getViewportPageBounds: () => ({ x: 0, y: 0, w: 100, h: 140 }),
       getZoomLevel: () => 1,
@@ -416,259 +315,13 @@ describe("PdfViewerScreen", () => {
 
   it("scopes the canvas to the app color mode", () => {
     const setColorMode = vi.fn<(mode: "dark" | "light") => unknown>()
-    mountedEditor = { setColorMode }
+    tldrawStub.editor = { setColorMode }
     renderScreen({ onOpenAnother: vi.fn<() => void>() })
     const root = document.querySelector("[data-canvas-theme]")
     expect(root).toBeTruthy()
     expect(root?.getAttribute("data-color-mode")).toBe("light")
     expect(setColorMode).toHaveBeenCalledWith("light")
-    expect(tldraw.props?.hideUi).toBeUndefined()
-  })
-})
-
-describe("canvas extensions", () => {
-  // tldraw is stubbed, so utils are identity tokens: the screen only forwards them.
-  const shapeA = { type: "shape-a" } as unknown as TldrawModule.TLAnyShapeUtilConstructor
-  const shapeB = { type: "shape-b" } as unknown as TldrawModule.TLAnyShapeUtilConstructor
-  const bindingA = { type: "binding-a" } as unknown as TldrawModule.TLAnyBindingUtilConstructor
-  const overlayA = { type: "overlay-a" } as unknown as TldrawModule.TLAnyOverlayUtilConstructor
-  const toolA = { id: "tool-a" } as unknown as TldrawModule.TLStateNodeConstructor
-  const toolB = { id: "tool-b" } as unknown as TldrawModule.TLStateNodeConstructor
-  const overridesA: TldrawModule.TLUiOverrides = { translations: { en: { "tool.a": "A" } } }
-  const overridesB: TldrawModule.TLUiOverrides = { translations: { en: { "tool.b": "B" } } }
-
-  it("passes every extension's contributions to the editor, in order", () => {
-    mountedEditor = { setColorMode: vi.fn<(mode: "dark" | "light") => unknown>() }
-    const teardownA = vi.fn<() => void>()
-    const onMountA = vi.fn<TldrawModule.TLOnMountHandler>(() => teardownA)
-    const onMountB = vi.fn<TldrawModule.TLOnMountHandler>()
-    const extensions: CanvasExtension[] = [
-      {
-        toolIds: ["tool-a"],
-        shapeUtils: [shapeA],
-        bindingUtils: [bindingA],
-        tools: [toolA],
-        overlayUtils: [overlayA],
-        overrides: overridesA,
-        InFrontOfTheCanvas: () => null,
-        onMount: onMountA
-      },
-      {
-        toolIds: ["tool-b"],
-        shapeUtils: [shapeB],
-        tools: [toolB],
-        overrides: overridesB,
-        onMount: onMountB
-      }
-    ]
-
-    const { unmount } = renderScreen({ extensions, onOpenAnother: vi.fn<() => void>() })
-
-    const props = tldraw.props
-    expect(props?.shapeUtils).toEqual([shapeA, shapeB])
-    expect(props?.bindingUtils).toEqual([bindingA])
-    expect(props?.tools).toEqual([toolA, toolB])
-    expect(props?.overlayUtils).toEqual([overlayA])
-    expect(props?.overrides).toEqual(expect.arrayContaining([overridesA, overridesB]))
-    expect(props?.components?.Toolbar).toBeTypeOf("function")
-    expect(props?.components?.KeyboardShortcutsDialog).toBeTypeOf("function")
-    expect(props?.components?.InFrontOfTheCanvas).toBeTypeOf("function")
-    expect(onMountA).toHaveBeenCalledWith(mountedEditor)
-    expect(onMountB).toHaveBeenCalledWith(mountedEditor)
-
-    unmount()
-    expect(teardownA).toHaveBeenCalledTimes(1)
-  })
-
-  it("keeps tldraw's stock toolbar and dialogs when no extension adds a tool", () => {
-    renderScreen({
-      extensions: [{ shapeUtils: [shapeA] }],
-      onOpenAnother: vi.fn<() => void>()
-    })
-
-    expect(tldraw.props?.shapeUtils).toEqual([shapeA])
-    expect(tldraw.props?.components?.Toolbar).toBeUndefined()
-    expect(tldraw.props?.components?.KeyboardShortcutsDialog).toBeUndefined()
-    expect(tldraw.props?.components?.InFrontOfTheCanvas).toBeUndefined()
-  })
-
-  it("keeps merged contributions referentially stable across re-renders", () => {
-    const extensions: CanvasExtension[] = [
-      { toolIds: ["tool-a"], shapeUtils: [shapeA], tools: [toolA] }
-    ]
-    const onOpenAnother = vi.fn<() => void>()
-    const { rerender } = renderScreen({ extensions, filename: "a.pdf", onOpenAnother })
-    const first = tldraw.props
-    expect(first?.shapeUtils).toEqual([shapeA])
-
-    rerender(
-      <UiProvider>
-        <Profiler id="pdf-viewer" onRender={() => {}}>
-          <PdfViewerScreen extensions={extensions} filename="b.pdf" onOpenAnother={onOpenAnother} />
-        </Profiler>
-      </UiProvider>
-    )
-
-    expect(tldraw.props).not.toBe(first)
-    expect(tldraw.props?.shapeUtils).toBe(first?.shapeUtils)
-    expect(tldraw.props?.tools).toBe(first?.tools)
-    expect(tldraw.props?.overrides).toBe(first?.overrides)
-    expect(tldraw.props?.components).toBe(first?.components)
-  })
-})
-
-describe("placePagesOnCanvas", () => {
-  it("starts with the first page so zoom-to-fit does not rasterise the full document", () => {
-    const editorStub = createEditorStub()
-    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, [page, page2]])
-
-    const shapes = editorStub.createShapes.mock.calls[0][0]
-    expect(shapes).toHaveLength(1)
-    expect(shapes[0]).toEqual({
-      id: "shape:page-1",
-      type: "image",
-      x: 0,
-      y: 0,
-      isLocked: true,
-      props: { assetId: "asset:page-1-pending", w: 100, h: 140 }
-    })
-    expect(editorStub.createAssets.mock.calls[0][0]).toEqual([
-      expect.objectContaining({
-        id: "asset:page-1-pending",
-        props: expect.objectContaining({ src: null, w: 100, h: 140 })
-      })
-    ])
-    expect(editorStub.zoomToFit).toHaveBeenCalledTimes(1)
-  })
-
-  it("lands each raster on a fresh asset and repoints the page shape", () => {
-    const editorStub = createEditorStub()
-    const pages = [page, page2]
-    const shownAsset = () => {
-      const assetId = editorStub.getShape("shape:page-1")?.props?.assetId
-      return typeof assetId === "string" ? editorStub.getAsset(assetId) : undefined
-    }
-    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, pages])
-
-    const firstRaster = { ...page, dataUrl: "data:image/png;base64,first" }
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [firstRaster]])
-    const first = shownAsset()
-    expect(first?.id).toMatch(/^asset:page-1-r\d+$/)
-    expect(first?.props?.src).toBe(firstRaster.dataUrl)
-    expect(editorStub.getAsset("asset:page-1-pending")).toBeUndefined()
-
-    const secondRaster = { ...page, dataUrl: "data:image/png;base64,second" }
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [secondRaster]])
-    const second = shownAsset()
-    expect(second?.id).toMatch(/^asset:page-1-r\d+$/)
-    expect(second?.id).not.toBe(first?.id)
-    expect(second?.props?.src).toBe(secondRaster.dataUrl)
-    expect(editorStub.getAssets().map((asset) => asset.id)).toEqual([second?.id])
-
-    expect(editorStub.updateAssets).not.toHaveBeenCalled()
-    for (const [, options] of editorStub.run.mock.calls) expect(options).toEqual(PAGE_RUN_OPTIONS)
-  })
-
-  it("releases page shapes and assets when they leave the viewport", () => {
-    const editorStub = createEditorStub()
-    const pages = [page, page2]
-    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, pages])
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [1], [page]])
-
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [2], [page2]])
-    expect(editorStub.getShape("shape:page-1")).toBeUndefined()
-    expect(editorStub.getShape("shape:page-2")).toBeDefined()
-    expect(editorStub.getAssets().map((asset) => asset.id)).toEqual([
-      expect.stringMatching(/^asset:page-2-r\d+$/)
-    ])
-
-    Reflect.apply(syncVisiblePages, undefined, [editorStub, pages, [], []])
-    expect(editorStub.getShape("shape:page-2")).toBeUndefined()
-    expect(editorStub.getAssets()).toEqual([])
-  })
-})
-
-describe("PDF page virtualization", () => {
-  it("selects only pages intersecting the viewport", () => {
-    const pages: PdfPage[] = Array.from({ length: 100 }, (_, index) => ({
-      pageNumber: index + 1,
-      width: 100,
-      height: 140
-    }))
-    expect(visiblePageNumbers(pages, { x: 0, y: 0, w: 100, h: 140 })).toEqual([1])
-    expect(
-      visiblePageNumbers(pages, {
-        x: 0,
-        y: page.height + PDF_PAGE_GAP,
-        w: 100,
-        h: 140
-      })
-    ).toEqual([2])
-    expect(visiblePageNumbers(pages, { x: 101, y: 0, w: 100, h: 140 })).toEqual([])
-  })
-
-  it("destroys the loading task when opening a document fails", async () => {
-    const loadingTask = {
-      promise: Promise.reject(new Error("invalid PDF")),
-      destroy: vi.fn<() => Promise<void>>(async () => {})
-    }
-    vi.mocked(pdfjs.getDocument).mockReturnValue(loadingTask as never)
-
-    await expect(openPdf(new ArrayBuffer(0))).rejects.toThrow("invalid PDF")
-    expect(loadingTask.destroy).toHaveBeenCalledTimes(1)
-  })
-
-  it("keeps the document alive so a failed visible page can retry", async () => {
-    const renderError = new Error("render failed")
-    const pdfPage = {
-      getViewport: () => ({ width: 100, height: 140 }),
-      render: () => ({ promise: Promise.reject(renderError) })
-    }
-    const loadingTask = {
-      promise: Promise.resolve({
-        numPages: 1,
-        getPage: vi.fn<() => Promise<typeof pdfPage>>(async () => pdfPage)
-      }),
-      destroy: vi.fn<() => Promise<void>>(async () => {})
-    }
-    vi.mocked(pdfjs.getDocument).mockReturnValue(loadingTask as never)
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
-      {} as CanvasRenderingContext2D
-    )
-
-    const document = await openPdf(new ArrayBuffer(0))
-    await expect(document.renderPages([1])).rejects.toThrow(renderError)
-    expect(loadingTask.destroy).not.toHaveBeenCalled()
-    await document.destroy()
-    expect(loadingTask.destroy).toHaveBeenCalledTimes(1)
-  })
-})
-
-describe("page workspace geometry", () => {
-  const pages: PdfPage[] = [page, page2, { ...page, pageNumber: 3 }]
-
-  it("positions pages with the same gap as canvas placement", () => {
-    expect(pageBounds(pages, 2)).toEqual({ x: 0, y: 140 + PDF_PAGE_GAP, w: 100, h: 140 })
-    expect(pageBounds(pages, 99)).toBeUndefined()
-  })
-
-  it("chooses the page with most visible overlap, including the gap", () => {
-    expect(activePageNumber(pages, { x: 0, y: 140, w: 100, h: 100 })).toBe(2)
-    expect(activePageNumber(pages, { x: 300, y: 0, w: 100, h: 140 })).toBe(1)
-  })
-
-  it("ignores PDF page shapes when checking for user marks", () => {
-    expect(hasUserMarks([{ id: "shape:page-1" }])).toBe(false)
-    expect(hasUserMarks([{ id: "shape:page-1" }, { id: "shape:mark-1" }])).toBe(true)
-  })
-
-  it("identifies PDF page shapes by their id pattern and image type", () => {
-    expect(isPdfPageShape({ id: "shape:page-1", type: "image" })).toBe(true)
-    expect(isPdfPageShape({ id: "shape:page-12", type: "image" })).toBe(true)
-    expect(isPdfPageShape({ id: "shape:page-1", type: "geo" })).toBe(false)
-    expect(isPdfPageShape({ id: "shape:mark-1", type: "image" })).toBe(false)
-    expect(isPdfPageShape({ id: "shape:page-1a", type: "image" })).toBe(false)
-    expect(isPdfPageShape({ id: "shape:page-", type: "image" })).toBe(false)
+    expect(tldrawStub.props?.hideUi).toBeUndefined()
   })
 })
 
