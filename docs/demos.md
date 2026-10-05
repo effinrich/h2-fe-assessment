@@ -135,13 +135,12 @@ these clips never show:
 That is the brief's own emphasis: _"How you fill the gaps is the core of the exercise."_
 Here the gaps are literally missing states.
 
-## Open question for Rich
+## Decision: Task 4 follows the brief
 
-Answered by reading the stills: the pin and crop interactions are described above, and
-the specs (`docs/specs/task-3-pin.md`, `docs/specs/task-4-camera.md`) design deliberately
-beyond them. What remains open is only whether matching the reference's Task 4 (no
-persistent shape) matters more to you than matching the brief's wording. The specs follow
-the brief.
+The pin and crop interactions are described above, and the specs
+(`docs/specs/task-3-pin.md`, `docs/specs/task-4-camera.md`) design deliberately beyond
+them. Where the reference persists no crop shape and the brief asks for one, the specs
+follow the brief.
 
 ---
 

@@ -5,8 +5,8 @@
     "source.format.oxc": "always", // run formatter first
     "source.fixAll.oxc": "always" // run lint fixes after
   },
+  "vim.enable": false,
   "editor.defaultFormatter": "oxc.oxc-vscode",
-  "oxc.fixKind": "safe_fix_or_suggestion",
   "editor.lightbulb.enabled": "onCode",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
@@ -24,6 +24,20 @@
   },
   "json.schemaDownload.enable": true,
   "[jsonc]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  }
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "editor.wordWrap": "on",
+  "cursor.composer.queueManualSendBehavior2": "steer",
+  "cursor.composer.queueMessageDefaultBehavior": "steer",
+  "cursor.composer.suggestNextPrompt": true,
+  "cursor.general.gitGraphIndexing": "enabled"
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+  "name": "h2-fe-assessment",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": ["nrwl.angular-console", "oxc.oxc-vscode"],
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib"
+      }
+    }
+  },
+  "forwardPorts": [4200, 5173, 6006],
+  "postCreateCommand": "bun install && bunx playwright install chromium"
+}

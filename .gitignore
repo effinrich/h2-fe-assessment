@@ -41,6 +41,7 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 .claude/worktrees
+.worktrees/
 .claude/settings.local.json
 
 .nx/polygraph
@@ -114,3 +115,4 @@ playwright-report/
 test-results/
 .vitest-reports/
 .chromatic-mobile/
+/.hermes.md

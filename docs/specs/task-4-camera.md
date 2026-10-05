@@ -1,6 +1,6 @@
 # Task 4 — camera tool
 
-- Status: in progress
+- Status: implemented (two open questions deferred, see below)
 - Brief reference: README.pdf §4, task-4.mp4
 
 ## What the brief asks
@@ -476,7 +476,8 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 The two **Viewer:** criteria below live in `apps/web`, as route-level tests: the route is where
 `createCameraExtension` and `retainPageBounds={getCropFrameBounds}` meet `PdfViewerScreen`
 (ADR 0011 amendment), and camera never imports pdf-viewer. The camera side of both, the extension
-and a reactive `getCropFrameBounds`, is done here; the route tests are still to write.
+and a reactive `getCropFrameBounds`, is done here; the route wiring is covered by
+`apps/web/src/app/routes/pdf-viewer-route.spec.tsx`.
 
 - [x] **Viewer: includes the PDF page** — page 1 is `shape:page-1` (`pdf-viewer` `placePages`);
       a crop over that id is in the export plan. — `camera.stories.tsx` ›

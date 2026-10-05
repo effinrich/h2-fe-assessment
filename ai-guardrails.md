@@ -7,13 +7,13 @@ not the model.
 
 ## Tier 1 — mechanical. Enforce these.
 
-| control | where it lives | effect |
-|---|---|---|
-| filesystem scope | container image, or a separate macOS user account. Mount the repo only, **no home directory** | stops cloud reach, Desktop writes, `~/.ssh`, `~/.aws`, `~/Documents` |
-| path denies | agent permission rules, or OS ACLs | cheaper than a container, weaker — only holds as well as the pattern match |
-| egress | firewall or proxy allowlist | registries only |
-| worktree per task | wrapper script | the real checkout is never edited; damage is `git reset --hard`-able |
-| gate before commit | pre-commit hook **and** CI | failures cannot land |
+| control            | where it lives                                                                                | effect                                                                     |
+| ------------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| filesystem scope   | container image, or a separate macOS user account. Mount the repo only, **no home directory** | stops cloud reach, Desktop writes, `~/.ssh`, `~/.aws`, `~/Documents`       |
+| path denies        | agent permission rules, or OS ACLs                                                            | cheaper than a container, weaker — only holds as well as the pattern match |
+| egress             | firewall or proxy allowlist                                                                   | registries only                                                            |
+| worktree per task  | wrapper script                                                                                | the real checkout is never edited; damage is `git reset --hard`-able       |
+| gate before commit | pre-commit hook **and** CI                                                                    | failures cannot land                                                       |
 
 ## Tier 2 — not mechanical
 

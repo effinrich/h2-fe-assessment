@@ -114,6 +114,7 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 
 ## Learned User Preferences
 
+- If you are not sure, say I don't know and stop. Do not guess. Do not open the app. Do not edit. Do not delegate.
 - Quality over speed: do not rush; stay calm; best work over finishing fast.
 - Do not harp on the oxc/editor lint-fix extension or chase flaky editor
   diagnostics; the gate is authoritative.
@@ -122,10 +123,12 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
   internals in `chakra()`.
 - bun only — never `npm install` or `npx` for workspace deps or Nx
   (`bun` / `bunx nx`).
-- Commit and push regularly on your own (do not wait for the user to ask), with smaller PRs so progress is easier to track. Do not leave `LEFTHOOK=0` on.
+- You are authorized to edit or create code files necessary to fulfill explicit user tasks. Ask for confirmation before deleting files or altering root project configurations.
+- Do not commit or push unless I write: commit now.
 - Do not stage local-only junk: the user's `.gitignore` edits,
   `.github/agents/`, `firebase-debug.log`, `docs/*.zip`.
-- An honest "I don't know" is accepted and encouraged when something was not verified.
+- If you did not check it this turn, say I don't know. If you changed it, say so. Do not deny it. Do not argue a false claim.
+- Customizing existing UI is not adding new UI. Do not cover tldraw Menu, undo, redo, delete, or the style panel.
 
 ## Learned Workspace Facts
 
