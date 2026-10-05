@@ -6,6 +6,16 @@ Tags: `scope:web`, `type:feature`. Do not import `@h2-fe/camera` or `@h2-fe/pdf-
 
 This project has no Storybook target. Its stories are included by `shared-ui` and `@h2-fe/web-ui`.
 
+## Public API
+
+From `src/index.ts`:
+
+- `createPinExtension(options?)`: returns a `PinExtension`, structurally a `CanvasExtension`. `options.canAttach(shape)` adds an eligibility rule; the route uses it to keep pins off PDF pages.
+- `PIN_TOOL_ID`: the tool id (`"pin"`). Shortcut: **P**.
+- Types: `PinExtension`, `PinExtensionOptions`.
+
+See the [`CanvasExtension` reference](../../../../docs/reference/canvas-extension.md) and the [spec](../../../../docs/specs/task-3-pin.md).
+
 From the repo root:
 
 ```sh

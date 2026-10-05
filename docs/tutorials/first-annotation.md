@@ -33,7 +33,7 @@ Press **P**. Click where the two rectangles overlap. A red pin lands there.
 
 Press **Escape** to return to the select tool, then drag one rectangle. The other follows. Drag the pin onto empty canvas and the rectangles move independently again.
 
-Pins refuse to attach to PDF pages. Try pinning on the page itself with nothing on top: nothing attaches.
+Pins do not attach to PDF pages, only to the shapes you draw.
 
 ## 5. Export a crop
 

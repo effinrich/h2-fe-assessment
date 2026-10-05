@@ -70,11 +70,11 @@ This repo uses the first method. `.github/workflows/chromatic.yml` runs `bunx nx
 
 ## What a reviewer should try
 
-1. Open the example from home. Page 1 is on the canvas. **Previous / Next** and the page field move between pages without redrawing the ones you cannot see.
-2. Draw a rectangle. **Open another document** warns before discarding marks. Cancel keeps the canvas.
-3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
-4. Press **C**, drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. An empty frame disables the actions.
-5. Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
+The five-minute walkthrough is [docs/reviewer.md](docs/reviewer.md).
+
+## Documentation
+
+[docs/README.md](docs/README.md) indexes everything: [tutorials](docs/tutorials), [how-to guides](docs/how-to), [reference](docs/reference), and [explanation](docs/explanation), plus the decisions and specs.
 
 ## Stack
 
