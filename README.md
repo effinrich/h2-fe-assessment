@@ -106,7 +106,7 @@ bunx nx run @h2-fe/pin:test        # one target on one project (short form: bunx
 bunx nx affected -t lint,test      # only projects changed since the base branch (main)
 ```
 
-`@h2-fe/source` is the repo root. It has no targets. Nx Cloud is not connected, so the task cache is local to your machine.
+`@h2-fe/source` is the repo root. It has no targets. Nx Cloud is not connected, so the task cache is local: Nx's default `.nx/cache`, which `nx.json` does not override. `bunx nx reset` clears it.
 
 ## Run the app
 
