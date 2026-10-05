@@ -16,16 +16,15 @@ export async function createExamplePdf(): Promise<File> {
       font: bold,
       color: rgb(0.08, 0.08, 0.09)
     })
-    page.drawText("Draw on this page with the tools in the top left.", {
-      x: 56,
-      y: 722,
-      size: 13,
-      font,
-      color: rgb(0.35, 0.35, 0.38)
-    })
+    for (const [line, y] of [
+      ["Draw on this page with the toolbar at the bottom of the screen.", 722],
+      ["Press P to pin shapes together, C to export an area as an image.", 702]
+    ] as const) {
+      page.drawText(line, { x: 56, y, size: 13, font, color: rgb(0.35, 0.35, 0.38) })
+    }
     page.drawLine({
-      start: { x: 56, y: 700 },
-      end: { x: 539, y: 700 },
+      start: { x: 56, y: 680 },
+      end: { x: 539, y: 680 },
       thickness: 1,
       color: rgb(0.85, 0.85, 0.87)
     })
