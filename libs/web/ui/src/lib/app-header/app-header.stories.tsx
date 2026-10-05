@@ -6,6 +6,10 @@ import { Button, ColorModeButton, Text } from "@h2-fe/ui"
 
 import { AppHeader } from "./app-header"
 
+const PHONE_VIEWPORT = {
+  phone: { name: "Phone", styles: { width: "390px", height: "844px" }, type: "mobile" }
+} as const
+
 // Spec: one in-flow chrome row; the brand is decoration, never a tab stop.
 const meta = {
   title: "Chrome/AppHeader",
@@ -46,12 +50,27 @@ export const WithSlots: Story = {
   }
 }
 
-export const Narrow: Story = {
+// The test browser's viewport, not a narrow box: `hideBelow` reads media queries.
+export const Phone: Story = {
   ...WithSlots,
+  parameters: { viewport: { options: PHONE_VIEWPORT } },
+  globals: { viewport: { value: "phone" } },
   play: async ({ canvas }) => {
     const banner = canvas.getByRole("banner")
-    await expect(canvas.getByText("quarterly-report.pdf")).toBeVisible()
+    const filename = canvas.getByText("quarterly-report.pdf")
+    // The file name is the context that matters on a phone; the brand yields.
+    await expect(canvas.getByText("Annotate")).not.toBeVisible()
+    await expect(filename).toBeVisible()
+    await expect(filename.getBoundingClientRect().width).toBeGreaterThan(40)
     await expect(canvas.getByRole("button", { name: "Open another" })).toBeVisible()
     await expect(banner.scrollWidth).toBeLessThanOrEqual(banner.clientWidth)
+  }
+}
+
+export const PhoneWithoutContext: Story = {
+  parameters: { viewport: { options: PHONE_VIEWPORT } },
+  globals: { viewport: { value: "phone" } },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText("Annotate")).toBeVisible()
   }
 }
