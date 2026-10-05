@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
+import { FileText } from "lucide-react"
+
 import { Stack } from "./layout"
-import { Code, Heading, Link, Text } from "./typography"
+import { Code, Heading, Icon, Kbd, Link, Text } from "./typography"
 
 const meta = {
   title: "Primitives/Typography"
@@ -39,6 +41,15 @@ export const Body: Story = {
       </Text>
       <Text textStyle="sm" color="fg.muted">
         Small muted text for supporting detail.
+      </Text>
+      <Text textStyle="sm">
+        Press <Kbd>P</Kbd> to pin, <Kbd>C</Kbd> to export an area.
+      </Text>
+      <Text textStyle="sm">
+        <Icon asChild boxSize="4" mr="1" verticalAlign="text-bottom">
+          <FileText aria-hidden />
+        </Icon>
+        An icon sized and coloured by tokens.
       </Text>
     </Stack>
   )

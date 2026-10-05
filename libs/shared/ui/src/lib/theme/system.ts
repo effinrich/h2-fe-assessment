@@ -1,5 +1,8 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
+const systemSans = `-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`
+const systemMono = `SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace`
+
 // A custom palette needs both the 50–950 scale (tokens) and the role keys
 // (semantic tokens) before `colorPalette="brand"` resolves on components.
 const config = defineConfig({
@@ -8,6 +11,11 @@ const config = defineConfig({
   },
   theme: {
     tokens: {
+      fonts: {
+        heading: { value: `"Inter Variable", ${systemSans}` },
+        body: { value: `"Inter Variable", ${systemSans}` },
+        mono: { value: `"JetBrains Mono Variable", ${systemMono}` }
+      },
       colors: {
         brand: {
           50: { value: "#f4f6f4" },
@@ -35,6 +43,11 @@ const config = defineConfig({
           solid: { value: { _light: "{colors.brand.600}", _dark: "{colors.brand.600}" } },
           focusRing: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.400}" } },
           border: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.400}" } }
+        },
+        // The surface the document sits on: off the panel colour so white
+        // pages and panels read as objects on it.
+        bg: {
+          canvas: { value: { _light: "{colors.brand.50}", _dark: "{colors.brand.950}" } }
         },
         // WCAG AA (4.5:1): Chakra's defaults put white text on the 600 shade of
         // these palettes and red.500 error text on white, both below the ratio.
