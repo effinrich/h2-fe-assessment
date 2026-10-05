@@ -200,7 +200,9 @@ libs/web/features/camera/src/
   index.ts                       barrel: createCameraExtension, getCropFrameBounds, isCropFrameShape, CAMERA_TOOL_ID, public types
   lib/
     camera.tsx                   createCameraExtension(options) → CanvasExtension-shaped object; getCropFrameBounds
-    camera.stories.tsx           the acceptance stories (web Storybook stage)
+    camera-*.stories.tsx         the acceptance stories, one file per theme (web Storybook stage)
+    camera-story-canvas.tsx      the stories' <Tldraw> harness and cameraStoryMeta; camera-story-toolbar.tsx its toolbar
+    story-helpers.ts             shared ids, pointer helpers, toolbar/toast finders
     camera-tool.ts               StateNode + idle/pointing/dragging children, default-frame drop
     crop-shortcuts.ts            Enter / Ctrl+C while a frame is selected
     export-actions.ts            tldraw's export/copy actions minus crop frames (overrides.actions)
@@ -211,7 +213,9 @@ libs/web/features/camera/src/
       utils.ts                   pure: normaliseBox, isBelowMinSize, frameInsertIndex, cropToolbarAnchor, defaultFrameBox, exportShapeIds, exportPixelRatio, exportPixelSize, buildExportFilename, isCropFrameShape
       utils.spec.ts              Vitest for the above
     crop-frame/
-      crop-frame-outline.tsx     the frame's dashed border, corner marks and label, shared by the shape and the marquee
+      crop-frame-outline.tsx     the frame's outline, shared by the shape and the marquee
+      crop-frame-marks.tsx       its dashed border and corner marks (svg)
+      crop-frame-label.tsx       its size label, hidden when too wide for the frame
       crop-frame-shape-util.tsx  BaseBoxShapeUtil<CropFrameShape>
       crop-marquee.tsx           the in-flight box (InFrontOfTheCanvas)
     crop-export/
@@ -220,7 +224,10 @@ libs/web/features/camera/src/
     first-use-hint/
       first-use-hint.tsx         the once-per-session hint (InFrontOfTheCanvas)
     crop-frame-toolbar/
-      crop-frame-toolbar.tsx     TldrawUiContextualToolbar with the three actions (InFrontOfTheCanvas slot)
+      crop-frame-toolbar.tsx     InFrontOfTheCanvas slot: mounts the content per selected frame
+      crop-frame-toolbar-content.tsx  TldrawUiContextualToolbar with the three actions
+      crop-action-button.tsx     one action button (busy, done, disabled states)
+      icons.tsx                  the action list and their icons
       hooks.ts                   toolbar target, empty state, placement
 ```
 
@@ -318,7 +325,8 @@ listed in `task-3-pin.md`.
 
 ## Acceptance criteria
 
-Stories live in `libs/web/features/camera/src/lib/camera.stories.tsx` (title `Features/Camera`).
+Stories live in `libs/web/features/camera/src/lib/camera-{create,export,toolbar,canvas}.stories.tsx`
+(titles `Features/Camera/Create`, `/Export`, `/Toolbar`, `/Canvas`).
 The harness mounts `<Tldraw>` with the camera extension and `documentName: "q3-report.pdf"`, and
 seeds two geo rectangles inside (100,100)–(400,300) and one outside it. Play functions take the
 editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
@@ -329,52 +337,52 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 ### Creating and drawing
 
 - [x] **`ToolbarEntry`** — the toolbar has a button named "Export area — C" containing an `svg`.
-      Pressing `c` makes `getCurrentToolId()` `"camera"`. — `camera.stories.tsx`
+      Pressing `c` makes `getCurrentToolId()` `"camera"`. — `camera-create.stories.tsx`
 - [x] **`FirstUseHint`** — entering the tool shows "Drag to frame an area to export · Esc to
       cancel" as a status; Escape (back to select) hides it; entering the tool again doesn't show
-      it. — `camera.stories.tsx`
+      it. — `camera-create.stories.tsx`
 - [x] **`DragCreatesFrame`** — drag (100,100) → (400,300). Exactly one `crop-frame` exists, at
       x 100, y 100, w 300, h 200 (±1). The current tool is `"select"`, the frame is the only
       selected shape, and a toolbar labelled "Crop frame" shows the three actions.
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`FrameLabel`** — the selected frame's label reads "600 × 400 PNG" (exported pixels).
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`DragAnyDirection`** — drag (400,300) → (100,100) and get the same frame.
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`MarqueeWhileDragging`** — mid-drag, a marquee element is visible with corner marks and
-      the readout "600 × 400", and no `crop-frame` shape exists. — `camera.stories.tsx`
+      the readout "600 × 400", and no `crop-frame` shape exists. — `camera-create.stories.tsx`
 - [x] **`EscapeCancels`** — Escape mid-drag: no frame, the tool is still `"camera"`, and no
-      marquee remains. — `camera.stories.tsx`
+      marquee remains. — `camera-create.stories.tsx`
 - [x] **`ClickCreatesNothing`** — a click, or a drag under 16 screen px, creates no frame.
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`EdgeScrollWhileDragging`** — holding a drag near the viewport's right edge moves the
-      camera, and the marquee grows with it. — `camera.stories.tsx`
+      camera, and the marquee grows with it. — `camera-canvas.stories.tsx`
 - [x] **`KeyboardCreatesFrame`** — with the canvas focused, `c` then Enter creates one 300×200
       frame (at zoom 1) centred in the viewport, selected, with the select tool current; `c`
-      twice does the same. — `camera.stories.tsx`
+      twice does the same. — `camera-create.stories.tsx`
 - [x] **`UndoCreation`** — after creating a frame, one `undo()` removes it and one `redo()`
-      restores it. Exporting doesn't change `getCanUndo()`. — `camera.stories.tsx`
+      restores it. Exporting doesn't change `getCanUndo()`. — `camera-canvas.stories.tsx`
 
 ### The frame
 
 - [x] **`ClickInsideSelects`** — over a locked background shape, a new frame is stacked above the
       background and below every seeded mark; with nothing selected, a click on empty space
-      inside the frame selects it. — `camera.stories.tsx`
+      inside the frame selects it. — `camera-create.stories.tsx`
 - [x] **`MarkInsideFrameSelectable`** — a click on a mark inside the frame selects the mark.
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`NeverRotates`** — `editor.rotateShapesBy([frame.id], Math.PI / 6)` leaves rotation 0
-      and x/y unchanged. — `camera.stories.tsx`
+      and x/y unchanged. — `camera-create.stories.tsx`
 - [x] **`LabelVisibility`** — a frame wide enough for its label shows it, with the corner marks.
       A frame too narrow for its label hides the label until it is hovered or selected.
       Selected, the corner marks are hidden and the label is neutral (background `fg`, text
-      `bg`). — `camera.stories.tsx`
+      `bg`). — `camera-create.stories.tsx`
 - [x] **`StylePanelHidden`** — with only a crop frame selected, tldraw's style panel is not
       shown; selecting a rectangle, or the frame plus a rectangle, brings it back.
-      — `camera.stories.tsx`
+      — `camera-create.stories.tsx`
 - [x] **`FollowsCanvasColorMode`** — with tldraw in dark mode (app light), the frame and toolbar
       carry the `dark` class, the corner marks use the same colour as the dashed border
       (`brand.fg`), and an export is still requested with `darkMode: false`.
-      — `camera.stories.tsx`
+      — `camera-canvas.stories.tsx`
 
 ### Export
 
@@ -383,48 +391,48 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
       opts including `bounds` equal to the frame's page bounds, `padding: 0`,
       `background: true`, `darkMode: false`, `pixelRatio: 2`, `format: "png"`. The captured
       download name matches `/^q3-report-crop-\d{8}-\d{6}\.png$/`. A `success` toast names the
-      file. The frame still exists and is still selected. — `camera.stories.tsx`
+      file. The frame still exists and is still selected. — `camera-export.stories.tsx`
 - [x] **`ExportSizeIsTwoX`** — the PNG produced for the 300×200 frame is 600×400 pixels
       (decoded with `createImageBitmap`; `toImage`'s own `width`/`height` are logical).
-      — `camera.stories.tsx`
+      — `camera-export.stories.tsx`
 - [x] **`ReExport`** — download twice: two downloads, the frame persists, and a `document`-scope
-      store listener records zero changes during the exports. — `camera.stories.tsx`
+      store listener records zero changes during the exports. — `camera-export.stories.tsx`
 - [x] **`CopyImage`** — "Copy image" calls `navigator.clipboard.write` once with a
       `ClipboardItem` carrying `image/png`, and a "Copied image" toast appears.
-      — `camera.stories.tsx`
+      — `camera-export.stories.tsx`
 - [x] **`CopyUnsupported`** — with `navigator.clipboard` undefined, an `error` toast suggests
       "Download PNG" instead, and its action downloads. The frame and its selection are
-      unchanged. — `camera.stories.tsx`
+      unchanged. — `camera-export.stories.tsx`
 - [x] **`CopyFails`** — when `clipboard.write` rejects with a `NotAllowedError` `DOMException`,
       an `error` toast "Couldn't copy the image" appears and its "Download PNG" action downloads.
-      — `camera.stories.tsx`
+      — `camera-export.stories.tsx`
 - [x] **`DownloadSvg`** — "Download SVG" produces a download name ending `.svg`, and `toImage` is
-      called with `format: "svg"` and no `pixelRatio`. — `camera.stories.tsx`
+      called with `format: "svg"` and no `pixelRatio`. — `camera-export.stories.tsx`
 - [x] **`FrameNeverInExport`** — with overlapping frames F1 and F2, exporting F1 excludes both.
       tldraw's SVG of `[shape, F1, F2]` draws exactly what `[shape]` draws. With `[shape, F1, F2]`
       selected, tldraw's "Copy as PNG" (Ctrl+Shift+C) renders `[shape]` only.
-      — `camera.stories.tsx`
+      — `camera-export.stories.tsx`
 - [x] **`ClippedChildExcluded`** — a child of a tldraw frame whose only overlap with the crop is
-      clipped away by its parent is not exported. — `camera.stories.tsx`
+      clipped away by its parent is not exported. — `camera-canvas.stories.tsx`
 - [x] **`ToolbarFlipsBelow`** — with room above, the toolbar sits above the frame. Moved so its
       top is 10 px below the viewport top, the frame gets its toolbar below its size label,
-      overlapping neither. — `camera.stories.tsx`
+      overlapping neither. — `camera-toolbar.stories.tsx`
 - [x] **`EmptyFrameDisabled`** — a frame over empty canvas shows all three actions disabled,
-      described by the hint "Nothing inside"; clicking doesn't export. — `camera.stories.tsx`
+      described by the hint "Nothing inside"; clicking doesn't export. — `camera-toolbar.stories.tsx`
 - [x] **`ResizeThenExport`** — resize the frame by its corner handle, then export. `bounds`
       equals the new page bounds. The selection has a `selection_fg:bottom_right` resize handle
-      and no handle whose id contains "rotate". — `camera.stories.tsx`
+      and no handle whose id contains "rotate". — `camera-toolbar.stories.tsx`
 - [x] **`ExportBusy`** — while `toImage` is pending (spy returns a held promise), the clicked
       action is disabled with `aria-busy="true"`, and a second click doesn't call `toImage`
-      again. — `camera.stories.tsx`
+      again. — `camera-toolbar.stories.tsx`
 - [x] **`BusySurvivesReselect`** — deselecting and reselecting the frame mid-export still shows
-      the busy action and refuses a second export. — `camera.stories.tsx`
+      the busy action and refuses a second export. — `camera-toolbar.stories.tsx`
 - [x] **`BusyResetsAfterUnexpectedFailure`** — if reporting a failed export itself throws, the
-      actions are enabled again. — `camera.stories.tsx`
+      actions are enabled again. — `camera-toolbar.stories.tsx`
 - [x] **`ExportFails`** — when `toImage` rejects, an `error` toast appears, the frame stays
-      selected, and the actions are enabled again. — `camera.stories.tsx`
+      selected, and the actions are enabled again. — `camera-toolbar.stories.tsx`
 - [x] **`OversizeFrame`** — a 6000×1000 frame exports with `pixelRatio` ≤ 8192/6000, and an info
-      toast gives the reduced size. — `camera.stories.tsx`
+      toast gives the reduced size. — `camera-toolbar.stories.tsx`
 
 ### Keyboard and accessibility
 
@@ -433,27 +441,27 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
       the frame is announced as "Exports at 600 × 400 px, Crop frame."; after Ctrl+Enter on the
       canvas exactly one action has `tabIndex` 0 and it has focus; arrows move between actions;
       the focus ring is tldraw's `--tl-color-focus`; the addon-a11y check passes.
-      — `camera.stories.tsx`
+      — `camera-toolbar.stories.tsx`
 - [x] **`EnterDownloads`** — with the frame selected and the canvas focused, Enter downloads a
-      PNG; Ctrl+Enter doesn't. — `camera.stories.tsx`
+      PNG; Ctrl+Enter doesn't. — `camera-toolbar.stories.tsx`
 - [x] **`CopyShortcut`** — with the frame selected and the canvas focused, a native `copy` event
       writes one `image/png` item to the clipboard (and not tldraw's shape copy).
-      — `camera.stories.tsx`
+      — `camera-toolbar.stories.tsx`
 - [x] **`FocusSurvivesKeyboardDownload`** — after Ctrl+Enter and Enter on "Download PNG", the
       download happens and the button still has focus; Enter on the canvas downloads and leaves
       focus on the canvas. Both hold with `<body>` focusable, where tldraw's `body.focus()`
-      really takes focus. — `camera.stories.tsx`
+      really takes focus. — `camera-toolbar.stories.tsx`
 - [x] **`LocalisedAnnouncement`** — in French, selecting a frame announces "Crop frame", not
-      `tool.crop-frame`. — `camera.stories.tsx`
+      `tool.crop-frame`. — `camera-canvas.stories.tsx`
 
 ### Lifecycle
 
 - [x] **`ReadonlyHidesTool`** — in a read-only editor the tool button is absent, and an existing
-      selected frame still exports. — `camera.stories.tsx`
+      selected frame still exports. — `camera-canvas.stories.tsx`
 - [x] **`CropFrameBoundsAreReactive`** — a `react()` over `getCropFrameBounds` sees a new frame,
-      a move and a delete. — `camera.stories.tsx`
+      a move and a delete. — `camera-canvas.stories.tsx`
 - [x] **`CropFrameBoundsIgnoreUnrelatedChanges`** — the same `react()` does not re-run when a
-      rectangle moves, and does when the frame then moves. — `camera.stories.tsx`
+      rectangle moves, and does when the frame then moves. — `camera-canvas.stories.tsx`
 
 ### Pure helpers — `libs/web/features/camera/src/lib/utils/utils.spec.ts`
 
@@ -479,11 +487,11 @@ The two **Viewer:** criteria below live in `apps/web`, as route-level tests: the
 and a reactive `getCropFrameBounds`, is done here; the route tests are still to write.
 
 - [x] **Viewer: includes the PDF page** — page 1 is `shape:page-1` (`pdf-viewer` `placePages`);
-      a crop over that id is in the export plan. — `camera.stories.tsx` ›
+      a crop over that id is in the export plan. — `camera-canvas.stories.tsx` ›
       `ExportIncludesPageShape`; route wires `createCameraExtension({ documentName })`.
 - [x] **Viewer: retains pages under a frame** — the route passes
       `retainPageBounds={getCropFrameBounds}` (`pdf-viewer-route.spec.tsx`); a page-1 shape
-      still exports after the camera pans it off screen. — `camera.stories.tsx` ›
+      still exports after the camera pans it off screen. — `camera-canvas.stories.tsx` ›
       `RetainedPageStillExports`
 
 ## States
