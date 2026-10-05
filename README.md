@@ -1,3 +1,5 @@
+# WIP: I had a very difficult weekend involving hospitals and a couple of AI agents who went rogue and effectively wiped out my project twice.  New agents are cleaning up and I'm making the video.  Real life setbacks dealt with as I would in production.  Realign and keep pushing.
+
 # H2 frontend assessment
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
