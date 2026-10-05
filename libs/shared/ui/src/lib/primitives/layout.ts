@@ -1,6 +1,7 @@
 export {
   Box,
   Center,
+  chakra,
   Container,
   Flex,
   Grid,
@@ -10,7 +11,7 @@ export {
   SimpleGrid,
   Stack,
   VStack
-} from '@chakra-ui/react'
+} from "@chakra-ui/react"
 export type {
   BoxProps,
   CenterProps,
@@ -18,7 +19,8 @@ export type {
   FlexProps,
   GridItemProps,
   GridProps,
+  HTMLChakraProps,
   SeparatorProps,
   SimpleGridProps,
   StackProps
-} from '@chakra-ui/react'
+} from "@chakra-ui/react"

@@ -8,6 +8,7 @@
   },
   "include": [
     "vite.config.mts",
+    "vitest.storybook.config.mts",
     "vitest.config.ts",
     "vitest.config.mts",
     "src/**/*.test.ts",

@@ -23,6 +23,5 @@ demonstrate _different_ work, not better work.
 
 - We depend on a library the team no longer uses. Recorded here so the choice
   reads as judgement rather than ignorance.
-- Every tldraw API call is verified against the installed types before it lands
-  (see the `verifier` agent), because model familiarity with tldraw is weaker
-  than with React.
+- Every tldraw API call is verified against the installed types before it lands.
+  Familiarity with tldraw is weaker than with React.

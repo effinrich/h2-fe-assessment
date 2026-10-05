@@ -1,5 +1,5 @@
-import { Breadcrumb as ChakraBreadcrumb } from '@chakra-ui/react'
-import { Fragment, type ReactNode } from 'react'
+import { Breadcrumb as ChakraBreadcrumb } from "@chakra-ui/react"
+import { Fragment, type ReactNode } from "react"
 
 export interface BreadcrumbItemData {
   label: ReactNode
@@ -7,7 +7,7 @@ export interface BreadcrumbItemData {
   href?: string
 }
 
-export interface BreadcrumbProps extends Omit<ChakraBreadcrumb.RootProps, 'children'> {
+export interface BreadcrumbProps extends Omit<ChakraBreadcrumb.RootProps, "children"> {
   items: BreadcrumbItemData[]
   /** Replaces the default chevron. */
   separator?: ReactNode

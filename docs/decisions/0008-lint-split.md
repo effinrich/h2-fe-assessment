@@ -18,7 +18,7 @@ whose only job is `@nx/enforce-module-boundaries`.**
 
 Boundaries are load-bearing: they are what makes the `scope:`/`type:` tags mean
 something, and they fail lint before tests run, which is the earliest useful
-feedback an agent can get.
+signal.
 
 ## Consequences
 
@@ -32,7 +32,7 @@ feedback an agent can get.
 ## Addendum — 2026-10-03
 
 Reality overtook this record. `@nx/oxlint` 23 ships `@nx/oxlint/boundaries-plugin`,
-an oxlint jsPlugin that runs `@nx/enforce-module-boundaries` *inside* oxlint —
+an oxlint jsPlugin that runs `@nx/enforce-module-boundaries` _inside_ oxlint —
 which is exactly what the workspace now does (root `.oxlintrc.json`, error
 level). The `eslint.config.mjs` this ADR planned was never created; the rule
 moved all the way in, and the two-tools consequence is gone. The reason this

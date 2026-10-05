@@ -1,4 +1,4 @@
-export type ColorMode = 'light' | 'dark'
+export type ColorMode = "light" | "dark"
 
 export interface UseColorModeReturn {
   colorMode: ColorMode

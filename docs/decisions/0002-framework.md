@@ -35,8 +35,9 @@ strip-down review promoted the two views into routes ("wouldn't the first
 overlay be its own route" was right) for telemetry, ads, chunk separation, and
 so one React file does not hold the entire app.
 
-- `/` — the home route: the former empty-state card as a real page
-  (`libs/web/features/home`).
+- `/` — the home route in `apps/web` (`src/app/routes/home`): the former
+  empty-state card as a real page. Home is a route, not a feature lib
+  (ADR 0011).
 - `/viewer` — the document canvas, lazy-loaded so tldraw, pdfjs, and
   `tldraw.css` leave the initial chunk (`libs/web/features/pdf-viewer`).
 - Layering and the screen pattern: ADR 0011.

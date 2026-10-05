@@ -1,14 +1,27 @@
-import { PDF_PAGE_GAP } from './consts'
-import * as pdfjs from 'pdfjs-dist'
-import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs?url'
-import { type Editor, type TLAssetId, type TLShapeId } from 'tldraw'
-import { AssetRecordType } from 'tldraw'
-import type { PdfDocumentSummary, PdfPage, RenderedPdfPage } from './types'
+import * as pdfjs from "pdfjs-dist"
+import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url"
+import {
+  type BoxModel,
+  type Editor,
+  type TLAssetId,
+  type TLImageShape,
+  type TLShapeId
+} from "tldraw"
+import { AssetRecordType } from "tldraw"
+
+import type {
+  CanvasExtension,
+  MergedCanvasExtensions,
+  PageOverlay,
+  PdfDocumentSummary,
+  PdfPage,
+  RenderedPdfPage
+} from "./types"
+
+import { PDF_PAGE_ASSET_ID, PDF_PAGE_GAP, PDF_PAGE_SHAPE_ID, VIEWER_OVERRIDES } from "./consts"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
-
-const PAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
 
 export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocumentSummary> {
   const loadingTask = pdfjs.getDocument({ data })
@@ -40,16 +53,16 @@ export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocument
       pages,
       renderPages: async (pageNumbers: number[]) => {
         return Promise.all(
-          [...new Set(pageNumbers)].map(async pageNumber => {
+          [...new Set(pageNumbers)].map(async (pageNumber) => {
             const page = await pdfDocument.getPage(pageNumber)
             const viewport = page.getViewport({ scale })
-            const canvas = window.document.createElement('canvas')
+            const canvas = window.document.createElement("canvas")
             canvas.width = Math.ceil(viewport.width)
             canvas.height = Math.ceil(viewport.height)
 
             try {
-              const canvasContext = canvas.getContext('2d')
-              if (!canvasContext) throw new Error('Could not get a 2D context for the page')
+              const canvasContext = canvas.getContext("2d")
+              if (!canvasContext) throw new Error("Could not get a 2D context for the page")
 
               await page.render({ canvas, viewport, canvasContext }).promise
 
@@ -57,7 +70,7 @@ export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocument
                 pageNumber,
                 width: canvas.width,
                 height: canvas.height,
-                dataUrl: canvas.toDataURL('image/png')
+                dataUrl: canvas.toDataURL("image/png")
               }
             } finally {
               canvas.width = 0
@@ -106,7 +119,31 @@ export function activePageNumber(
 }
 
 export function hasUserMarks(shapes: ReadonlyArray<{ id: string }>): boolean {
-  return shapes.some(shape => !/^shape:page-\d+$/.test(shape.id))
+  return shapes.some((shape) => !PDF_PAGE_SHAPE_ID.test(shape.id))
+}
+
+export function isPdfPageShape(shape: { id: string; type: string }): boolean {
+  return shape.type === "image" && PDF_PAGE_SHAPE_ID.test(shape.id)
+}
+
+export function mergeCanvasExtensions(
+  extensions: readonly CanvasExtension[]
+): MergedCanvasExtensions {
+  return {
+    toolIds: extensions.flatMap((extension) => extension.toolIds ?? []),
+    shapeUtils: extensions.flatMap((extension) => extension.shapeUtils ?? []),
+    bindingUtils: extensions.flatMap((extension) => extension.bindingUtils ?? []),
+    tools: extensions.flatMap((extension) => extension.tools ?? []),
+    overlayUtils: extensions.flatMap((extension) => extension.overlayUtils ?? []),
+    overrides: [
+      ...extensions.flatMap((extension) => (extension.overrides ? [extension.overrides] : [])),
+      VIEWER_OVERRIDES
+    ],
+    inFrontOfTheCanvas: extensions.flatMap((extension) =>
+      extension.InFrontOfTheCanvas ? [extension.InFrontOfTheCanvas] : []
+    ),
+    onMount: extensions.flatMap((extension) => (extension.onMount ? [extension.onMount] : []))
+  }
 }
 
 export function visiblePageNumbers(
@@ -129,11 +166,74 @@ export function visiblePageNumbers(
   return visible
 }
 
+export function keptPageNumbers(
+  pages: PdfPage[],
+  viewport: BoxModel,
+  retained: readonly BoxModel[]
+): number[] {
+  if (retained.length === 0) return visiblePageNumbers(pages, viewport)
+  const kept = new Set(visiblePageNumbers(pages, viewport))
+  for (const box of retained) {
+    for (const pageNumber of visiblePageNumbers(pages, box)) kept.add(pageNumber)
+  }
+  return pages.map((page) => page.pageNumber).filter((pageNumber) => kept.has(pageNumber))
+}
+
+export function samePageNumbers(a: readonly number[], b: readonly number[]): boolean {
+  return a.length === b.length && a.every((pageNumber, index) => pageNumber === b[index])
+}
+
+export function sameOverlays(a: readonly PageOverlay[], b: readonly PageOverlay[]): boolean {
+  return (
+    a.length === b.length &&
+    a.every((overlay, index) => {
+      const other = b[index]
+      return (
+        overlay.page === other.page &&
+        overlay.state === other.state &&
+        overlay.style.left === other.style.left &&
+        overlay.style.top === other.style.top &&
+        overlay.style.width === other.style.width &&
+        overlay.style.height === other.style.height
+      )
+    })
+  )
+}
+
 export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {
   if (pages.length === 0) return
 
   syncVisiblePages(editor, pages, [pages[0].pageNumber], [])
   editor.zoomToFit({ animation: { duration: 200 } })
+}
+
+let rasterSequence = 0
+
+function pageAsset(id: TLAssetId, page: PdfPage, src: string | null) {
+  return AssetRecordType.create({
+    id,
+    type: "image",
+    meta: {},
+    props: {
+      name: `page-${page.pageNumber}.png`,
+      src,
+      w: page.width,
+      h: page.height,
+      mimeType: "image/png",
+      isAnimated: false
+    }
+  })
+}
+
+function assetIdsByPage(editor: Editor): Map<number, TLAssetId[]> {
+  const byPage = new Map<number, TLAssetId[]>()
+  for (const asset of editor.getAssets()) {
+    const match = PDF_PAGE_ASSET_ID.exec(asset.id)
+    if (!match) continue
+    const pageNumber = Number(match[1])
+    byPage.set(pageNumber, [...(byPage.get(pageNumber) ?? []), asset.id])
+  }
+  return byPage
 }
 
 export function syncVisiblePages(
@@ -143,63 +243,60 @@ export function syncVisiblePages(
   renderedPages: RenderedPdfPage[]
 ): void {
   const visible = new Set(visiblePageNumbers)
-  const offscreenPages = pages.filter(page => !visible.has(page.pageNumber))
-  const offscreenShapeIds = offscreenPages
-    .map(page => `shape:page-${page.pageNumber}` as TLShapeId)
-    .filter(id => editor.getShape(id))
-  const offscreenAssetIds = offscreenPages
-    .map(page => `asset:page-${page.pageNumber}` as TLAssetId)
-    .filter(id => editor.getAsset(id))
+  const renderedByPage = new Map(renderedPages.map((page) => [page.pageNumber, page]))
+  const pageAssetIds = assetIdsByPage(editor)
+  const evictedShapeIds: TLShapeId[] = []
+  const staleAssetIds: TLAssetId[] = []
 
   editor.run(
     () => {
-      if (offscreenShapeIds.length) editor.deleteShapes(offscreenShapeIds)
-      if (offscreenAssetIds.length) editor.deleteAssets(offscreenAssetIds)
-
-      const renderedByPage = new Map(renderedPages.map(page => [page.pageNumber, page]))
       let y = 0
-
       for (const page of pages) {
-        if (visible.has(page.pageNumber)) {
-          const assetId = `asset:page-${page.pageNumber}` as TLAssetId
-          const shapeId = `shape:page-${page.pageNumber}` as TLShapeId
-          const existingAsset = editor.getAsset(assetId)
-          const renderedPage = renderedByPage.get(page.pageNumber)
+        const shapeId = `shape:page-${page.pageNumber}` as TLShapeId
+        const shape = editor.getShape<TLImageShape>(shapeId)
+        const assetIds = pageAssetIds.get(page.pageNumber) ?? []
 
-          if (!existingAsset || renderedPage) {
-            const asset = AssetRecordType.create({
-              id: assetId,
-              type: 'image',
-              meta: {},
-              props: {
-                name: `page-${page.pageNumber}.png`,
-                src: renderedPage?.dataUrl ?? PAGE_PLACEHOLDER,
-                w: page.width,
-                h: page.height,
-                mimeType: 'image/png',
-                isAnimated: false
-              }
-            })
-            if (existingAsset) editor.updateAssets([asset])
-            else editor.createAssets([asset])
+        if (!visible.has(page.pageNumber)) {
+          if (shape) evictedShapeIds.push(shapeId)
+          staleAssetIds.push(...assetIds)
+        } else {
+          const shownAssetId = shape?.props.assetId
+          const rendered = renderedByPage.get(page.pageNumber)
+          let assetId: TLAssetId
+          if (rendered) {
+            // tldraw shows a src change on a shown asset only after ~32 frames; a new id shows at once.
+            assetId = `asset:page-${page.pageNumber}-r${++rasterSequence}` as TLAssetId
+            editor.createAssets([pageAsset(assetId, page, rendered.dataUrl)])
+          } else if (shownAssetId && editor.getAsset(shownAssetId)) {
+            assetId = shownAssetId
+          } else {
+            assetId = `asset:page-${page.pageNumber}-pending` as TLAssetId
+            if (!editor.getAsset(assetId)) editor.createAssets([pageAsset(assetId, page, null)])
           }
 
-          if (!editor.getShape(shapeId)) {
+          if (!shape) {
             editor.createShapes([
               {
                 id: shapeId,
-                type: 'image',
+                type: "image",
                 x: 0,
                 y,
                 isLocked: true,
                 props: { assetId, w: page.width, h: page.height }
               }
             ])
+          } else if (shownAssetId !== assetId) {
+            editor.updateShapes<TLImageShape>([{ id: shapeId, type: "image", props: { assetId } }])
           }
+          staleAssetIds.push(...assetIds.filter((id) => id !== assetId))
         }
         y += page.height + PDF_PAGE_GAP
       }
+
+      if (evictedShapeIds.length) editor.deleteShapes(evictedShapeIds)
+      if (staleAssetIds.length) editor.deleteAssets(staleAssetIds)
     },
-    { history: 'ignore' }
+    // Page shapes are locked; tldraw silently skips locked shapes in updateShapes and deleteShapes.
+    { history: "ignore", ignoreShapeLock: true }
   )
 }

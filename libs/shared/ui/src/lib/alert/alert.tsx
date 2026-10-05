@@ -1,7 +1,8 @@
-import { Alert as ChakraAlert } from '@chakra-ui/react'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode } from "react"
 
-export interface AlertProps extends Omit<ChakraAlert.RootProps, 'title'> {
+import { Alert as ChakraAlert } from "@chakra-ui/react"
+
+export interface AlertProps extends Omit<ChakraAlert.RootProps, "title"> {
   title: ReactNode
   /** Optional description under the title. */
   children?: ReactNode

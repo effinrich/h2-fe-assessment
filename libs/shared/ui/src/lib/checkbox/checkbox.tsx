@@ -1,9 +1,10 @@
-import { Checkbox as ChakraCheckbox } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
 
-export type CheckboxCheckedState = ChakraCheckbox.CheckedChangeDetails['checked']
+import { Checkbox as ChakraCheckbox } from "@chakra-ui/react"
 
-export interface CheckboxProps extends Omit<ChakraCheckbox.RootProps, 'onCheckedChange'> {
+export type CheckboxCheckedState = ChakraCheckbox.CheckedChangeDetails["checked"]
+
+export interface CheckboxProps extends Omit<ChakraCheckbox.RootProps, "onCheckedChange"> {
   /** The checkbox's label. */
   children?: ReactNode
   onCheckedChange?: (checked: CheckboxCheckedState) => void
@@ -13,7 +14,7 @@ export function Checkbox({ children, onCheckedChange, ...rootProps }: CheckboxPr
   return (
     <ChakraCheckbox.Root
       {...rootProps}
-      onCheckedChange={details => onCheckedChange?.(details.checked)}
+      onCheckedChange={(details) => onCheckedChange?.(details.checked)}
     >
       <ChakraCheckbox.HiddenInput />
       <ChakraCheckbox.Control>

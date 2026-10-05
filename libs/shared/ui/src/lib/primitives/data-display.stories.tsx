@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Avatar } from '../avatar/avatar'
-import { Stat } from '../stat/stat'
-import { AvatarGroup, Badge, Card, List, StatGroup, Table } from './data-display'
-import { HStack, Stack } from './layout'
-import { Text } from './typography'
+import { Avatar } from "../avatar/avatar"
+import { Stat } from "../stat/stat"
+import { AvatarGroup, Badge, Card, List, StatGroup, Table } from "./data-display"
+import { HStack, Stack } from "./layout"
+import { Text } from "./typography"
 
 const meta = {
-  title: 'Primitives/Data display'
+  title: "Primitives/Data display"
 } satisfies Meta
 
 export default meta
@@ -61,8 +61,8 @@ export const Lists: Story = {
 }
 
 const rows = [
-  { id: 1, name: 'shapes.json', size: '12 KB' },
-  { id: 2, name: 'pins.csv', size: '3 KB' }
+  { id: 1, name: "shapes.json", size: "12 KB" },
+  { id: 2, name: "pins.csv", size: "3 KB" }
 ]
 
 export const Tables: Story = {
@@ -75,7 +75,7 @@ export const Tables: Story = {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {rows.map(row => (
+        {rows.map((row) => (
           <Table.Row key={row.id}>
             <Table.Cell>{row.name}</Table.Cell>
             <Table.Cell textAlign="end">{row.size}</Table.Cell>
@@ -100,7 +100,7 @@ export const StatGroups: Story = {
   render: () => (
     <StatGroup gap="8">
       <Stat label="Shapes" value="1,284" />
-      <Stat label="Pins" value="312" trend={{ direction: 'up', value: '4%' }} />
+      <Stat label="Pins" value="312" trend={{ direction: "up", value: "4%" }} />
     </StatGroup>
   )
 }

@@ -14,9 +14,10 @@ its own entry here, written as it lands.
 
 1. `bunx nx reset` — graph recomputed from disk truth.
 2. `bunx nx show projects` before/after; the set is unchanged unless intended.
-   Baseline (verified 2026-10-04): `@h2-fe/web`, `@h2-fe/home`,
-   `@h2-fe/pdf-viewer`, `@h2-fe/web-ui`, `shared-ui`, `@h2-fe/source`
-   (`@h2-fe/importers` was deleted — see Entry 4).
+   Baseline (verified 2026-10-04): `@h2-fe/web`, `@h2-fe/pdf-viewer`,
+   `@h2-fe/pin`, `@h2-fe/camera`, `@h2-fe/web-ui`, `shared-ui`, `@h2-fe/source`.
+   `@h2-fe/importers` was deleted — see Entry 4. `@h2-fe/home` left the graph
+   when the home page became the `/` route in `apps/web` — see ADR 0011.
 3. `bunx nx graph --file=...` still parses.
 4. Targeted greps across `nx.json`, all project/package jsons, vite configs,
    and workflows.

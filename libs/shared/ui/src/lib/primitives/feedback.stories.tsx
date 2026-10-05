@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Skeleton, SkeletonCircle, SkeletonText, Spinner } from './feedback'
-import { HStack, Stack } from './layout'
+import { Skeleton, SkeletonCircle, SkeletonText, Spinner } from "./feedback"
+import { HStack, Stack } from "./layout"
 
 const meta = {
-  title: 'Primitives/Feedback'
+  title: "Primitives/Feedback"
 } satisfies Meta
 
 export default meta

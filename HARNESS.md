@@ -39,12 +39,11 @@ answer twice at double cost. Model diversity only pays when the checks differ.
 ## Gates
 
 ```
-bun run gate   →   nx affected -t lint,format,typecheck,test,build,build-storybook
+bun run gate   →   nx affected -t lint,format,typecheck,test,build,build-storybook,test-storybook
 ```
 
-Wired to a `Stop` hook (`.commandcode/settings.json`), so failures reach the
-model before the turn ends. Affected-only: an agent that re-runs the world every
-turn burns the feedback loop it depends on.
+Git pushes run that gate through lefthook (`lefthook.yml`). A corrupted
+command-code agent wasted a large amount of time.
 
 **Structure gate.** Every path under `apps/` and `libs/` must appear in
 `nx show projects`, and every project must carry both a `scope:` and a `type:`

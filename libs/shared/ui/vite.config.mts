@@ -1,15 +1,21 @@
+import react from "@vitejs/plugin-react"
+import * as path from "path"
 /// <reference types='vitest' />
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import dts from 'vite-plugin-dts'
-import * as path from 'path'
+import { defaultClientConditions, defineConfig } from "vite"
+import dts from "vite-plugin-dts"
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../../node_modules/.vite/libs/shared/ui',
+  cacheDir: "../../../node_modules/.vite/libs/shared/ui",
+  // Storybook globs in feature and web-ui stories. Those files import
+  // workspace packages, which export TypeScript source only under this
+  // condition (the same resolve the web stage already uses).
+  resolve: {
+    conditions: [...defaultClientConditions, "@h2-fe/source"]
+  },
   plugins: [
     react(),
-    dts({ entryRoot: 'src', tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json') })
+    dts({ entryRoot: "src", tsconfigPath: path.join(import.meta.dirname, "tsconfig.lib.json") })
   ],
   // Uncomment this if you are using workers.
   // worker: {
@@ -18,7 +24,7 @@ export default defineConfig(() => ({
   // Configuration for building your library.
   // See: https://vite.dev/guide/build.html#library-mode
   build: {
-    outDir: './dist',
+    outDir: "./dist",
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -26,36 +32,37 @@ export default defineConfig(() => ({
     },
     lib: {
       // Could also be a dictionary or array of multiple entry points.
-      entry: 'src/index.ts',
-      name: '@h2-fe/ui',
-      fileName: 'index',
+      entry: "src/index.ts",
+      name: "@h2-fe/ui",
+      fileName: "index",
       // Change this to the formats you want to support.
       // Don't forget to update your package.json as well.
-      formats: ['es' as const]
+      formats: ["es" as const]
     },
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: [
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        '@chakra-ui/react',
-        '@emotion/react',
-        'next-themes'
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@chakra-ui/react",
+        "@emotion/react",
+        "lucide-react",
+        "next-themes"
       ]
     }
   },
   test: {
-    name: '@h2-fe/ui',
+    name: "@h2-fe/ui",
     watch: false,
     globals: true,
-    environment: 'jsdom',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    environment: "jsdom",
+    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     passWithNoTests: true,
-    reporters: ['default'],
+    reporters: ["default"],
     coverage: {
-      reportsDirectory: './test-output/vitest/coverage',
-      provider: 'v8' as const
+      reportsDirectory: "./test-output/vitest/coverage",
+      provider: "v8" as const
     }
   }
 }))
