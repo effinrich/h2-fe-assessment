@@ -123,6 +123,10 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 - bun only — never `npm install` or `npx` for workspace deps or Nx
   (`bun` / `bunx nx`).
 - Commit and push regularly on your own (do not wait for the user to ask), with smaller PRs so progress is easier to track. Do not leave `LEFTHOOK=0` on.
+- Other agent sessions often run in this checkout at the same time and may
+  switch branches or stage files mid-task: check the branch before each
+  commit, commit by explicit pathspec, never touch another session's work,
+  and do root-config or parallel work in a new git worktree.
 - Do not stage local-only junk: the user's `.gitignore` edits,
   `.github/agents/`, `firebase-debug.log`, `docs/*.zip`.
 - An honest "I don't know" is accepted and encouraged when something was not verified.
@@ -134,8 +138,15 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
   (`apps/web/src/app/routes/home`), not a feature project (`@h2-fe/home` was
   removed). Pin, camera, and pdf-viewer stay sibling feature libs and must not
   import each other; only `apps/web` (the viewer route) composes canvas
-  extensions (ADR 0011).
+  extensions (ADR 0011). "Camera" is the Export area tool (`C`), built on
+  tldraw's `exportAs` / `copyAs`; no third-party package.
 - The reviewer walkthrough is `docs/reviewer.md` (linked from the README).
+- Story tests run at 1200×900 unless the story sets its own viewport; a
+  narrow wrapper `Box` does not trigger Chakra `hideBelow` (viewport-based).
+  Set phone sizes per story (`globals.viewport` + `parameters.viewport.options`),
+  since web-ui and shared-ui Storybooks both run feature stories.
+- Nx Cloud is not connected (no `nxCloudId`), so `nx fix-ci` aborts. Running
+  `nx connect` is the user's call (it creates a workspace on their account).
 - Locked tldraw shapes: `updateShapes` / `deleteShapes` silently no-op unless
   `editor.run(..., { ignoreShapeLock: true })`.
 - Never update `src` in-place on a tldraw image asset a shape is already
