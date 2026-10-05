@@ -21,7 +21,16 @@
     },
     "format": {},
     "format:fix": {},
-    "test-storybook": {},
+    "test-storybook": {
+      "inputs": [
+        "default",
+        "^production",
+        "storybookTestRunner",
+        "{workspaceRoot}/libs/web/features/*/src/**/*",
+        "{workspaceRoot}/libs/web/ui/src/**/*",
+        "{workspaceRoot}/apps/web/src/app/routes/home/**/*"
+      ]
+    },
     "storybook": {
       "options": {
         "port": 4400,
@@ -35,6 +44,18 @@
     },
     "build-storybook": {
       "outputs": ["{workspaceRoot}/dist/storybook/shared-ui"],
+      "inputs": [
+        "production",
+        "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json",
+        "{workspaceRoot}/libs/web/features/*/src/**/*",
+        "!{workspaceRoot}/libs/web/features/*/src/**/*.spec.@(ts|tsx)",
+        "{workspaceRoot}/libs/web/ui/src/**/*",
+        "!{workspaceRoot}/libs/web/ui/src/**/*.spec.@(ts|tsx)",
+        "{workspaceRoot}/apps/web/src/app/routes/home/**/*",
+        "!{workspaceRoot}/apps/web/src/app/routes/home/**/*.spec.@(ts|tsx)"
+      ],
       "options": {
         "config-dir": ".storybook",
         "output-dir": "../../../dist/storybook/shared-ui",
