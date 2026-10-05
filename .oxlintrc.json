@@ -31,6 +31,18 @@
           {
             "sourceTag": "scope:web",
             "onlyDependOnLibsWithTags": ["scope:web", "scope:shared"]
+          },
+          {
+            "sourceTag": "type:ui",
+            "onlyDependOnLibsWithTags": ["type:ui"]
+          },
+          {
+            "sourceTag": "type:feature",
+            "onlyDependOnLibsWithTags": ["type:ui"]
+          },
+          {
+            "sourceTag": "type:app",
+            "onlyDependOnLibsWithTags": ["type:feature", "type:ui"]
           }
         ]
       }
