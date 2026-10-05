@@ -93,8 +93,7 @@
         "**/partials/canvas-components.tsx",
         "**/src/lib/camera.stories.tsx",
         "**/crop-frame/crop-frame-outline.tsx",
-        "**/crop-frame-toolbar/crop-frame-toolbar.tsx",
-        "**/partials/pin-view.tsx"
+        "**/crop-frame-toolbar/crop-frame-toolbar.tsx"
       ],
       "rules": {
         "react/no-multi-comp": "off",
