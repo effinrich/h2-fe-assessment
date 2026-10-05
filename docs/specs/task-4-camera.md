@@ -201,8 +201,8 @@ libs/web/features/camera/src/
   lib/
     camera.tsx                   createCameraExtension(options) → CanvasExtension-shaped object; getCropFrameBounds
     camera-*.stories.tsx         the acceptance stories, one file per theme (web Storybook stage)
-    camera-story-canvas.tsx      the stories' <Tldraw> harness; camera-story-toolbar.tsx its toolbar
-    story-helpers.ts             shared ids, pointer helpers, toolbar/toast finders, cameraStoryMeta
+    camera-story-canvas.tsx      the stories' <Tldraw> harness and cameraStoryMeta; camera-story-toolbar.tsx its toolbar
+    story-helpers.ts             shared ids, pointer helpers, toolbar/toast finders
     camera-tool.ts               StateNode + idle/pointing/dragging children, default-frame drop
     crop-shortcuts.ts            Enter / Ctrl+C while a frame is selected
     export-actions.ts            tldraw's export/copy actions minus crop frames (overrides.actions)
