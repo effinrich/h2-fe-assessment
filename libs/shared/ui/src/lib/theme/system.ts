@@ -41,7 +41,10 @@ const config = defineConfig({
         fg: {
           error: { value: { _light: "{colors.red.600}", _dark: "{colors.red.400}" } }
         },
-        orange: { solid: { value: "{colors.orange.700}" } },
+        orange: {
+          solid: { value: "{colors.orange.700}" },
+          contrast: { value: { _light: "white", _dark: "white" } }
+        },
         green: { solid: { value: "{colors.green.700}" } },
         teal: { solid: { value: "{colors.teal.700}" } },
         cyan: { solid: { value: "{colors.cyan.700}" } },

@@ -1130,6 +1130,7 @@ export const CopyShortcut: Story = {
     })
 
     editor.getContainer().focus()
+    await waitFor(() => expect(editor.getInstanceState().isFocused).toBe(true))
     const copy = new ClipboardEvent("copy", { bubbles: true, cancelable: true })
     editor.getContainer().dispatchEvent(copy)
 
