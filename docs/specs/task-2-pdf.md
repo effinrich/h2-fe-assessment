@@ -99,6 +99,18 @@ and committed failing before the code exists.
       — `apps/web/src/app/routes/home/home-screen/home-screen.spec.tsx` (red
       `edf477a`, green `ac2b31d`); the screen lives on the home route in the
       app — see ADR 0011.
+- [x] **The home screen reads as the canvas the document will land on**: the
+      app header, the canvas surface, one card with both actions, and the
+      three tools that make this more than a viewer (Pin `P`, Export area
+      `C`, Draw `D`). — `home-screen.stories.tsx` › `Idle`.
+- [x] **A PDF dropped anywhere on the home screen opens, the same as a
+      picked one. Anything else (wrong type, more than one file) is refused
+      with an error toast and the screen stays put.** While a file is
+      dragged over, the card says so. Drops go straight to the viewer, not
+      through tldraw's asset pipeline: the viewer owns PDF rasterisation
+      (ADR 0012). — `home-screen.spec.tsx` › "opens a dropped PDF", "refuses
+      a dropped file that is not a single PDF"; `home-screen.stories.tsx` ›
+      `DropAPdf` (native drag events, real `DataTransfer`). Red `058037a`.
 - [x] **Choosing a file places its first page as a locked image shape.** —
       placement: `pdf-viewer.spec.tsx` › `placePagesOnCanvas` › "starts with
       the first page…". Real rasterisation needs a real canvas, so pixels are
@@ -254,7 +266,7 @@ Each becomes a red test before it becomes code.
 
 | State    | Handled | How                                                                                                                         |
 | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Empty    | yes     | Home route: "Open PDF" and "Use an example"; `/viewer` with no file redirects home                                          |
+| Empty    | yes     | Home route: "Open PDF", "Use an example", or drop a PDF; `/viewer` with no file redirects home                              |
 | Loading  | yes     | Full-surface spinner while the document opens; per-page spinner over each loading page                                      |
 | Error    | yes     | Document: message + "Try again" (refetch). Page: page-sized card with "Retry page N"                                        |
 | Success  | yes     | Visible pages render as locked image shapes; page indicator follows the viewport                                            |
@@ -289,5 +301,5 @@ jsdom cannot rasterise a PDF, so:
 
 ## Open questions
 
-- **Drag-and-drop.** Whether a dropped PDF should go through tldraw's asset
-  pipeline instead of the picker. Not started.
+- None open. Drag-and-drop was decided: home-screen drops only (see criteria).
+  Dropping a second PDF onto an open document is not supported.
