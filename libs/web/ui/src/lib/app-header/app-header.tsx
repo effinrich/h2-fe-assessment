@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { Scan } from "lucide-react"
 
-import { chakra, Icon, Text } from "@h2-fe/ui"
+import { chakra, Icon, Separator, Text } from "@h2-fe/ui"
 
 interface AppHeaderProps {
   /** Beside the brand: what this screen is about (e.g. the open file). */
@@ -22,7 +22,7 @@ const Bar = chakra("header", {
     borderBottomWidth: "1px",
     borderColor: "border",
     color: "fg",
-    columnGap: { base: "2", md: "4" },
+    columnGap: { base: "2", md: "3" },
     display: "grid",
     flexShrink: "0",
     gridTemplateColumns: {
@@ -58,10 +58,12 @@ const Mark = chakra("span", {
 })
 
 export function AppHeader({ start, children, end }: AppHeaderProps) {
+  // On a phone the screen's own context (the file name) gets the room.
+  const brandHideBelow = start ? "md" : undefined
   return (
     <Bar>
       <Start>
-        <Mark aria-hidden>
+        <Mark aria-hidden hideBelow={brandHideBelow}>
           <Icon asChild boxSize="4">
             <Scan strokeWidth={2.25} />
           </Icon>
@@ -70,11 +72,12 @@ export function AppHeader({ start, children, end }: AppHeaderProps) {
           as="span"
           fontSize="sm"
           fontWeight="semibold"
-          hideBelow={start ? "md" : undefined}
+          hideBelow={brandHideBelow}
           letterSpacing="-0.01em"
         >
           Annotate
         </Text>
+        {start && <Separator h="5" hideBelow="md" orientation="vertical" />}
         {start}
       </Start>
       <div>{children}</div>

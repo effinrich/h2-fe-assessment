@@ -2,9 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 
 import { expect, fn } from "storybook/test"
 
-import { Box } from "@h2-fe/ui"
-
 import { ViewerTopBar } from "./viewer-top-bar"
+
+const PHONE_VIEWPORT = {
+  phone: { name: "Phone", styles: { width: "390px", height: "844px" }, type: "mobile" }
+} as const
 
 // Spec: the viewer's "Open another document" affordance stays above the
 // canvas. Color mode is the other control in this strip; both receive events.
@@ -54,21 +56,24 @@ export const OnePage: Story = {
   }
 }
 
+// The test browser's viewport, not a narrow box: `hideBelow` reads media queries.
 export const NarrowKeyboard: Story = {
-  decorators: [
-    (Story) => (
-      <Box position="relative" width="390px" minH="40">
-        <Story />
-      </Box>
-    )
-  ],
+  parameters: { viewport: { options: PHONE_VIEWPORT } },
+  globals: { viewport: { value: "phone" } },
   play: async ({ canvas, userEvent }) => {
+    const banner = canvas.getByRole("banner")
+    const filename = canvas.getByText("example.pdf")
     const page = canvas.getByRole("spinbutton", { name: "Page number" })
     const next = canvas.getByRole("button", { name: "Next page" })
     const open = canvas.getByRole("button", { name: "Open another document" })
 
-    await expect(canvas.getByText("example.pdf")).toBeVisible()
+    // The brand and the button's text yield so the file name keeps its room.
+    await expect(canvas.getByText("Annotate")).not.toBeVisible()
+    await expect(canvas.getByText("Open another")).not.toBeVisible()
+    await expect(filename).toBeVisible()
+    await expect(filename.getBoundingClientRect().width).toBeGreaterThan(40)
     await expect(open).toBeVisible()
+    await expect(banner.scrollWidth).toBeLessThanOrEqual(banner.clientWidth)
 
     await userEvent.tab()
     await expect(page).toHaveFocus()
