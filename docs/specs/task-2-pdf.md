@@ -169,7 +169,7 @@ and committed failing before the code exists.
       them.** Before: a floating pill at z-index 400 covered tldraw's
       top-left menu, and the style panel was pushed down by a 5rem padding
       hack. — `pdf-viewer.stories.tsx` › `ChromeSitsAboveCanvas` (real
-      tldraw; red `2ec3276`).
+      tldraw; red `45489d6`).
 - [x] **Our top-bar chrome and tldraw's style panel do not share a pixel slot.
       "Open another document" stays fully readable and clickable; the style
       panel fill is opaque.** jsdom cannot prove stacking or computed panel
