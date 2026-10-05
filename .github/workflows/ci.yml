@@ -33,3 +33,8 @@ jobs:
         run: bunx playwright install --with-deps --only-shell chromium
       - name: Gate
         run: bun run gate
+      # Needs a workspace connected to Nx Cloud (`bunx nx connect`); without it
+      # this step fails with "Nx Cloud is not enabled".
+      - name: Nx Cloud self-healing CI
+        if: always()
+        run: bunx nx fix-ci
