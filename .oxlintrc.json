@@ -90,10 +90,7 @@
         "**/viewer-top-bar/viewer-top-bar.tsx",
         "**/src/lib/pdf-viewer.tsx",
         "**/src/lib/pdf-viewer.spec.tsx",
-        "**/partials/canvas-components.tsx",
-        "**/src/lib/camera.stories.tsx",
-        "**/crop-frame/crop-frame-outline.tsx",
-        "**/crop-frame-toolbar/crop-frame-toolbar.tsx"
+        "**/partials/canvas-components.tsx"
       ],
       "rules": {
         "react/no-multi-comp": "off",
