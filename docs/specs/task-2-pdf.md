@@ -112,7 +112,7 @@ and committed failing before the code exists.
       a dropped file that is not a single PDF"; `home-screen.stories.tsx` ›
       `DropAPdf` (native drag events, real `DataTransfer`). Red `058037a`.
 - [x] **Choosing a file places its first page as a locked image shape.** —
-      placement: `pdf-viewer.spec.tsx` › `placePagesOnCanvas` › "starts with
+      placement: `utils.spec.ts` › `placePagesOnCanvas` › "starts with
       the first page…". Real rasterisation needs a real canvas, so pixels are
       verified by hand in the browser only.
 - [x] **While the document opens, a loading state is visible.** —
@@ -125,14 +125,14 @@ and committed failing before the code exists.
       — `pdf-viewer.spec.tsx` › "shows the error surface with a working retry"
       (screen level, props in). The route's `refetch` wiring is not tested.
 - [x] **A failed open releases the pdf.js loading task.** —
-      `pdf-viewer.spec.tsx` › "destroys the loading task when opening a
+      `utils.spec.ts` › "destroys the loading task when opening a
       document fails".
 - [x] **A failed page retries on its own without clearing other pages,
       unmounting tldraw, or destroying the document.** — `pdf-viewer.spec.tsx`
-      › "retries a failed page without reopening the document"; "keeps the
-      document alive so a failed visible page can retry".
+      › "retries a failed page without reopening the document"; `utils.spec.ts`
+      › "keeps the document alive so a failed visible page can retry".
 - [x] **Only pages intersecting the viewport are selected for raster.** —
-      `pdf-viewer.spec.tsx` › "selects only pages intersecting the viewport"
+      `utils.spec.ts` › "selects only pages intersecting the viewport"
       (100 synthetic pages, pure selector). No real 100-page PDF is tested.
 - [x] **Off-screen pages release their locked shape and every asset of the
       page; pages under a retained box stay until the box goes; user marks are
@@ -140,8 +140,8 @@ and committed failing before the code exists.
       tldraw's lock rule: in the real editor `deleteShapes` skipped the locked
       page shape, so nothing was evicted. The stub now applies the rule. —
       `pdf-viewer.stories.tsx` › `EvictsOffscreenPages` play test (real
-      tldraw); `pdf-viewer.spec.tsx` › "releases page shapes and assets when
-      they leave the viewport"; "keeps pages under a retained box after they
+      tldraw); `utils.spec.ts` › "releases page shapes and assets when
+      they leave the viewport"; `pdf-viewer.spec.tsx` › "keeps pages under a retained box after they
       leave the viewport, until the box goes"; "tracks page position, jumps
       without rasterising all pages, and preserves marks".
 - [x] **A landed raster is on screen within a few animation frames of its
@@ -149,7 +149,7 @@ and committed failing before the code exists.
       `src` was updated in place, which tldraw shows only after more than 32
       frames without a further change — ~0.5s at 60fps, ~33s measured at 1fps.
       Now 1 frame. — `pdf-viewer.stories.tsx` › `RasterLandsPromptly` play
-      test (fewer than 8 frames, real tldraw; red at 32); `pdf-viewer.spec.tsx`
+      test (fewer than 8 frames, real tldraw; red at 32); `utils.spec.ts`
       › "lands each raster on a fresh asset and repoints the page shape".
 - [x] **Unmounting the viewer or changing document removes the previous
       document's page shapes and assets**, so the new document's pages take
@@ -161,7 +161,7 @@ and committed failing before the code exists.
       position…"; `libs/web/ui/src/lib/viewer-top-bar/viewer-top-bar.stories.tsx`
       play tests.
 - [x] **PDF page shapes alone never count as unsaved marks.** —
-      `pdf-viewer.spec.tsx` › "ignores PDF page shapes when checking for user
+      `utils.spec.ts` › "ignores PDF page shapes when checking for user
       marks".
 - [x] **With unsaved marks, "Open another document" offers a cancelable
       warning; without marks it exits directly. Refresh/close prompts only while
@@ -277,7 +277,8 @@ Each becomes a red test before it becomes code.
 
 jsdom cannot rasterise a PDF, so:
 
-- **Vitest + jsdom** (`pdf-viewer.spec.tsx`): tldraw and pdf.js are stubbed;
+- **Vitest + jsdom** (`pdf-viewer.spec.tsx`, `pdf-viewer-extensions.spec.tsx`,
+  `utils.spec.ts`, over `tldraw-stub.tsx` and `spec-helpers.tsx`): tldraw and pdf.js are stubbed;
   tests assert our behaviour — state transitions, page selection, eviction,
   retry, render counts — not pdf.js correctness.
 - **Storybook play tests**: screen states and the top bar's navigation, plus

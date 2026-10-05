@@ -165,7 +165,7 @@ libs/web/features/pin/src/
     pin-tool.ts                StateNode: press places + settles + selects in one step; drag hands off to select.translating
     pin-feedback-overlay.ts    OverlayUtil: attach flash + held-shape outlines (tldraw 5 overlay API)
     pin-extension.ts           createPinExtension(options) → the extension object below
-    partials/                  pin-view (canvas markup), pin-glyph (SVG), pin-icon (lucide)
+    partials/                  pin-view (canvas markup) composing attach-rings, head-ring, pin-badge; pin-glyph (SVG), pin-icon (lucide)
     pin-story-canvas.tsx       story-only <Tldraw> carrying the extension, with
     pin-story-toolbar.tsx        the toolbar and shortcuts-dialog slots the
     pin-story-shortcuts-dialog.tsx  viewer renders for extension tools
@@ -501,7 +501,7 @@ Moved out of this lib by the ADR 0011 amendment (owned by pdf-viewer, tracked th
 - **Viewer integration** — `PdfViewerScreen` with `extensions` renders the extension's toolbar
   item. Covered with a stand-in extension. — `libs/web/features/pdf-viewer/src/lib/pdf-viewer.stories.tsx`
 - **`isPdfPageShape`** — true for `image` shapes with id `shape:page-<n>`; false for other ids
-  and types. — `libs/web/features/pdf-viewer/src/lib/pdf-viewer.spec.tsx`
+  and types. — `libs/web/features/pdf-viewer/src/lib/utils.spec.ts`
 
 ## States
 
