@@ -2,12 +2,13 @@ import type { TLShapeId } from "tldraw"
 
 import { HTMLContainer } from "tldraw"
 
-import type { BoxProps } from "@h2-fe/ui"
 import { Box } from "@h2-fe/ui"
 
 import type { PinColors, PinState } from "../types"
 
-import { ATTACH_FLASH_MS, PIN_HEAD, PIN_SIZE, PIN_TIP } from "../consts"
+import { PIN_SIZE, PIN_TIP } from "../consts"
+import { AttachRings } from "./attach-rings"
+import { PinBadge } from "./pin-badge"
 import { PinGlyph } from "./pin-glyph"
 
 interface PinViewProps {
@@ -20,30 +21,7 @@ interface PinViewProps {
   scale: number
 }
 
-const HALO_GAP = 3
-const HIDDEN = { display: "none" } as const
-
-/** A ring centred on the pin head. */
-function HeadRing({ radius, ...rest }: BoxProps & { radius: number }) {
-  return (
-    <Box
-      position="absolute"
-      left={`${PIN_HEAD.cx - radius}px`}
-      top={`${PIN_HEAD.cy - radius}px`}
-      boxSize={`${radius * 2}px`}
-      rounded="full"
-      borderWidth="2px"
-      pointerEvents="none"
-      {...rest}
-    />
-  )
-}
-
-/**
- * The pin on the canvas, in page units: glyph, count badge and, right after
- * it attaches, a ring that pings out from the head (a static halo just clear
- * of the head when the user prefers reduced motion).
- */
+/** The pin on the canvas, in page units: glyph, attach rings and count badge. */
 export function PinView({ id, state, colors, badge, attaching, scale }: PinViewProps) {
   return (
     <Box
@@ -62,27 +40,7 @@ export function PinView({ id, state, colors, badge, attaching, scale }: PinViewP
           transform={scale === 1 ? undefined : `scale(${scale})`}
           transformOrigin={`${PIN_TIP.x}px ${PIN_TIP.y}px`}
         >
-          {attaching && (
-            <>
-              <HeadRing
-                data-ring="ping"
-                radius={PIN_HEAD.r}
-                borderColor={colors.stroke}
-                animationName="ping"
-                animationDuration={`${ATTACH_FLASH_MS}ms`}
-                animationTimingFunction="cubic-bezier(0, 0, 0.2, 1)"
-                animationFillMode="forwards"
-                _motionReduce={HIDDEN}
-              />
-              <HeadRing
-                data-ring="halo"
-                radius={PIN_HEAD.r + HALO_GAP}
-                borderColor={colors.stroke}
-                opacity={0.5}
-                _motionSafe={HIDDEN}
-              />
-            </>
-          )}
+          {attaching && <AttachRings stroke={colors.stroke} />}
           <svg
             width={PIN_SIZE.w}
             height={PIN_SIZE.h}
@@ -93,27 +51,7 @@ export function PinView({ id, state, colors, badge, attaching, scale }: PinViewP
             <PinGlyph colors={colors} />
           </svg>
         </Box>
-        {badge && (
-          <Box
-            position="absolute"
-            top="-1.5"
-            right="-2.5"
-            minW="4"
-            h="4"
-            px="1"
-            rounded="full"
-            borderWidth="1px"
-            borderColor={colors.stroke}
-            bg={colors.badgeBg}
-            color={colors.badgeFg}
-            fontSize="2xs"
-            fontWeight="semibold"
-            lineHeight="0.875rem"
-            textAlign="center"
-          >
-            {badge}
-          </Box>
-        )}
+        {badge && <PinBadge colors={colors}>{badge}</PinBadge>}
       </HTMLContainer>
     </Box>
   )
