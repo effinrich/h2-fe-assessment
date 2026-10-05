@@ -1,45 +1,34 @@
-// Uncomment this line to use CSS modules
-// import styles from './app.module.css';
-import NxWelcome from "./nx-welcome";
+import { lazy, Suspense } from "react"
+import { Route, Routes } from "react-router-dom"
 
-import { Route, Routes, Link } from 'react-router-dom';
+import { Center, Spinner } from "@h2-fe/ui"
 
-export function App() {
+import HomeRoute from "./routes/home/home"
+
+// The route table is the whole app: home first, the document canvas lazily so
+// tldraw, pdfjs and its css leave the initial bundle. Each route wrapper owns
+// its redirect and fallback semantics; this file owns only the table and the
+// chunk boundary.
+const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route/pdf-viewer-route"))
+
+export default function App() {
   return (
-    <div>
-      <NxWelcome title="@h2-fe/web"/>
-    
-    {/* START: routes */}
-    {/* These routes and navigation have been generated for you */}
-    {/* Feel free to move and update them to fit your needs */}
-    <br/>
-    <hr/>
-    <br/>
-    <div role="navigation">
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/page-2">Page 2</Link></li>
-      </ul>
-    </div>
     <Routes>
+      <Route path="/" element={<HomeRoute />} />
       <Route
-        path="/"
+        path="/viewer"
         element={
-          <div>This is the generated root route. <Link to="/page-2">Click here for page 2.</Link></div>
-        }
-      />
-      <Route
-        path="/page-2"
-        element={
-          <div><Link to="/">Click here to go back to root page.</Link></div>
+          <Suspense
+            fallback={
+              <Center minH="100dvh">
+                <Spinner size="xl" />
+              </Center>
+            }
+          >
+            <PdfViewerRoute />
+          </Suspense>
         }
       />
     </Routes>
-    {/* END: routes */}
-    </div>
-  );
+  )
 }
-
-export default App;
-
-

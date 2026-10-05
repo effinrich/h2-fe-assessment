@@ -12,5 +12,10 @@
       "path": "./tsconfig.storybook.json"
     }
   ],
-  "extends": "../../../tsconfig.base.json"
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }

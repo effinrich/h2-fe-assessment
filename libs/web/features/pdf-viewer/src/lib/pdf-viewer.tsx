@@ -1,0 +1,72 @@
+import { useMemo, useState } from "react"
+import { Tldraw } from "tldraw"
+import "tldraw/tldraw.css"
+
+import "./tldraw-theme.css"
+
+import { useColorMode } from "@h2-fe/ui"
+import { ViewerTopBar } from "@h2-fe/web-ui"
+
+import type { CanvasExtension, PdfViewerScreenProps } from "./types"
+
+import { CANVAS_THEME_CLASS } from "./consts"
+import { useCanvasEditor, useMarksChange, useVisiblePages } from "./hooks"
+import { createCanvasComponents } from "./partials/canvas-components"
+import { ViewerCanvas, ViewerRoot } from "./partials/viewer-chrome"
+import { ViewerPageOverlay } from "./partials/viewer-page-overlay"
+import { ViewerStatus } from "./partials/viewer-status"
+import { mergeCanvasExtensions } from "./utils"
+
+const NO_EXTENSIONS: readonly CanvasExtension[] = []
+
+export function PdfViewerScreen({
+  filename,
+  onMarksChange,
+  document,
+  isLoading,
+  isError,
+  onRetry,
+  onOpenAnother,
+  extensions = NO_EXTENSIONS,
+  retainPageBounds
+}: PdfViewerScreenProps) {
+  const { colorMode } = useColorMode()
+  const [initialColorScheme] = useState(colorMode)
+  const merged = useMemo(() => mergeCanvasExtensions(extensions), [extensions])
+  const components = useMemo(() => createCanvasComponents(merged), [merged])
+  const { editor, handleMount } = useCanvasEditor(colorMode, merged)
+  useMarksChange(editor, onMarksChange)
+  const { page, overlays, jumpToPage, retryPage } = useVisiblePages(
+    editor,
+    document,
+    retainPageBounds
+  )
+
+  return (
+    <ViewerRoot className={CANVAS_THEME_CLASS} data-canvas-theme="" data-color-mode={colorMode}>
+      <ViewerTopBar
+        filename={filename}
+        onOpenAnother={onOpenAnother}
+        onPageChange={jumpToPage}
+        page={page}
+        totalPages={document?.pages.length ?? 0}
+      />
+      <ViewerCanvas>
+        <Tldraw
+          bindingUtils={merged.bindingUtils}
+          colorScheme={initialColorScheme}
+          components={components}
+          onMount={handleMount}
+          overlayUtils={merged.overlayUtils}
+          overrides={merged.overrides}
+          shapeUtils={merged.shapeUtils}
+          tools={merged.tools}
+        />
+        <ViewerStatus isError={isError} isLoading={isLoading} onRetry={onRetry} />
+        {overlays.map((overlay) => (
+          <ViewerPageOverlay key={overlay.page} onRetryPage={retryPage} overlay={overlay} />
+        ))}
+      </ViewerCanvas>
+    </ViewerRoot>
+  )
+}

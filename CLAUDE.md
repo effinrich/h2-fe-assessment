@@ -20,5 +20,6 @@
 - DON'T USE for: basic generator syntax (`nx g @nx/react:app`), standard commands, things you already know
 - The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
 
-
 <!-- nx configuration end-->
+
+Workspace instructions are [AGENTS.md](AGENTS.md). `@h2-fe/source` is this repo root and has no Nx targets. Each app and library has its own `AGENTS.md`.

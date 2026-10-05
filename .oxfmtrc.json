@@ -6,16 +6,40 @@
   "semi": false,
   "singleQuote": false,
   "jsxSingleQuote": false,
-  "trailingComma": "all",
+  "trailingComma": "none",
   "bracketSpacing": true,
   "arrowParens": "always",
   "endOfLine": "lf",
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "@h2-fe",
+        "elementNamePattern": ["@h2-fe/**"]
+      },
+      {
+        "groupName": "app",
+        "elementNamePattern": ["@/**"]
+      }
+    ],
+    "groups": [
+      "type-import",
+      ["value-builtin", "value-external"],
+      "@h2-fe",
+      "app",
+      "type-internal",
+      "value-internal",
+      ["type-parent", "type-sibling", "type-index"],
+      ["value-parent", "value-sibling", "value-index"]
+    ],
+    "newlinesBetween": true
+  },
   "ignorePatterns": [
     "node_modules",
     "dist",
     ".output",
-    ".expo/**",
-    ".nitro",
-    "storybook-static/**"
+    ".vinxi",
+    ".vercel/",
+    "storybook-static/**",
+    "bun.lock"
   ]
 }

@@ -1,16 +1,25 @@
-import { StrictMode } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import * as ReactDOM from 'react-dom/client';
-import App from './app/app';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { StrictMode } from "react"
+import ReactDOM from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+import { UiProvider } from "@h2-fe/ui"
+
+import App from "./app/app"
+import "./index.css"
+
+const queryClient = new QueryClient()
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 
 root.render(
   <StrictMode>
-    <BrowserRouter>
-      <App/>
-    </BrowserRouter>
+    <UiProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </UiProvider>
   </StrictMode>
-);
+)

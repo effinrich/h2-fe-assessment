@@ -1,41 +1,48 @@
+import react from "@vitejs/plugin-react"
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defaultClientConditions, defineConfig } from "vite"
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../node_modules/.vite/apps/web',
-  server:{
+  cacheDir: "../../node_modules/.vite/apps/web",
+  server: {
     port: 4200,
-    host: 'localhost',
+    host: "localhost"
   },
-  preview:{
+  preview: {
     port: 4300,
-    host: 'localhost',
+    host: "localhost"
   },
   plugins: [react()],
+  // Workspace libs export their TypeScript source under the @h2-fe/source
+  // condition, so the app consumes them without a prior lib build. Setting
+  // `conditions` replaces Vite's defaults, hence the spread.
+  resolve: {
+    conditions: [...defaultClientConditions, "@h2-fe/source"]
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],
   // },
   build: {
-    outDir: './dist',
+    outDir: "./dist",
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-  test: {
-    name: '@h2-fe/web',
-    watch: false,
-    globals: true,
-    environment: 'jsdom',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: './test-output/vitest/coverage',
-      provider: 'v8' as const,
+      transformMixedEsModules: true
     }
   },
-}));
+  test: {
+    name: "@h2-fe/web",
+    watch: false,
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["../../tools/vitest-setup.ts"],
+    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    reporters: ["default"],
+    coverage: {
+      reportsDirectory: "./test-output/vitest/coverage",
+      provider: "v8" as const
+    }
+  }
+}))

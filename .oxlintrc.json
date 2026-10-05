@@ -1,15 +1,97 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "unicorn",
-    "oxc"
-  ],
-  "categories": {
-    "correctness": "error"
+  "jsPlugins": ["@nx/oxlint/boundaries-plugin"],
+  "plugins": ["react", "typescript", "import", "jsx-a11y", "unicorn", "vitest", "react-perf"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": false
   },
-  "rules": {},
+  "categories": {
+    "correctness": "error",
+    "perf": "warn",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "style": "off"
+  },
   "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true,
     "builtin": true
-  }
+  },
+  "rules": {
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "depConstraints": [
+          {
+            "sourceTag": "scope:shared",
+            "onlyDependOnLibsWithTags": ["scope:shared"]
+          },
+          {
+            "sourceTag": "scope:web",
+            "onlyDependOnLibsWithTags": ["scope:web", "scope:shared"]
+          }
+        ]
+      }
+    ],
+    "no-console": "off",
+    "no-unused-vars": "warn",
+    "typescript/no-unused-vars": "warn",
+    "typescript/no-explicit-any": "error",
+    "react/jsx-key": "error",
+    "react/no-array-index-key": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/no-unassigned-import": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase",
+        "ignore": [
+          "^(AGENTS|README|CHANGELOG)\\.md$",
+          "^LICENSE$",
+          "^__root\\.tsx$",
+          "^routeTree\\.gen\\.ts$",
+          "^\\d{14}_[a-f0-9-]+\\.sql$"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "rules": {
+        "import/default": "off"
+      }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "rules": {
+        "react/no-multi-comp": "error",
+        "max-lines": ["error", { "max": 150, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": [
+          "error",
+          { "max": 60, "skipBlankLines": true, "skipComments": true }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.stories.tsx", "**/*.spec.tsx", "**/*.test.tsx"],
+      "rules": {
+        "react/no-multi-comp": "off",
+        "max-lines": ["error", { "max": 400, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    ".output",
+    ".vinxi",
+    ".nitro",
+    ".vercel/",
+    "storybook-static/**",
+    "bun.lock"
+  ]
 }
