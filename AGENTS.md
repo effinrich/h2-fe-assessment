@@ -44,14 +44,18 @@ made during this project's setup.
   `vitest.storybook.config.mts`: the name sits outside the inferred-`test`
   glob, so `test` stays the jsdom run. The target lives in nx.json
   `targetDefaults`; a project opts in with `"test-storybook": {}`. Feature
-  stories run in the `@h2-fe/web-ui` stage. Locally, run
+  stories run in the `@h2-fe/web-ui` stage and are also globbed into
+  `shared-ui` so Chromatic's one publish includes them. Locally, run
   `bunx playwright install chromium` once.
-- **Feature stories and `affected`.** web-ui doesn't import the features (and
-  `implicitDependencies` would cycle), so its `test-storybook` /
-  `build-storybook` inputs list `{workspaceRoot}/libs/web/features/*/src/**/*`
-  and the home route's stories (`apps/web/src/app/routes/home/**`).
+- **Feature stories and `affected`.** web-ui and shared-ui do not import the
+  features (and `implicitDependencies` would cycle), so their `test-storybook`
+  / `build-storybook` inputs list the feature and home-route story files.
   Nx treats `{workspaceRoot}` inputs as implicit dependencies: a feature-only
-  change marks web-ui affected and busts both caches. Keep those inputs.
+  change marks those Storybook targets affected and busts both caches. Keep
+  those inputs. A stories glob is not a source import: `libs/shared/ui` must
+  still not import `scope:web`.
+- **`@h2-fe/source`** is the repo root. `nx show project @h2-fe/source` reports
+  no targets. Root `package.json` `"includedScripts": []` is why.
 - **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
   inferred target (`args: ["--type-aware"]` in `project.json`); never write
   `@nx/oxlint:lint`. Two plugins must not claim the same target name.
@@ -121,13 +125,17 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 - Commit and push regularly on your own (do not wait for the user to ask), with smaller PRs so progress is easier to track. Do not leave `LEFTHOOK=0` on.
 - Do not stage local-only junk: the user's `.gitignore` edits,
   `.github/agents/`, `firebase-debug.log`, `docs/*.zip`.
+- An honest "I don't know" is accepted and encouraged when something was not verified.
 
 ## Learned Workspace Facts
 
-- A feature is a capability; a route is a host. Home is the `/` route in
-  `apps/web`, not a feature lib. Pin, camera, and pdf-viewer must not import
-  each other; only `apps/web` (the viewer route) composes canvas extensions
-  (ADR 0011).
+- A feature is a capability you can name and ship; a route is a host and may
+  compose many features. Home is the `/` route in `apps/web`
+  (`apps/web/src/app/routes/home`), not a feature project (`@h2-fe/home` was
+  removed). Pin, camera, and pdf-viewer stay sibling feature libs and must not
+  import each other; only `apps/web` (the viewer route) composes canvas
+  extensions (ADR 0011).
+- The reviewer walkthrough is `docs/reviewer.md` (linked from the README).
 - Locked tldraw shapes: `updateShapes` / `deleteShapes` silently no-op unless
   `editor.run(..., { ignoreShapeLock: true })`.
 - Never update `src` in-place on a tldraw image asset a shape is already

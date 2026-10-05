@@ -1,34 +1,27 @@
-# h2-fe-assessment — handoff
+# Handoff
 
-Branch: `fixing-and-cleanup`. Product work for the hiring zip is in.
+Branch: `fixing-and-cleanup`.
 
-## State
-
-Tasks 1–4 are implemented: home, PDF viewer, pin, camera (export area). Theme is a quiet olive-ink palette in `libs/shared/ui/src/lib/theme/system.ts`. Reviewer README is the root `README.md`.
-
-Pin, camera, and pdf-viewer do not import each other. `apps/web` `pdf-viewer-route` composes `createPinExtension` + `createCameraExtension` and passes `retainPageBounds={getCropFrameBounds}`.
-
-## Verify
+## Run
 
 ```sh
 bun install
-bun run start          # / and /viewer
-bun run gate
+bun run start
 ```
 
-Storybook: `bun run storybook` (shared-ui, :4400), `bun run storybook:web` (web-ui + feature stories, :6006).
+Dev server port is 4200 (`apps/web/vite.config.mts`). Routes: `/` and `/viewer`.
 
-## Leftovers (not this zip)
+`bun run storybook` serves `shared-ui` on port 4400. `bun run storybook:web` serves `@h2-fe/web-ui` and does not set a port.
 
-- Walkthrough video
-- Chromatic project for `@h2-fe/web-ui` (workflow still snaps `shared-ui`)
-- Scheduled Task 2 extras (full-PDF export, more chrome) — see spec debts
-- Home-as-feature vs host — left as a route-screen lib (ADR 0011)
+Chromatic publishes `dist/storybook/shared-ui`. That build includes the design system plus feature, chrome, and home stories. The walkthrough is `docs/reviewer.md`.
+
+## Composition
+
+Pin, camera, and pdf-viewer do not import each other. `apps/web` `pdf-viewer-route` composes pin and camera and passes `retainPageBounds={getCropFrameBounds}`.
 
 ## Traps
 
 - Locked tldraw shapes: `editor.run(..., { ignoreShapeLock: true })`
 - Never update an in-use image asset `src` in place (ADR 0012)
 - Chakra for chrome, tldraw CSS vars for canvas UI (ADR 0013)
-- oxfmt has no `extends`; do not add nested `.oxfmtrc.json`
-- Ask before deleting config files
+- oxfmt has no `extends`; do not add a nested `.oxfmtrc.json`
