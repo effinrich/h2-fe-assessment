@@ -114,3 +114,4 @@ playwright-report/
 test-results/
 .vitest-reports/
 .chromatic-mobile/
+.superdesign/tmp/
