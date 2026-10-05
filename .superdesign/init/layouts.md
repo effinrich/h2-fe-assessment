@@ -65,7 +65,7 @@ import HomeRoute from "./routes/home/home"
 // tldraw, pdfjs and its css leave the initial bundle. Each route wrapper owns
 // its redirect and fallback semantics; this file owns only the table and the
 // chunk boundary.
-const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route"))
+const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route/pdf-viewer-route"))
 
 export default function App() {
   return (
@@ -193,11 +193,11 @@ export interface HomeScreenProps {
 }
 ```
 
-## `apps/web/src/app/routes/pdf-viewer-route.tsx`: viewer route
+## `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx`: viewer route
 
 Reads the `File` from navigation state (redirects home if missing), loads it with `usePdfPages`, and renders `PdfViewerScreen` with the pin and camera canvas extensions. Also owns the "Leave this document?" `Modal` (shown when leaving with unsaved marks) and the `beforeunload` guard.
 
-`apps/web/src/app/routes/pdf-viewer-route.tsx` (97 lines)
+`apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx` (97 lines)
 
 ```tsx
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"

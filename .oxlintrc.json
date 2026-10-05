@@ -82,18 +82,6 @@
         "max-lines": ["error", { "max": 400, "skipBlankLines": true, "skipComments": true }],
         "max-lines-per-function": "off"
       }
-    },
-    {
-      "files": [
-        "**/routes/home/home-screen/home-screen.tsx",
-        "**/routes/pdf-viewer-route.tsx",
-        "**/viewer-top-bar/viewer-top-bar.tsx"
-      ],
-      "rules": {
-        "react/no-multi-comp": "off",
-        "max-lines": "off",
-        "max-lines-per-function": "off"
-      }
     }
   ],
   "ignorePatterns": [
