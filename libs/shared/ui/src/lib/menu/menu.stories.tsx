@@ -1,11 +1,12 @@
-import { Button } from '@chakra-ui/react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, fn, screen } from 'storybook/test'
+import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Menu } from './menu'
+import { Button } from "@chakra-ui/react"
+import { expect, fn, screen } from "storybook/test"
+
+import { Menu } from "./menu"
 
 const meta = {
-  title: 'Overlay/Menu',
+  title: "Overlay/Menu",
   component: Menu,
   args: {
     trigger: (
@@ -14,10 +15,10 @@ const meta = {
       </Button>
     ),
     items: [
-      { value: 'rename', label: 'Rename', command: '⌘R' },
-      { value: 'duplicate', label: 'Duplicate', command: '⌘D' },
-      { value: 'export', label: 'Export', disabled: true },
-      { value: 'delete', label: 'Delete', danger: true }
+      { value: "rename", label: "Rename", command: "⌘R" },
+      { value: "duplicate", label: "Duplicate", command: "⌘D" },
+      { value: "export", label: "Export", disabled: true },
+      { value: "delete", label: "Delete", danger: true }
     ],
     onSelect: fn()
   }
@@ -28,12 +29,12 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   play: async ({ args, canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: 'Actions' }))
-    await userEvent.click(await screen.findByRole('menuitem', { name: /Rename/ }))
-    await expect(args.onSelect).toHaveBeenCalledWith('rename')
+    await userEvent.click(canvas.getByRole("button", { name: "Actions" }))
+    await userEvent.click(await screen.findByRole("menuitem", { name: /Rename/ }))
+    await expect(args.onSelect).toHaveBeenCalledWith("rename")
   }
 }
 
 export const PlacedEnd: Story = {
-  args: { positioning: { placement: 'bottom-end' } }
+  args: { positioning: { placement: "bottom-end" } }
 }

@@ -13,7 +13,19 @@
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/tsconfig.storybook.json"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [],
+    "storybookTestRunner": [
+      {
+        "externalDependencies": [
+          "vitest",
+          "@vitest/browser-playwright",
+          "@vitest/coverage-v8",
+          "playwright",
+          "storybook",
+          "@storybook/addon-vitest"
+        ]
+      }
+    ]
   },
   "plugins": [
     {
@@ -45,7 +57,7 @@
         "devTargetName": "dev",
         "previewTargetName": "preview",
         "serveStaticTargetName": "serve-static",
-        "typecheckTargetName": "typecheck",
+        "typecheckTargetName": "vite:typecheck",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
@@ -82,7 +94,8 @@
       "dependsOn": ["^build"]
     },
     "typecheck": {
-      "dependsOn": ["build", "^build"]
+      "dependsOn": ["build", "^build"],
+      "inputs": ["default", "^production", { "externalDependencies": ["typescript"] }]
     },
     "format": {
       "executor": "nx:run-commands",
@@ -100,6 +113,16 @@
         "cwd": "{projectRoot}"
       },
       "cache": false
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --config vitest.storybook.config.mts --coverage",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "^production", "storybookTestRunner"],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
     }
   },
   "generators": {

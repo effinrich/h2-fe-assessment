@@ -21,31 +21,49 @@
     },
     "format": {},
     "format:fix": {},
+    "test-storybook": {
+      "inputs": [
+        "default",
+        "^production",
+        "storybookTestRunner",
+        "{workspaceRoot}/libs/web/features/*/src/**/*",
+        "{workspaceRoot}/libs/web/ui/src/**/*",
+        "{workspaceRoot}/apps/web/src/app/routes/home/**/*"
+      ]
+    },
     "storybook": {
-      "executor": "@nx/storybook:storybook",
       "options": {
         "port": 4400,
-        "open": true,
-        "configDir": "libs/shared/ui/.storybook"
+        "config-dir": ".storybook"
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "args": ["--quiet"]
         }
       }
     },
     "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
+      "outputs": ["{workspaceRoot}/dist/storybook/shared-ui"],
+      "inputs": [
+        "production",
+        "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json",
+        "{workspaceRoot}/libs/web/features/*/src/**/*",
+        "!{workspaceRoot}/libs/web/features/*/src/**/*.spec.@(ts|tsx)",
+        "{workspaceRoot}/libs/web/ui/src/**/*",
+        "!{workspaceRoot}/libs/web/ui/src/**/*.spec.@(ts|tsx)",
+        "{workspaceRoot}/apps/web/src/app/routes/home/**/*",
+        "!{workspaceRoot}/apps/web/src/app/routes/home/**/*.spec.@(ts|tsx)"
+      ],
       "options": {
-        "framework": "@storybook/react-vite",
-        "outputDir": "dist/storybook/shared-ui",
-        "configDir": "libs/shared/ui/.storybook",
-        "webpackStatsJson": true
+        "config-dir": ".storybook",
+        "output-dir": "../../../dist/storybook/shared-ui",
+        "args": ["--stats-json"]
       },
       "configurations": {
         "ci": {
-          "quiet": true
+          "args": ["--stats-json", "--quiet"]
         }
       }
     }

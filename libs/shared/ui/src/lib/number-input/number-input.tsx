@@ -1,9 +1,10 @@
-import { NumberInput as ChakraNumberInput } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
+
+import { NumberInput as ChakraNumberInput } from "@chakra-ui/react"
 
 export interface NumberInputProps extends Omit<
   ChakraNumberInput.RootProps,
-  'children' | 'onValueChange'
+  "children" | "onValueChange"
 > {
   label?: ReactNode
   placeholder?: string
@@ -15,7 +16,7 @@ export function NumberInput({ label, placeholder, onValueChange, ...rootProps }:
   return (
     <ChakraNumberInput.Root
       {...rootProps}
-      onValueChange={details => onValueChange?.(details.valueAsNumber, details.value)}
+      onValueChange={(details) => onValueChange?.(details.valueAsNumber, details.value)}
     >
       {label ? <ChakraNumberInput.Label>{label}</ChakraNumberInput.Label> : null}
       <ChakraNumberInput.Control>

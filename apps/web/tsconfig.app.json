@@ -36,10 +36,13 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../../libs/web/features/pin/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/web/features/pdf-viewer/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/web/features/home/tsconfig.lib.json"
+      "path": "../../libs/web/features/camera/tsconfig.lib.json"
     },
     {
       "path": "../../libs/shared/ui/tsconfig.lib.json"

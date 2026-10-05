@@ -1,5 +1,6 @@
-import { Field, Input, type InputProps } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
+
+import { Field, Input, type InputProps } from "@chakra-ui/react"
 
 export interface TextFieldProps extends InputProps {
   label: ReactNode

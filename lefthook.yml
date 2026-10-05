@@ -1,0 +1,29 @@
+# Installed by lefthook's postinstall on `bun install` (skipped when CI is set).
+# `LEFTHOOK=0 git commit ...` bypasses the hooks.
+
+pre-commit:
+  parallel: true
+  jobs:
+    # Both fixers rewrite staged files, so they run one after the other.
+    - name: fix
+      group:
+        piped: true
+        jobs:
+          - name: lint
+            glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"
+            run: bunx oxlint --type-aware --fix --no-error-on-unmatched-pattern {staged_files}
+            stage_fixed: true
+          - name: format
+            glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,md,yml,yaml,css}"
+            run: bunx oxfmt --no-error-on-unmatched-pattern {staged_files}
+            stage_fixed: true
+    - name: typecheck
+      glob: "*.{ts,tsx,mts,cts,json}"
+      # Upstream builds are skipped for speed (imports resolve to src via the
+      # @h2-fe/source condition); pre-push and CI run the full gate.
+      run: bunx nx affected -t typecheck --uncommitted --excludeTaskDependencies
+
+pre-push:
+  jobs:
+    - name: gate
+      run: bun run gate

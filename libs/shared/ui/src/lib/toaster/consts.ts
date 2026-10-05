@@ -1,6 +1,6 @@
-import { createToaster } from '@chakra-ui/react'
+import { createToaster } from "@chakra-ui/react"
 
 export const toaster = createToaster({
-  placement: 'bottom-end',
+  placement: "top-end",
   pauseOnPageIdle: true
 })

@@ -1,7 +1,8 @@
-import { EmptyState as ChakraEmptyState, VStack } from '@chakra-ui/react'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
 
-export interface EmptyStateProps extends Omit<ChakraEmptyState.RootProps, 'title'> {
+import { EmptyState as ChakraEmptyState, VStack } from "@chakra-ui/react"
+
+export interface EmptyStateProps extends Omit<ChakraEmptyState.RootProps, "title"> {
   title: ReactNode
   description?: ReactNode
   icon?: ReactNode

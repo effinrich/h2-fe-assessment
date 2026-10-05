@@ -1,5 +1,6 @@
-import { useRef } from 'react'
-import { Box, Button, Flex, Input, Text } from '@h2-fe/ui'
+import { useRef } from "react"
+
+import { Button, ColorModeButton, Field, Flex, Input, Text } from "@h2-fe/ui"
 
 interface ViewerTopBarProps {
   filename?: string
@@ -66,7 +67,7 @@ export function ViewerTopBar({
           title={filename}
           whiteSpace="nowrap"
         >
-          {filename ?? 'Document'}
+          {filename ?? "Document"}
         </Text>
         {totalPages > 0 && (
           <Flex align="center" gap="1">
@@ -80,25 +81,28 @@ export function ViewerTopBar({
               Previous
             </Button>
             <form
-              onSubmit={event => {
+              onSubmit={(event) => {
                 event.preventDefault()
                 jump()
               }}
             >
-              <Input
-                aria-label="Page number"
-                defaultValue={page}
-                inputMode="numeric"
-                key={page}
-                max={totalPages}
-                min={1}
-                onBlur={abandonJump}
-                ref={pageInput}
-                size="sm"
-                textAlign="center"
-                type="number"
-                w="14"
-              />
+              <Field.Root>
+                <Field.Label srOnly>Page number</Field.Label>
+                <Input
+                  aria-label="Page number"
+                  defaultValue={page}
+                  inputMode="numeric"
+                  key={page}
+                  max={totalPages}
+                  min={1}
+                  onBlur={abandonJump}
+                  ref={pageInput}
+                  size="sm"
+                  textAlign="center"
+                  type="number"
+                  w="14"
+                />
+              </Field.Root>
             </form>
             <Text fontSize="sm" whiteSpace="nowrap">
               of {totalPages}
@@ -115,11 +119,12 @@ export function ViewerTopBar({
           </Flex>
         )}
       </Flex>
-      <Box marginLeft="auto" pointerEvents="auto">
+      <Flex flexShrink="0" gap="2" marginLeft="auto" pointerEvents="auto" whiteSpace="nowrap">
+        <ColorModeButton />
         <Button onClick={onOpenAnother} variant="outline">
           Open another document
         </Button>
-      </Box>
+      </Flex>
     </Flex>
   )
 }
