@@ -1131,11 +1131,16 @@ export const CopyShortcut: Story = {
 
     editor.getContainer().focus()
     await waitFor(() => expect(editor.getInstanceState().isFocused).toBe(true))
+    await expect(editor.getOnlySelectedShape()?.type).toBe(CROP_FRAME)
+    await expect(editor.isIn("select.idle")).toBe(true)
+    await expect(editor.getEditingShapeId()).toBeNull()
+    await expect(editor.menus.hasAnyOpenMenus()).toBe(false)
+    await expect(editor.getContainer()).toHaveFocus()
     const copy = new ClipboardEvent("copy", { bubbles: true, cancelable: true })
     editor.getContainer().dispatchEvent(copy)
 
-    await expectVisible(await screen.findByText("Copied image"))
     await expect(copy.defaultPrevented).toBe(true)
+    await expectVisible(await screen.findByText("Copied image"))
     await expect(write).toHaveBeenCalledTimes(1)
     const [item] = write.mock.lastCall?.[0] ?? []
     await expect(item?.types).toContain("image/png")
