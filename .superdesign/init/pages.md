@@ -32,7 +32,7 @@ apps/web/index.html
         │   ├── Center  → libs/shared/ui/src/lib/primitives/layout.ts
         │   └── Spinner → libs/shared/ui/src/lib/primitives/feedback.ts
         ├── apps/web/src/app/routes/home/home.tsx              (route "/", eager)
-        └── apps/web/src/app/routes/pdf-viewer-route.tsx       (route "/viewer", lazy chunk)
+        └── apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx       (route "/viewer", lazy chunk)
 ```
 
 ## `/`: Home
@@ -58,10 +58,10 @@ apps/web/src/app/routes/home/home.tsx                 [react, react-router-dom]
 
 ## `/viewer`: PDF viewer canvas
 
-Entry: `apps/web/src/app/routes/pdf-viewer-route.tsx`. Leaf files reached more than once are marked `(↑ above)` after their first expansion.
+Entry: `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx`. Leaf files reached more than once are marked `(↑ above)` after their first expansion.
 
 ```
-apps/web/src/app/routes/pdf-viewer-route.tsx          [react, react-router-dom]
+apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx          [react, react-router-dom]
 ├── @h2-fe/ui
 │   ├── Button     → libs/shared/ui/src/lib/button/button.tsx
 │   ├── Flex       → libs/shared/ui/src/lib/primitives/layout.ts

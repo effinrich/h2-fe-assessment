@@ -192,7 +192,7 @@ feature imports. So `@h2-fe/pdf-viewer` never imports `@h2-fe/pin`. Instead:
   handlers. It renders one toolbar (`DefaultToolbar` + a `ToolbarItem` per extension tool id +
   `DefaultToolbarContent`) and one shortcuts dialog. Both live in pdf-viewer `partials/`.
 - `@h2-fe/pin` exports an object structurally matching `CanvasExtension`. The match is checked
-  where the two meet: in `apps/web/src/app/routes/pdf-viewer-route.tsx`, which passes
+  where the two meet: in `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx`, which passes
   `extensions={[createPinExtension({ canAttach: (s) => !isPdfPageShape(s) }), cameraExtension]}`.
   The route already holds business wiring (ADR 0011). Extensions are created once, at module
   scope or in `useMemo`, because tldraw expects stable util arrays.

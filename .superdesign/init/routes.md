@@ -6,10 +6,10 @@ Superdesign init: routing for `apps/web`.
 - **Route table:** `apps/web/src/app/app.tsx`. Two routes, no nesting, no layout route, no 404 route.
 - **Handoff:** home passes the chosen `File` to the viewer through navigation state (`navigate("/viewer", { state: { file } })`). There is no URL parameter, so a refresh or deep link to `/viewer` redirects to `/`.
 
-| Path      | Component                            | File                                                                                                  | Loading                                                   |
-| --------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `/`       | `HomeRoute` → `HomeScreen`           | `apps/web/src/app/routes/home/home.tsx`, `apps/web/src/app/routes/home/home-screen/home-screen.tsx`   | eager                                                     |
-| `/viewer` | `PdfViewerRoute` → `PdfViewerScreen` | `apps/web/src/app/routes/pdf-viewer-route.tsx`, `libs/web/features/pdf-viewer/src/lib/pdf-viewer.tsx` | `React.lazy` + `Suspense` (centred `xl` Spinner fallback) |
+| Path      | Component                            | File                                                                                                                   | Loading                                                   |
+| --------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `/`       | `HomeRoute` → `HomeScreen`           | `apps/web/src/app/routes/home/home.tsx`, `apps/web/src/app/routes/home/home-screen/home-screen.tsx`                    | eager                                                     |
+| `/viewer` | `PdfViewerRoute` → `PdfViewerScreen` | `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx`, `libs/web/features/pdf-viewer/src/lib/pdf-viewer.tsx` | `React.lazy` + `Suspense` (centred `xl` Spinner fallback) |
 
 ## Router config
 
@@ -27,7 +27,7 @@ import HomeRoute from "./routes/home/home"
 // tldraw, pdfjs and its css leave the initial bundle. Each route wrapper owns
 // its redirect and fallback semantics; this file owns only the table and the
 // chunk boundary.
-const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route"))
+const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route/pdf-viewer-route"))
 
 export default function App() {
   return (
@@ -228,14 +228,14 @@ export async function createExamplePdf(): Promise<File> {
 
 Files:
 
-- Route component: `apps/web/src/app/routes/pdf-viewer-route.tsx`
+- Route component: `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx`
 - Screen: `libs/web/features/pdf-viewer/src/lib/pdf-viewer.tsx` (`@h2-fe/pdf-viewer`)
 - Top bar: `libs/web/ui/src/lib/viewer-top-bar/viewer-top-bar.tsx` (`@h2-fe/web-ui`)
 - Canvas extensions: `libs/web/features/pin/src` (`@h2-fe/pin`), `libs/web/features/camera/src` (`@h2-fe/camera`)
 
 Full source for the screen and chrome is in `layouts.md`; the full dependency tree is in `pages.md`.
 
-`apps/web/src/app/routes/pdf-viewer-route.tsx` (97 lines)
+`apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx` (97 lines)
 
 ```tsx
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
