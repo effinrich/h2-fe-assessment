@@ -39,3 +39,11 @@
 .h2-canvas-theme .tlui-layout__top__right {
   padding-top: 5rem;
 }
+
+/* PDF page images are the stage (ids shape:page-N). A 1px screen-space
+   stroke sits outside the sheet so it reads against the canvas. --tl-scale
+   cancels camera zoom, the same compensation as .tl-shape-indicator.
+   Pins, marks, and crop frames use other ids. */
+.h2-canvas-theme .tl-shape[data-shape-id^="shape:page-"] {
+  box-shadow: 0 0 0 calc(1px * var(--tl-scale)) color-mix(in srgb, var(--app-text) 40%, transparent);
+}

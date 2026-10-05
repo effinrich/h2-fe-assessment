@@ -82,7 +82,14 @@ export const Error: Story = {
 export const Ready: Story = {
   // A long filename so the truncated label is what the story captures.
   args: { filename: "sample-annotated-report-2026-q3.pdf", onOpenAnother: fn() },
-  render: (args) => <PdfViewerScreen {...args} document={exampleDocument} />
+  render: (args) => <PdfViewerScreen {...args} document={exampleDocument} />,
+  play: async ({ canvasElement }) => {
+    await waitFor(() =>
+      expect(canvasElement.querySelector("[data-shape-id='shape:page-1']")).not.toBeNull()
+    )
+    const page = canvasElement.querySelector<HTMLElement>("[data-shape-id='shape:page-1']")!
+    await expect(getComputedStyle(page).boxShadow).not.toBe("none")
+  }
 }
 
 let landRaster = () => {}
