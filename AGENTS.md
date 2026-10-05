@@ -36,6 +36,11 @@ made during this project's setup.
 - **Tags are mandatory** on every project, and `@nx/enforce-module-boundaries`
   in the root `.oxlintrc.json` enforces them. An illegal import fails lint
   before tests run.
+- **Small components, enforced.** Every `*.tsx`: one component per file,
+  ≤ 150 lines, ≤ 60 lines per function (blanks and comments not counted);
+  stories and specs ≤ 400 lines. Split a file that grows; never add to the
+  exception list in `.oxlintrc.json`, which only shrinks. Override globs
+  there resolve per project, so write them as `**/<folder>/<file>.tsx`.
 - `nx affected` over `--all` on any branch. `bun run gate` =
   `nx affected -t lint,format,typecheck,test,build,build-storybook,test-storybook`.
 - **`test-storybook`** runs every story (render, play function, axe a11y at

@@ -50,6 +50,13 @@ command-code agent wasted a large amount of time.
 tag. This converts "the agent ignored the Nx rules" from a review comment into a
 failing check whose message the model can act on.
 
+**Component size gate.** Root `.oxlintrc.json`, every `*.tsx` file: one React
+component per file (`react/no-multi-comp`), at most 150 lines per file and 60
+per function, blank lines and comments not counted. Stories and specs may hold
+helper components and run to 400 lines, with no per-function limit. A file
+that is too long gets split, not excepted: the exception list in that config
+holds only files waiting for their refactor, and shrinks to empty.
+
 ## Exclusions, on purpose
 
 - **three.js** — considered and declined. ADR 0003.
