@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { expect, fn } from "storybook/test"
+import { expect, fireEvent, fn } from "storybook/test"
 
 import { HomeScreen } from "./home-screen"
 
@@ -10,7 +10,8 @@ import { HomeScreen } from "./home-screen"
 const meta = {
   title: "Routes/Home",
   component: HomeScreen,
-  args: { onFileChange: fn(), onUseExample: fn() }
+  parameters: { layout: "fullscreen" },
+  args: { onFileChange: fn(), onDropFile: fn(), onRejectDrop: fn(), onUseExample: fn() }
 } satisfies Meta<typeof HomeScreen>
 
 export default meta
@@ -21,6 +22,10 @@ export const Idle: Story = {
     const openPdf = canvas.getByRole("button", { name: "Open PDF" })
     await expect(openPdf).toBeEnabled()
     await expect(canvas.getByRole("button", { name: "Use an example" })).toBeEnabled()
+    await expect(canvas.getByRole("banner")).toBeVisible()
+    await expect(canvas.getByText(/Pin shapes together/)).toBeVisible()
+    await expect(canvas.getByText(/Export an area/)).toBeVisible()
+    await expect(canvas.getByText(/Draw, write, highlight/)).toBeVisible()
 
     const input = canvasElement.querySelector('input[type="file"]')
     if (!(input instanceof HTMLInputElement)) {
@@ -37,5 +42,22 @@ export const Busy: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByRole("button", { name: "Opening" })).toBeDisabled()
     await expect(canvas.getByRole("button", { name: "Use an example" })).toBeDisabled()
+  }
+}
+
+// A real DataTransfer through the browser's drag events, not a stubbed object.
+export const DropAPdf: Story = {
+  play: async ({ args, canvas }) => {
+    const target = canvas.getByRole("main")
+    const file = new File(["%PDF-1.4"], "dropped.pdf", { type: "application/pdf" })
+    const dataTransfer = new DataTransfer()
+    dataTransfer.items.add(file)
+
+    await fireEvent.dragOver(target, { dataTransfer })
+    await expect(await canvas.findByText("Drop to open")).toBeVisible()
+
+    await fireEvent.drop(target, { dataTransfer })
+    await expect(args.onDropFile).toHaveBeenCalledWith(file)
+    await expect(canvas.queryByText("Drop to open")).toBeNull()
   }
 }
