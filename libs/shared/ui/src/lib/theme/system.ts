@@ -32,7 +32,7 @@ const config = defineConfig({
           subtle: { value: { _light: "{colors.brand.100}", _dark: "{colors.brand.900}" } },
           muted: { value: { _light: "{colors.brand.200}", _dark: "{colors.brand.800}" } },
           emphasized: { value: { _light: "{colors.brand.300}", _dark: "{colors.brand.700}" } },
-          solid: { value: { _light: "{colors.brand.600}", _dark: "{colors.brand.500}" } },
+          solid: { value: { _light: "{colors.brand.600}", _dark: "{colors.brand.600}" } },
           focusRing: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.400}" } },
           border: { value: { _light: "{colors.brand.500}", _dark: "{colors.brand.400}" } }
         },
