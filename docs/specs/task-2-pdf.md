@@ -110,7 +110,7 @@ and committed failing before the code exists.
       through tldraw's asset pipeline: the viewer owns PDF rasterisation
       (ADR 0012). — `home-screen.spec.tsx` › "opens a dropped PDF", "refuses
       a dropped file that is not a single PDF"; `home-screen.stories.tsx` ›
-      `DropAPdf` (native drag events, real `DataTransfer`). Red `1bedc64`.
+      `DropAPdf` (native drag events, real `DataTransfer`). Red `058037a`.
 - [x] **Choosing a file places its first page as a locked image shape.** —
       placement: `pdf-viewer.spec.tsx` › `placePagesOnCanvas` › "starts with
       the first page…". Real rasterisation needs a real canvas, so pixels are
