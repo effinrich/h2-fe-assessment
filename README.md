@@ -2,6 +2,8 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
+[Reviewer walkthrough](docs/reviewer.md).
+
 ## Run
 
 ```sh
