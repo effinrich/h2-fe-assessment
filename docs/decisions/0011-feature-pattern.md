@@ -83,3 +83,19 @@ behaviour to the viewer's canvas and have no screen of their own.
   by web-ui's feature glob) and mount a plain `<Tldraw>` with their
   extension. The viewer's generic seam is covered in pdf-viewer's specs and
   stories with a stand-in extension.
+
+## Amendment (2026-10-04): a feature is a capability, a route is a host
+
+A feature is a capability you can name and ship on its own. A route is a host.
+One page may compose many features. This narrows the decision above, which
+had paired each route with a feature lib.
+
+- Pin and camera stay sibling feature libs with no route. They still do not
+  import pdf-viewer, and pdf-viewer does not import them. The viewer route
+  composes them.
+- Home is not a feature. Open PDF, the example document, color mode, and the
+  empty-state copy are one open-document page. That page is the `/` route in
+  `apps/web` (`src/app/routes/home`). It is not folded into pdf-viewer.
+  `@h2-fe/home` leaves the project graph.
+- pdf-viewer stays a feature: displaying a document on the canvas is a
+  capability, and the viewer route hosts it.

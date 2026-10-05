@@ -65,10 +65,6 @@
       "name": "@h2-fe/camera",
       "version": "0.0.1",
     },
-    "libs/web/features/home": {
-      "name": "@h2-fe/home",
-      "version": "0.0.1",
-    },
     "libs/web/features/pdf-viewer": {
       "name": "@h2-fe/pdf-viewer",
       "version": "0.0.1",
@@ -414,8 +410,6 @@
     "@floating-ui/utils": ["@floating-ui/utils@0.2.12", "", {}, "sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww=="],
 
     "@h2-fe/camera": ["@h2-fe/camera@workspace:libs/web/features/camera"],
-
-    "@h2-fe/home": ["@h2-fe/home@workspace:libs/web/features/home"],
 
     "@h2-fe/pdf-viewer": ["@h2-fe/pdf-viewer@workspace:libs/web/features/pdf-viewer"],
 

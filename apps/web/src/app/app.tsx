@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom"
 
 import { Center, Spinner } from "@h2-fe/ui"
 
-import HomeRoute from "./routes/home-route"
+import HomeRoute from "./routes/home/home"
 
 // The route table is the whole app: home first, the document canvas lazily so
 // tldraw, pdfjs and its css leave the initial bundle. Each route wrapper owns

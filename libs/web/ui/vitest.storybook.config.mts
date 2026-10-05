@@ -32,13 +32,18 @@ export default mergeConfig(
       },
       coverage: {
         provider: "v8",
-        // The web stage also hosts the feature screens' stories, so feature
-        // components are listed even when unrendered; feature .ts modules count
-        // only once a story loads them. Vitest cannot transform a never-loaded
-        // file outside this root ("Failed to parse"), and feature logic is the
-        // feature libs' unit specs' job anyway.
+        // The web stage also hosts the feature screens' stories and the home
+        // route's screen, so those components are listed even when unrendered;
+        // .ts modules count only once a story loads them. Vitest cannot
+        // transform a never-loaded file outside this root ("Failed to parse"),
+        // and feature logic is the feature libs' unit specs' job anyway. The
+        // home screen is the one app file this stage loads.
         allowExternal: true,
-        include: ["src/**/*.{ts,tsx}", "**/libs/web/features/*/src/**/*.tsx"],
+        include: [
+          "src/**/*.{ts,tsx}",
+          "**/libs/web/features/*/src/**/*.tsx",
+          "**/apps/web/src/app/routes/home/home-screen/home-screen.tsx"
+        ],
         exclude: ["**/libs/shared/**", "**/*.stories.tsx", "**/*.spec.tsx", "**/*.d.ts"],
         reporter: ["text-summary", "lcov", "html"],
         reportsDirectory: "../../../coverage/libs/web/ui"

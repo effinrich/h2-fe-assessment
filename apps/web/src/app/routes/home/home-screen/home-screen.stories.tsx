@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 
 import { expect, fn } from "storybook/test"
 
-import { HomeScreen } from "./home"
+import { HomeScreen } from "./home-screen"
 
-// Storybook is the test surface for screen-level compositions; the play
-// function here carries criterion 1 of docs/specs/task-2-pdf.md end-to-end in
-// the browser, and Chromatic diffs the visual surface.
+// Storybook is the test surface for this route's screen; the play function
+// here carries criterion 1 of docs/specs/task-2-pdf.md end-to-end in the
+// browser, and Chromatic diffs the visual surface.
 const meta = {
-  title: "Features/Home",
+  title: "Routes/Home",
   component: HomeScreen,
   args: { onFileChange: fn(), onUseExample: fn() }
 } satisfies Meta<typeof HomeScreen>

@@ -96,8 +96,9 @@ Falsifiable, each with the test that proves it. Test-first: the test is written
 and committed failing before the code exists.
 
 - [x] **Given no document, the canvas offers "Open PDF" and "Use an example".**
-      — `libs/web/features/home/src/lib/home.spec.tsx` (red `edf477a`, green
-      `ac2b31d`); the interface moved to the routed home page — see ADR 0011.
+      — `apps/web/src/app/routes/home/home-screen/home-screen.spec.tsx` (red
+      `edf477a`, green `ac2b31d`); the screen lives on the home route in the
+      app — see ADR 0011.
 - [x] **Choosing a file places its first page as a locked image shape.** —
       placement: `pdf-viewer.spec.tsx` › `placePagesOnCanvas` › "starts with
       the first page…". Real rasterisation needs a real canvas, so pixels are

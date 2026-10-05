@@ -1,8 +1,10 @@
 import { useState, type ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { createExamplePdf, HomeScreen } from "@h2-fe/home"
 import { toaster } from "@h2-fe/ui"
+
+import { HomeScreen } from "./home-screen/home-screen"
+import { createExamplePdf } from "./utils"
 
 // The route that owns the file handoff. It holds the busy flag for the
 // example-generation moment and navigates with the file in tow; the screen

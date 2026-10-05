@@ -48,7 +48,8 @@ made during this project's setup.
   `bunx playwright install chromium` once.
 - **Feature stories and `affected`.** web-ui doesn't import the features (and
   `implicitDependencies` would cycle), so its `test-storybook` /
-  `build-storybook` inputs list `{workspaceRoot}/libs/web/features/*/src/**/*`.
+  `build-storybook` inputs list `{workspaceRoot}/libs/web/features/*/src/**/*`
+  and the home route's stories (`apps/web/src/app/routes/home/**`).
   Nx treats `{workspaceRoot}` inputs as implicit dependencies: a feature-only
   change marks web-ui affected and busts both caches. Keep those inputs.
 - **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
@@ -89,7 +90,9 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
   (`src/lib/primitives/`); compound components get thin wrappers, one folder each.
 - `libs/<scope>/features/<name>` — feature libs; inside them, the
   feature-based-architecture skill governs the file layout.
-- `apps/web` — a thin shell. Logic belongs in libs.
+- `apps/web` — route hosts. A page may compose many features. Home is the
+  `/` route here (`src/app/routes/home`), not a feature lib. Other logic
+  belongs in libs.
 
 ## Rules that do not bend
 
@@ -121,8 +124,10 @@ Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
 
 ## Learned Workspace Facts
 
-- Pin, camera, and pdf-viewer must not import each other; only `apps/web`
-  (the viewer route) composes canvas extensions (ADR 0011 amendment).
+- A feature is a capability; a route is a host. Home is the `/` route in
+  `apps/web`, not a feature lib. Pin, camera, and pdf-viewer must not import
+  each other; only `apps/web` (the viewer route) composes canvas extensions
+  (ADR 0011).
 - Locked tldraw shapes: `updateShapes` / `deleteShapes` silently no-op unless
   `editor.run(..., { ignoreShapeLock: true })`.
 - Never update `src` in-place on a tldraw image asset a shape is already

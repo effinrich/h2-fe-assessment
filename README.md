@@ -46,7 +46,7 @@ Specs: [docs/specs](docs/specs). Decisions: [docs/decisions](docs/decisions).
 
 Nx 23 + bun · Vite · React 19 · TypeScript strict · Chakra UI v3 · TanStack Query · tldraw 5.5 · Storybook 10 · Vitest
 
-`apps/web` is a thin shell. Feature libs live under `libs/web/features/*`. The design system is `libs/shared/ui` (`@h2-fe/ui`). Pin, camera, and the PDF viewer do not import each other; the viewer route composes them.
+`apps/web` hosts routes. Home is the `/` route in the app (`src/app/routes/home`), not a feature lib. Feature libs live under `libs/web/features/*`. The design system is `libs/shared/ui` (`@h2-fe/ui`). Pin, camera, and the PDF viewer do not import each other; the viewer route composes pin and camera.
 
 ## Check
 

@@ -5,7 +5,7 @@ import { UiProvider } from "@h2-fe/ui"
 
 import type { HomeScreenProps } from "./types"
 
-import { HomeScreen } from "./home"
+import { HomeScreen } from "./home-screen"
 
 // Spec: docs/specs/task-2-pdf.md criterion 1 —
 // "Given no document, the canvas offers 'Open PDF' and 'Use an example'."
