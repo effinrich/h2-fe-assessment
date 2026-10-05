@@ -331,6 +331,27 @@ function cssColorAlpha(color: string) {
   return 1
 }
 
+// Spec: docs/specs/task-2-pdf.md — our chrome is one row in the page flow and
+// tldraw's container starts below it, so no tldraw corner sits under our UI.
+export const ChromeSitsAboveCanvas: Story = {
+  args: { filename: "example.pdf", onOpenAnother: fn() },
+  parameters: { layout: "fullscreen" },
+  render: (args) => <PdfViewerScreen {...args} document={exampleDocument} />,
+  play: async ({ canvas, canvasElement }) => {
+    const header = canvas.getByRole("banner")
+    await waitFor(() => expect(canvasElement.querySelector(".tlui-menu-zone")).not.toBeNull())
+    const container = canvasElement.querySelector(".tl-container")!
+    const menu = canvasElement.querySelector(".tlui-menu-zone")!
+
+    await expect(header.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      container.getBoundingClientRect().top
+    )
+    await expect(boxesOverlap(header.getBoundingClientRect(), menu.getBoundingClientRect())).toBe(
+      false
+    )
+  }
+}
+
 // Spec: docs/specs/task-2-pdf.md — Open another document stays off tldraw's
 // style panel, and the panel fill is opaque. Only a real browser can prove
 // stacking and computed background alpha; the jsdom stub never mounts tldraw UI.

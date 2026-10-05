@@ -6,11 +6,23 @@ import { chakra } from "@h2-fe/ui"
 // (tldraw-theme.css), not by wrapping stock chrome in chakra().
 export const ViewerRoot = chakra("div", {
   base: {
+    display: "flex",
+    flexDirection: "column",
     h: "100dvh",
     inset: "0",
     minW: "0",
     position: "absolute",
     w: "full"
+  }
+})
+
+// Everything positioned in viewport coordinates (tldraw, covers, page
+// overlays) is relative to this box, below the header.
+export const ViewerCanvas = chakra("div", {
+  base: {
+    flex: "1",
+    minH: "0",
+    position: "relative"
   }
 })
 
