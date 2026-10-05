@@ -67,15 +67,46 @@ flowchart LR
 
 After the Chromatic invite, open the project from the dashboard. This repo does not record a public library URL. `chromatic.config.json` names the project as `Project:6abe484afd9c0c336f0e71fb`.
 
-## Prerequisites
+## Getting started
 
-Install [Bun](https://bun.sh). From the repo root:
+### Requirements
+
+- [Bun](https://bun.sh) — the package manager and script runner. CI uses the latest release.
+- [Node.js](https://nodejs.org) 24 — the Nx CLI is a Node script (`#!/usr/bin/env node`), so `bunx nx` still needs Node on your `PATH`. CI pins 24.20.0.
+- Git.
+
+Nx does **not** need a global install. It is a dev dependency (Nx 23.2.1), and every command below runs it through `bunx nx`.
+
+### Install
 
 ```sh
+git clone https://github.com/effinrich/h2-fe-assessment.git
+cd h2-fe-assessment
 bun install
 ```
 
-Dependencies live only in the root `package.json`. Do not install from an app or library folder.
+Run `bun install` from the repo root only. Every dependency lives in the root `package.json`. Do not install from an app or library folder.
+
+`bun install` also installs the [lefthook](https://lefthook.dev) git hooks through lefthook's postinstall. Pre-commit lints, formats and typechecks the files you changed. Pre-push runs `bun run gate`. `LEFTHOOK=0 git commit …` skips them for one command.
+
+The Storybook play tests run in headless Chromium. Install it once:
+
+```sh
+bunx playwright install chromium
+```
+
+### Use Nx
+
+```sh
+bunx nx --version                  # local Nx; "Global: Not found" is expected
+bunx nx show projects              # @h2-fe/web, @h2-fe/pdf-viewer, @h2-fe/pin, @h2-fe/camera, @h2-fe/web-ui, shared-ui
+bunx nx show project @h2-fe/pin    # targets, mostly inferred by plugins, so project.json is not the full list
+bunx nx graph                      # the project graph in a browser
+bunx nx run @h2-fe/pin:test        # one target on one project (short form: bunx nx test @h2-fe/pin)
+bunx nx affected -t lint,test      # only projects changed since the base branch (main)
+```
+
+`@h2-fe/source` is the repo root. It has no targets. Nx Cloud is not connected, so the task cache is local: Nx's default `.nx/cache`, which `nx.json` does not override. `bunx nx reset` clears it.
 
 ## Run the app
 
@@ -149,3 +180,13 @@ bun run gate
 ```
 
 That is `nx affected` for lint, format, typecheck, test, build, Storybook build, and Storybook play tests.
+
+Pieces of it, from the repo root:
+
+```sh
+bun run test                                  # every Vitest (jsdom) suite
+bun run lint                                  # oxlint, type-aware, every project
+bun run format                                # oxfmt check
+bunx nx run @h2-fe/web-ui:test-storybook      # app and feature stories in Chromium
+bunx nx run shared-ui:test-storybook          # design-system stories in Chromium
+```
