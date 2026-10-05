@@ -21,7 +21,7 @@ On `/`, choose **Open PDF** or **Use an example**. The example opens `/viewer` w
 
 **Previous** / **Next** and the page field move between pages. Pages you cannot see are not redrawn.
 
-Draw a rectangle. **Open another document** warns before discarding marks. Cancel keeps the canvas.
+Draw a rectangle. **Open another** (top right) warns before discarding marks. Cancel keeps the canvas.
 
 ## Pin
 
