@@ -200,6 +200,35 @@ export function sameOverlays(a: readonly PageOverlay[], b: readonly PageOverlay[
   )
 }
 
+/** Viewport-space cards over the on-screen pages that are still rendering or failed. */
+export function pageOverlays(
+  editor: Editor,
+  pages: PdfPage[],
+  onScreen: readonly number[],
+  renderingPages: ReadonlySet<number>,
+  failedPages: ReadonlySet<number>
+): PageOverlay[] {
+  const zoom = editor.getZoomLevel()
+  return onScreen.flatMap((pageNumber): PageOverlay[] => {
+    if (!renderingPages.has(pageNumber) && !failedPages.has(pageNumber)) return []
+    const pageBox = pageBounds(pages, pageNumber)
+    if (!pageBox) return []
+    const topLeft = editor.pageToViewport({ x: pageBox.x, y: pageBox.y })
+    return [
+      {
+        page: pageNumber,
+        state: failedPages.has(pageNumber) ? "error" : "loading",
+        style: {
+          left: topLeft.x,
+          top: topLeft.y,
+          width: pageBox.w * zoom,
+          height: pageBox.h * zoom
+        }
+      }
+    ]
+  })
+}
+
 export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {
   if (pages.length === 0) return
 
