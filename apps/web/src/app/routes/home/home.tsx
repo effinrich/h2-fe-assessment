@@ -6,6 +6,14 @@ import { toaster } from "@h2-fe/ui"
 import { HomeScreen } from "./home-screen/home-screen"
 import { createExamplePdf } from "./utils"
 
+function onRejectDrop() {
+  toaster.create({
+    title: "Only a PDF can be opened here.",
+    description: "Drop a single .pdf file, or choose one with Open PDF.",
+    type: "error"
+  })
+}
+
 // The route that owns the file handoff. It holds the busy flag for the
 // example-generation moment and navigates with the file in tow; the screen
 // itself stays dumb.
@@ -38,5 +46,13 @@ export default function HomeRoute() {
     }
   }
 
-  return <HomeScreen isBusy={isBusy} onFileChange={handlePick} onUseExample={onUseExample} />
+  return (
+    <HomeScreen
+      isBusy={isBusy}
+      onDropFile={openViewerWith}
+      onFileChange={handlePick}
+      onRejectDrop={onRejectDrop}
+      onUseExample={onUseExample}
+    />
+  )
 }
