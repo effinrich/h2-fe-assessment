@@ -15,11 +15,11 @@ Open [http://localhost:4200/](http://localhost:4200/).
 
 ## Open a document
 
-On `/`, choose **Open PDF** or **Use an example**. The example opens `/viewer` with page 1 on the canvas.
+On `/`, choose **Open PDF** or **Use an example**, or drop a PDF anywhere on the page. Anything that isn't a single PDF is refused with a toast. The example opens `/viewer` with page 1 on the canvas.
 
 ## The canvas
 
-**Previous** / **Next** and the page field move between pages. Pages you cannot see are not redrawn.
+The ‹ / › arrows and the page field in the header move between pages. Pages you cannot see are not redrawn.
 
 Draw a rectangle. **Open another** (top right) warns before discarding marks. Cancel keeps the canvas.
 
