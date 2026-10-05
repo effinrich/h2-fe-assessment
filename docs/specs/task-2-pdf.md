@@ -158,12 +158,11 @@ and committed failing before the code exists.
 - [x] **Filename truncation, page controls, loading and error feedback remain
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** —
-      `viewer-top-bar.stories.tsx` › `NarrowKeyboard` (390px); tldraw tools
-      stay in the canvas toolbar, not the top bar. Below `md` the brand
-      yields to the file name and "Open another document" shows its icon
-      only (the accessible name is unchanged). The `md` breakpoint is
-      viewport-based, so a 390px story box cannot exercise it; checked by
-      hand with a 390×844 viewport screenshot.
+      `viewer-top-bar.stories.tsx` › `NarrowKeyboard` and
+      `app-header.stories.tsx` › `Phone`, both at a 390×844 Storybook
+      viewport; tldraw tools stay in the canvas toolbar, not the top bar.
+      Below `md` the brand yields to the file name and "Open another
+      document" shows its icon only (the accessible name is unchanged).
 - [x] **Our chrome is one header row in the page flow, above the canvas.
       tldraw's container starts below it, so tldraw's menu, page panel and
       style panel keep their stock corners and nothing of ours paints on
