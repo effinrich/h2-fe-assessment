@@ -63,6 +63,44 @@
       "rules": {
         "import/default": "off"
       }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "rules": {
+        "react/no-multi-comp": "error",
+        "max-lines": ["error", { "max": 150, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": [
+          "error",
+          { "max": 60, "skipBlankLines": true, "skipComments": true }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.stories.tsx", "**/*.spec.tsx", "**/*.test.tsx"],
+      "rules": {
+        "react/no-multi-comp": "off",
+        "max-lines": ["error", { "max": 400, "skipBlankLines": true, "skipComments": true }],
+        "max-lines-per-function": "off"
+      }
+    },
+    {
+      "files": [
+        "**/routes/home/home-screen/home-screen.tsx",
+        "**/routes/pdf-viewer-route.tsx",
+        "**/viewer-top-bar/viewer-top-bar.tsx",
+        "**/src/lib/pdf-viewer.tsx",
+        "**/src/lib/pdf-viewer.spec.tsx",
+        "**/partials/canvas-components.tsx",
+        "**/src/lib/camera.stories.tsx",
+        "**/crop-frame/crop-frame-outline.tsx",
+        "**/crop-frame-toolbar/crop-frame-toolbar.tsx",
+        "**/partials/pin-view.tsx"
+      ],
+      "rules": {
+        "react/no-multi-comp": "off",
+        "max-lines": "off",
+        "max-lines-per-function": "off"
+      }
     }
   ],
   "ignorePatterns": [
