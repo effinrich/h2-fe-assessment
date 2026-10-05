@@ -11,7 +11,13 @@ import type { CanvasExtension, PageOverlay, PdfViewerScreenProps, RenderedPdfPag
 
 import { CANVAS_THEME_CLASS } from "./consts"
 import { createCanvasComponents } from "./partials/canvas-components"
-import { PageOverlayCard, ViewerCover, ViewerPanel, ViewerRoot } from "./partials/viewer-chrome"
+import {
+  PageOverlayCard,
+  ViewerCanvas,
+  ViewerCover,
+  ViewerPanel,
+  ViewerRoot
+} from "./partials/viewer-chrome"
 import {
   activePageNumber,
   hasUserMarks,
@@ -209,62 +215,6 @@ export function PdfViewerScreen({
 
   return (
     <ViewerRoot className={CANVAS_THEME_CLASS} data-canvas-theme="" data-color-mode={colorMode}>
-      <Tldraw
-        bindingUtils={merged.bindingUtils}
-        colorScheme={initialColorScheme}
-        components={components}
-        onMount={handleMount}
-        overlayUtils={merged.overlayUtils}
-        overrides={merged.overrides}
-        shapeUtils={merged.shapeUtils}
-        tools={merged.tools}
-      />
-
-      {isLoading ? (
-        <ViewerCover aria-label="Opening the document" as="output">
-          <Spinner data-testid="viewer-loading" size="lg" />
-        </ViewerCover>
-      ) : isError ? (
-        <ViewerCover>
-          <ViewerPanel role="alert">
-            <Stack gap="6">
-              <Stack gap="2">
-                <Heading size="lg">The document didn't open</Heading>
-                <Text>The file may be unreadable or in an unsupported PDF dialect.</Text>
-              </Stack>
-              <Button variant="solid" w="full" onClick={onRetry}>
-                Try again
-              </Button>
-            </Stack>
-          </ViewerPanel>
-        </ViewerCover>
-      ) : null}
-
-      {overlays.map((overlay) => (
-        <PageOverlayCard
-          aria-label={`Page ${overlay.page} ${overlay.state === "error" ? "did not load" : "is loading"}`}
-          css={{
-            left: `${overlay.style.left}px`,
-            top: `${overlay.style.top}px`,
-            width: `${overlay.style.width}px`,
-            height: `${overlay.style.height}px`
-          }}
-          key={overlay.page}
-          role={overlay.state === "error" ? "alert" : "status"}
-        >
-          {overlay.state === "loading" ? (
-            <Spinner aria-label={`Loading page ${overlay.page}`} />
-          ) : (
-            <Stack gap="2" pointerEvents="auto" textAlign="center">
-              <Text>Page {overlay.page} couldn't load.</Text>
-              <Button data-page={overlay.page} onClick={handleRetryPage} size="sm">
-                Retry page {overlay.page}
-              </Button>
-            </Stack>
-          )}
-        </PageOverlayCard>
-      ))}
-
       <ViewerTopBar
         filename={filename}
         onOpenAnother={onOpenAnother}
@@ -272,6 +222,63 @@ export function PdfViewerScreen({
         page={page}
         totalPages={document?.pages.length ?? 0}
       />
+      <ViewerCanvas>
+        <Tldraw
+          bindingUtils={merged.bindingUtils}
+          colorScheme={initialColorScheme}
+          components={components}
+          onMount={handleMount}
+          overlayUtils={merged.overlayUtils}
+          overrides={merged.overrides}
+          shapeUtils={merged.shapeUtils}
+          tools={merged.tools}
+        />
+
+        {isLoading ? (
+          <ViewerCover aria-label="Opening the document" as="output">
+            <Spinner data-testid="viewer-loading" size="lg" />
+          </ViewerCover>
+        ) : isError ? (
+          <ViewerCover>
+            <ViewerPanel role="alert">
+              <Stack gap="6">
+                <Stack gap="2">
+                  <Heading size="lg">The document didn't open</Heading>
+                  <Text>The file may be unreadable or in an unsupported PDF dialect.</Text>
+                </Stack>
+                <Button variant="solid" w="full" onClick={onRetry}>
+                  Try again
+                </Button>
+              </Stack>
+            </ViewerPanel>
+          </ViewerCover>
+        ) : null}
+
+        {overlays.map((overlay) => (
+          <PageOverlayCard
+            aria-label={`Page ${overlay.page} ${overlay.state === "error" ? "did not load" : "is loading"}`}
+            css={{
+              left: `${overlay.style.left}px`,
+              top: `${overlay.style.top}px`,
+              width: `${overlay.style.width}px`,
+              height: `${overlay.style.height}px`
+            }}
+            key={overlay.page}
+            role={overlay.state === "error" ? "alert" : "status"}
+          >
+            {overlay.state === "loading" ? (
+              <Spinner aria-label={`Loading page ${overlay.page}`} />
+            ) : (
+              <Stack gap="2" pointerEvents="auto" textAlign="center">
+                <Text>Page {overlay.page} couldn't load.</Text>
+                <Button data-page={overlay.page} onClick={handleRetryPage} size="sm">
+                  Retry page {overlay.page}
+                </Button>
+              </Stack>
+            )}
+          </PageOverlayCard>
+        ))}
+      </ViewerCanvas>
     </ViewerRoot>
   )
 }

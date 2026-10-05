@@ -159,19 +159,24 @@ and committed failing before the code exists.
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** —
       `viewer-top-bar.stories.tsx` › `NarrowKeyboard` (390px); tldraw tools
-      stay in the canvas toolbar, not the top bar.
-- [ ] **Our chrome is one header row in the page flow, above the canvas.
+      stay in the canvas toolbar, not the top bar. Below `md` the brand
+      yields to the file name and "Open another document" shows its icon
+      only (the accessible name is unchanged). The `md` breakpoint is
+      viewport-based, so a 390px story box cannot exercise it; checked by
+      hand with a 390×844 viewport screenshot.
+- [x] **Our chrome is one header row in the page flow, above the canvas.
       tldraw's container starts below it, so tldraw's menu, page panel and
       style panel keep their stock corners and nothing of ours paints on
       them.** Before: a floating pill at z-index 400 covered tldraw's
       top-left menu, and the style panel was pushed down by a 5rem padding
       hack. — `pdf-viewer.stories.tsx` › `ChromeSitsAboveCanvas` (real
-      tldraw).
+      tldraw; red `2ec3276`).
 - [x] **Our top-bar chrome and tldraw's style panel do not share a pixel slot.
       "Open another document" stays fully readable and clickable; the style
       panel fill is opaque.** jsdom cannot prove stacking or computed panel
       alpha. — `pdf-viewer.stories.tsx` › `ChromeClearsStylePanel` (real
-      tldraw; red before the offset). Tooltip placement over the opacity
+      tldraw; red before the offset, now held by the in-flow header above).
+      Tooltip placement over the opacity
       slider is stock tldraw. `--chakra-colors-bg-panel` is already opaque
       (`#FFFFFF` / `gray.950`); the show-through was the outline button on
       the panel, not a translucent token.

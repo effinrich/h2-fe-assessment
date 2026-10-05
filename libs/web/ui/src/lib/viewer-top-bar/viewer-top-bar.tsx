@@ -1,6 +1,9 @@
+import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react"
 import { useRef } from "react"
 
-import { Button, ColorModeButton, Field, Flex, Input, Text } from "@h2-fe/ui"
+import { Button, chakra, ColorModeButton, Field, Flex, IconButton, Input, Text } from "@h2-fe/ui"
+
+import { AppHeader } from "../app-header/app-header"
 
 interface ViewerTopBarProps {
   filename?: string
@@ -35,96 +38,92 @@ export function ViewerTopBar({
   }
 
   return (
-    <Flex
-      align="start"
-      gap="2"
-      flexWrap="wrap"
-      left="0"
-      p="4"
-      pointerEvents="none"
-      position="absolute"
-      right="0"
-      top="0"
-      zIndex={400}
-    >
-      <Flex
-        align="center"
-        bg="bg.panel"
-        borderRadius="md"
-        boxShadow="md"
-        color="fg"
-        flexWrap="wrap"
-        gap="2"
-        maxW="full"
-        p="2"
-        pointerEvents="auto"
-      >
-        <Text
-          fontSize="sm"
-          maxW="36"
-          overflow="hidden"
-          textOverflow="ellipsis"
-          title={filename}
-          whiteSpace="nowrap"
-        >
+    <AppHeader
+      start={
+        <Text color="fg.muted" fontSize="sm" title={filename} truncate>
           {filename ?? "Document"}
         </Text>
-        {totalPages > 0 && (
-          <Flex align="center" gap="1">
-            <Button
-              aria-label="Previous page"
-              disabled={page <= 1}
-              onClick={() => onPageChange(page - 1)}
-              size="sm"
-              variant="outline"
-            >
-              Previous
-            </Button>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault()
-                jump()
-              }}
-            >
-              <Field.Root>
-                <Field.Label srOnly>Page number</Field.Label>
-                <Input
-                  aria-label="Page number"
-                  defaultValue={page}
-                  inputMode="numeric"
-                  key={page}
-                  max={totalPages}
-                  min={1}
-                  onBlur={abandonJump}
-                  ref={pageInput}
-                  size="sm"
-                  textAlign="center"
-                  type="number"
-                  w="14"
-                />
-              </Field.Root>
-            </form>
-            <Text fontSize="sm" whiteSpace="nowrap">
-              of {totalPages}
-            </Text>
-            <Button
-              aria-label="Next page"
-              disabled={page >= totalPages}
-              onClick={() => onPageChange(page + 1)}
-              size="sm"
-              variant="outline"
-            >
-              Next
-            </Button>
-          </Flex>
-        )}
-      </Flex>
-      <Flex flexShrink="0" gap="2" marginLeft="auto" pointerEvents="auto" whiteSpace="nowrap">
-        <ColorModeButton />
-        <Button onClick={onOpenAnother} variant="outline">
-          Open another document
-        </Button>
-      </Flex>
-    </Flex>
+      }
+      end={
+        <>
+          <ColorModeButton />
+          <Button
+            aria-label="Open another document"
+            onClick={onOpenAnother}
+            size="sm"
+            variant="outline"
+          >
+            <FolderOpen />
+            <chakra.span hideBelow="md">Open another</chakra.span>
+          </Button>
+        </>
+      }
+    >
+      {totalPages > 0 && (
+        <Flex
+          align="center"
+          fontFamily="mono"
+          fontSize="sm"
+          fontVariantNumeric="tabular-nums"
+          gap="1"
+        >
+          <IconButton
+            aria-label="Previous page"
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+            size="sm"
+            variant="ghost"
+          >
+            <ChevronLeft />
+          </IconButton>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              jump()
+            }}
+          >
+            <Field.Root>
+              <Field.Label srOnly>Page number</Field.Label>
+              <Input
+                aria-label="Page number"
+                css={{
+                  MozAppearance: "textfield",
+                  "&::-webkit-inner-spin-button, &::-webkit-outer-spin-button": {
+                    appearance: "none",
+                    margin: 0
+                  }
+                }}
+                defaultValue={page}
+                fontFamily="inherit"
+                inputMode="numeric"
+                key={page}
+                max={totalPages}
+                min={1}
+                onBlur={abandonJump}
+                px="1"
+                ref={pageInput}
+                size="sm"
+                textAlign="center"
+                type="number"
+                w="12"
+              />
+            </Field.Root>
+          </form>
+          <Text color="fg.muted" whiteSpace="nowrap">
+            <chakra.span srOnly>of</chakra.span>
+            <span aria-hidden>/</span> {totalPages}
+          </Text>
+          <IconButton
+            aria-label="Next page"
+            disabled={page >= totalPages}
+            onClick={() => onPageChange(page + 1)}
+            size="sm"
+            variant="ghost"
+          >
+            <ChevronRight />
+          </IconButton>
+        </Flex>
+      )}
+    </AppHeader>
   )
 }
