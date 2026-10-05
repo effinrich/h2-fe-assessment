@@ -13,12 +13,12 @@ import {
   CROP_FRAME_TOOLBAR_CLASS,
   CROP_FRAME_TOOLBAR_LABEL
 } from "./consts"
-import { CropFrameShapeUtil } from "./crop-frame-shape-util"
 import { CropFrameToolbar } from "./crop-frame-toolbar/crop-frame-toolbar"
-import { CropMarquee } from "./crop-marquee"
+import { CropFrameShapeUtil } from "./crop-frame/crop-frame-shape-util"
+import { CropMarquee } from "./crop-frame/crop-marquee"
 import { registerCropShortcuts } from "./crop-shortcuts"
 import { withFramelessExports } from "./export-actions"
-import { FirstUseHint } from "./first-use-hint"
+import { FirstUseHint } from "./first-use-hint/first-use-hint"
 import { StylePanelGuard } from "./style-panel-guard"
 
 /** Move keyboard focus to the crop toolbar, if a crop frame is what's selected. */

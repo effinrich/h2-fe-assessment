@@ -10,11 +10,11 @@ import {
 
 import { Box } from "@h2-fe/ui"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
-import { CROP_FRAME } from "./consts"
+import { CROP_FRAME } from "../consts"
+import { exportSizeText } from "../utils/utils"
 import { CropFrameOutline } from "./crop-frame-outline"
-import { exportSizeText } from "./utils"
 
 function CropFrame({ shape }: { shape: CropFrameShape }) {
   const editor = useEditor()

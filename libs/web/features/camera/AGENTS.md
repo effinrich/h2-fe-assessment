@@ -1,6 +1,6 @@
 # `@h2-fe/camera`
 
-Feature at `libs/web/features/camera`. A canvas extension, not a route.
+Feature at `libs/web/features/camera`. A canvas extension, not a route. Files are grouped by concern: `camera.tsx`, the tool, extension wiring, and `camera.stories.tsx` stay in `src/lib/`; each other concern (`utils`, `crop-frame`, `crop-export`, `first-use-hint`, `crop-frame-toolbar`) is its own folder with its spec beside the implementation.
 
 ## Boundaries
 

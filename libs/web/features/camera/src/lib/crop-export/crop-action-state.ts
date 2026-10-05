@@ -1,8 +1,8 @@
 import { atom, type Atom, type Editor } from "tldraw"
 
-import type { CropActionJob, CropActionState } from "./types"
+import type { CropActionJob, CropActionState } from "../types"
 
-import { ACTION_DONE_MS } from "./consts"
+import { ACTION_DONE_MS } from "../consts"
 import { runCropAction, type CropActionOutcome, type CropActionRequest } from "./crop-export"
 
 const IDLE: CropActionState = { busy: null, done: null }

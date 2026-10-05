@@ -1,7 +1,7 @@
 import type { Editor, TLEventInfo, TLShapeId } from "tldraw"
 
 import { CROP_FRAME } from "./consts"
-import { startCropAction } from "./crop-action-state"
+import { startCropAction } from "./crop-export/crop-action-state"
 
 function isTextEntry(element: Element | null): boolean {
   if (!(element instanceof HTMLElement)) return false

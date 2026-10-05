@@ -4,9 +4,9 @@ import { Box, useValue, type Editor, type TLShapeId } from "tldraw"
 import type { CropAction } from "../types"
 
 import { CROP_FRAME, CROP_FRAME_LABEL_ATTR, CROP_FRAME_TOOLBAR_CLASS } from "../consts"
-import { getCropActionState, startCropAction } from "../crop-action-state"
-import { getCropExportPlan } from "../crop-export"
-import { cropToolbarAnchor } from "../utils"
+import { getCropActionState, startCropAction } from "../crop-export/crop-action-state"
+import { getCropExportPlan } from "../crop-export/crop-export"
+import { cropToolbarAnchor } from "../utils/utils"
 
 /** The crop frame whose actions to show: the sole selection, while idle. */
 export function useCropFrameToolbarTarget(editor: Editor): TLShapeId | null {

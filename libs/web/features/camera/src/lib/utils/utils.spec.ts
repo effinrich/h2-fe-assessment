@@ -1,9 +1,9 @@
 import { createShapeId, getIndexAbove, type IndexKey } from "tldraw"
 import { describe, expect, it } from "vitest"
 
-import type { ExportCandidate } from "./types"
+import type { ExportCandidate } from "../types"
 
-import { CROP_FRAME, EXPORT_EDGE_SLOP, MAX_EXPORT_AREA_PX, MAX_EXPORT_SIDE_PX } from "./consts"
+import { CROP_FRAME, EXPORT_EDGE_SLOP, MAX_EXPORT_AREA_PX, MAX_EXPORT_SIDE_PX } from "../consts"
 import {
   buildExportFilename,
   cropToolbarAnchor,

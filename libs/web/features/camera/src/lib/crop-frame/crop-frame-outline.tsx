@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react"
 
 import { Box, Text } from "@h2-fe/ui"
 
-import { CROP_FRAME_LABEL_ATTR, FRAME_CORNER_PX } from "./consts"
+import { CROP_FRAME_LABEL_ATTR, FRAME_CORNER_PX } from "../consts"
 
 /** Path for the four L-shaped corner marks of a `w`×`h` box. */
 function cornerMarksPath(w: number, h: number, length: number): string {

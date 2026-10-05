@@ -199,25 +199,29 @@ bunx nx g @nx/react:lib camera --directory=libs/web/features/camera --tags=scope
 libs/web/features/camera/src/
   index.ts                       barrel: createCameraExtension, getCropFrameBounds, isCropFrameShape, CAMERA_TOOL_ID, public types
   lib/
-    consts.ts                    ids, labels, sizes and limits
-    types.ts                     CropFrameShape (+ TLGlobalShapePropsMap augmentation), CameraExtension(Options), internal types
-    utils.ts                     pure: normaliseBox, isBelowMinSize, frameInsertIndex, cropToolbarAnchor, defaultFrameBox, exportShapeIds, exportPixelRatio, exportPixelSize, buildExportFilename, isCropFrameShape
-    utils.spec.ts                Vitest for the above
-    crop-frame-outline.tsx       the frame's dashed border, corner marks and label, shared by the shape and the marquee
-    crop-frame-shape-util.tsx    BaseBoxShapeUtil<CropFrameShape>
+    camera.tsx                   createCameraExtension(options) → CanvasExtension-shaped object; getCropFrameBounds
+    camera.stories.tsx           the acceptance stories (web Storybook stage)
     camera-tool.ts               StateNode + idle/pointing/dragging children, default-frame drop
-    crop-marquee.tsx             the in-flight box (InFrontOfTheCanvas)
-    first-use-hint.tsx           the once-per-session hint (InFrontOfTheCanvas)
-    style-panel-guard.tsx        hides the style panel for crop-only selections (InFrontOfTheCanvas)
-    crop-export.ts               export plan, exportAs/copyAs, toast reporting
-    crop-action-state.ts         per-editor busy/done state, focus restore
     crop-shortcuts.ts            Enter / Ctrl+C while a frame is selected
     export-actions.ts            tldraw's export/copy actions minus crop frames (overrides.actions)
+    style-panel-guard.tsx        hides the style panel for crop-only selections (InFrontOfTheCanvas)
+    consts.ts                    ids, labels, sizes and limits (shared)
+    types.ts                     CropFrameShape (+ TLGlobalShapePropsMap augmentation), CameraExtension(Options), internal types (shared)
+    utils/
+      utils.ts                   pure: normaliseBox, isBelowMinSize, frameInsertIndex, cropToolbarAnchor, defaultFrameBox, exportShapeIds, exportPixelRatio, exportPixelSize, buildExportFilename, isCropFrameShape
+      utils.spec.ts              Vitest for the above
+    crop-frame/
+      crop-frame-outline.tsx     the frame's dashed border, corner marks and label, shared by the shape and the marquee
+      crop-frame-shape-util.tsx  BaseBoxShapeUtil<CropFrameShape>
+      crop-marquee.tsx           the in-flight box (InFrontOfTheCanvas)
+    crop-export/
+      crop-export.ts             export plan, exportAs/copyAs, toast reporting
+      crop-action-state.ts       per-editor busy/done state, focus restore
+    first-use-hint/
+      first-use-hint.tsx         the once-per-session hint (InFrontOfTheCanvas)
     crop-frame-toolbar/
       crop-frame-toolbar.tsx     TldrawUiContextualToolbar with the three actions (InFrontOfTheCanvas slot)
       hooks.ts                   toolbar target, empty state, placement
-    camera-extension.tsx         createCameraExtension(options) → CanvasExtension-shaped object; getCropFrameBounds
-    camera.stories.tsx           the acceptance stories (web Storybook stage)
 ```
 
 ### How it plugs into the existing editor
@@ -451,7 +455,7 @@ editor from `tleditors.getMounted()`. They spy on `editor.toImage` (`spyOn` from
 - [x] **`CropFrameBoundsIgnoreUnrelatedChanges`** — the same `react()` does not re-run when a
       rectangle moves, and does when the frame then moves. — `camera.stories.tsx`
 
-### Pure helpers — `libs/web/features/camera/src/lib/utils.spec.ts`
+### Pure helpers — `libs/web/features/camera/src/lib/utils/utils.spec.ts`
 
 - [x] `normaliseBox` (all four drag directions); `isBelowMinSize` (zoom-aware, 16 px).
 - [x] `frameInsertIndex` — between the background and the lowest mark; on top with no marks;

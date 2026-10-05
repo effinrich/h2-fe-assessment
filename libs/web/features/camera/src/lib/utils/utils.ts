@@ -1,6 +1,6 @@
 import { getIndexBetween, type BoxModel, type IndexKey, type TLShapeId, type VecLike } from "tldraw"
 
-import type { CropFrameShape, ExportCandidate, ExportPixelSize, FrameSibling } from "./types"
+import type { CropFrameShape, ExportCandidate, ExportPixelSize, FrameSibling } from "../types"
 
 import {
   CROP_FRAME,
@@ -15,7 +15,7 @@ import {
   MIN_FRAME_SCREEN_PX,
   TOOLBAR_GAP_PX,
   TOOLBAR_MARGIN_PX
-} from "./consts"
+} from "../consts"
 
 /** The axis-aligned box between two drag points, whichever way the drag went. */
 export function normaliseBox(origin: VecLike, current: VecLike): BoxModel {

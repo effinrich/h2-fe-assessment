@@ -24,10 +24,10 @@ import "tldraw/tldraw.css"
 
 import type { CameraExtension, CropFrameShape } from "./types"
 
-import { createCameraExtension, getCropFrameBounds } from "./camera-extension"
+import { createCameraExtension, getCropFrameBounds } from "./camera"
 import { CameraDragging } from "./camera-tool"
 import { CAMERA_TOOL_ID, CROP_FRAME, FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY } from "./consts"
-import { getCropExportPlan } from "./crop-export"
+import { getCropExportPlan } from "./crop-export/crop-export"
 
 const DOCUMENT_NAME = "q3-report.pdf"
 const INSIDE_BACK = createShapeId("inside-back")

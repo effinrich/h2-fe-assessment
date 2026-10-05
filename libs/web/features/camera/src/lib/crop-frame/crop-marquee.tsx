@@ -2,11 +2,11 @@ import { useEditor, useValue } from "tldraw"
 
 import { Box } from "@h2-fe/ui"
 
-import type { CameraDragging } from "./camera-tool"
+import type { CameraDragging } from "../camera-tool"
 
-import { CAMERA_TOOL_ID } from "./consts"
+import { CAMERA_TOOL_ID } from "../consts"
+import { exportSizeText } from "../utils/utils"
 import { CropFrameOutline } from "./crop-frame-outline"
-import { exportSizeText } from "./utils"
 
 const DRAGGING_PATH = `${CAMERA_TOOL_ID}.dragging`
 

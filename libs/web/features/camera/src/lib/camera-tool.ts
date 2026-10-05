@@ -11,8 +11,8 @@ import {
 import type { CropFrameShape } from "./types"
 
 import { CAMERA_TOOL_ID, CROP_FRAME } from "./consts"
-import { claimFirstUseHint } from "./first-use-hint"
-import { defaultFrameBox, frameInsertIndex, isBelowMinSize, normaliseBox } from "./utils"
+import { claimFirstUseHint } from "./first-use-hint/first-use-hint"
+import { defaultFrameBox, frameInsertIndex, isBelowMinSize, normaliseBox } from "./utils/utils"
 
 function cropFrameInsertIndex(editor: Editor) {
   const siblings = editor

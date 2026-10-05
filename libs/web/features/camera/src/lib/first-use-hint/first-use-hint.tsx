@@ -2,9 +2,9 @@ import { useEditor, useValue } from "tldraw"
 
 import { Box, Text } from "@h2-fe/ui"
 
-import type { CameraTool } from "./camera-tool"
+import type { CameraTool } from "../camera-tool"
 
-import { CAMERA_TOOL_ID, FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY } from "./consts"
+import { CAMERA_TOOL_ID, FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY } from "../consts"
 
 /** Whether to show the hint on this tool entry: once per browser session. */
 export function claimFirstUseHint(): boolean {
