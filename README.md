@@ -6,6 +6,62 @@ A PDF annotation canvas: open a document, mark it, pin shapes together, export a
 
 The five-minute product walkthrough is [docs/reviewer.md](docs/reviewer.md).
 
+## Architecture at a glance
+
+Every box is an Nx project, created by a generator and tagged. Arrows are the imports `nx graph` reports. Pin, camera and the PDF viewer are siblings that never import each other; only the app composes them.
+
+```mermaid
+flowchart TB
+  subgraph app["apps/web · scope:web · type:app"]
+    web["@h2-fe/web<br/>routes: / (home, drop a PDF) and /viewer"]
+  end
+  subgraph features["libs/web/features · scope:web · type:feature"]
+    pdf["@h2-fe/pdf-viewer<br/>pages as locked image shapes"]
+    pin["@h2-fe/pin<br/>P: pin shapes together"]
+    camera["@h2-fe/camera<br/>C: export an area"]
+  end
+  subgraph webui["libs/web/ui · scope:web · type:ui"]
+    wui["@h2-fe/web-ui<br/>AppHeader, ViewerTopBar"]
+  end
+  subgraph shared["libs/shared/ui · scope:shared · type:ui"]
+    ui["@h2-fe/ui<br/>Chakra v3 system, tokens, primitives"]
+  end
+  web --> pdf & pin & camera & wui & ui
+  pdf --> wui
+  pdf & pin & camera --> ui
+  wui --> ui
+```
+
+`@nx/enforce-module-boundaries` runs inside oxlint: `scope:shared` may import only `scope:shared`, so the design system can never reach into the app.
+
+### From keystroke to merge
+
+```mermaid
+flowchart LR
+  edit["Edit"] --> commit["pre-commit · lefthook<br/>oxlint --type-aware --fix<br/>oxfmt<br/>nx affected typecheck"]
+  commit --> push["pre-push · bun run gate<br/>lint · format · typecheck · test<br/>build · build-storybook · test-storybook"]
+  push --> ci["CI · ci.yml<br/>the same gate on nx affected"]
+  push --> chromatic["chromatic.yml<br/>publish the shared-ui Storybook"]
+```
+
+`test-storybook` runs every story in headless Chromium: render, play function, and axe accessibility checks at error level, including stories pinned to a 390×844 phone viewport. Every GitHub Action is pinned to a commit SHA.
+
+### Decisions
+
+| Decision                                                                | Why                                                                                            | Record                                                             |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Nx monorepo, libraries over folders, generators only                    | A queryable project graph; `nx affected` runs only what changed; tags are the architecture map | [0001](docs/decisions/0001-workspace-and-package-manager.md)       |
+| Vite + React SPA; TanStack Query only for the PDF fetch and export      | No SSR to pay for; loading, error and retry are real states that stories assert                | [0002](docs/decisions/0002-framework.md)                           |
+| tldraw as the canvas engine                                             | Custom shapes, bindings and export are the transferable work                                   | [0003](docs/decisions/0003-canvas-engine.md)                       |
+| Chakra UI v3 with typed tokens and recipes                              | Replaced Panda + Park UI; a misspelled token is a type error                                   | [0004](docs/decisions/0004-styling-and-primitives.md) (superseded) |
+| Spec first, failing test committed first                                | Each criterion has a test that fails without the change, and the history shows it              | [0005](docs/decisions/0005-sdd-and-tdd.md)                         |
+| Every UI component has a story; its play test is its component test     | Interaction, a11y and Chromatic coverage from one file                                         | [0007](docs/decisions/0007-storybook-scope.md)                     |
+| oxlint (type-aware) + oxfmt, one tool, boundaries included              | Fast enough for a pre-commit hook; no ESLint                                                   | [0008](docs/decisions/0008-lint-split.md)                          |
+| Sibling feature libs; only the app composes them                        | Features ship and test alone                                                                   | [0011](docs/decisions/0011-feature-pattern.md)                     |
+| PDF pages rasterised into locked image shapes, off-screen pages evicted | Memory bounded by the viewport; export works; paging never enters undo                         | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)           |
+| tldraw and Chakra stay two styling systems, bridged by CSS variables    | Chakra for our chrome, tldraw's variables for the canvas; one color mode drives both           | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)          |
+| What was left out, on purpose                                           | Scope stated, not implied                                                                      | [0009](docs/decisions/0009-not-built.md)                           |
+
 ## Access
 
 1. Accept an invite to the GitHub repo [effinrich/h2-fe-assessment](https://github.com/effinrich/h2-fe-assessment).
@@ -72,11 +128,13 @@ This repo uses the first method. `.github/workflows/chromatic.yml` runs `bunx nx
 
 ## What a reviewer should try
 
-1. Open the example from home. Page 1 is on the canvas. **Previous / Next** and the page field move between pages without redrawing the ones you cannot see.
+1. Open the example from home. Page 1 is on the canvas. The **‹ / ›** arrows and the page field in the header move between pages without redrawing the ones you cannot see.
 2. Draw a rectangle. **Open another document** warns before discarding marks. Cancel keeps the canvas.
 3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
 4. Press **C**, drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. An empty frame disables the actions.
 5. Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
+6. Back on home, drop a PDF anywhere on the page: it opens like a picked file. Drop an image or two files instead: a toast refuses them and nothing navigates.
+7. Break the architecture on purpose. Add `export { AppHeader } from "@h2-fe/web-ui"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. `@nx/enforce-module-boundaries` fails it before a test runs. `bunx nx graph` draws the same map as the diagram above.
 
 ## Stack
 
