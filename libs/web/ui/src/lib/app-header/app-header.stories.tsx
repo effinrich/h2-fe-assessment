@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 
 import { expect } from "storybook/test"
 
-import { Box, Button, ColorModeButton, Text } from "@h2-fe/ui"
+import { Button, ColorModeButton, Text } from "@h2-fe/ui"
 
 import { AppHeader } from "./app-header"
 
@@ -48,13 +48,6 @@ export const WithSlots: Story = {
 
 export const Narrow: Story = {
   ...WithSlots,
-  decorators: [
-    (Story) => (
-      <Box width="390px">
-        <Story />
-      </Box>
-    )
-  ],
   play: async ({ canvas }) => {
     const banner = canvas.getByRole("banner")
     await expect(canvas.getByText("quarterly-report.pdf")).toBeVisible()
