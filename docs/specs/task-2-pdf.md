@@ -166,7 +166,7 @@ and committed failing before the code exists.
 - [x] **With unsaved marks, "Open another document" offers a cancelable
       warning; without marks it exits directly. Refresh/close prompts only while
       marked, where the browser supports it.** —
-      `apps/web/src/app/routes/pdf-viewer-route.spec.tsx`.
+      `apps/web/src/app/routes/pdf-viewer-route/pdf-viewer-route.spec.tsx`.
 - [x] **Filename truncation, page controls, loading and error feedback remain
       legible and keyboard-accessible at narrow widths; tldraw's own tool and
       zoom controls are not duplicated.** —

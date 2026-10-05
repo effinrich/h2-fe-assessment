@@ -9,7 +9,7 @@ import HomeRoute from "./routes/home/home"
 // tldraw, pdfjs and its css leave the initial bundle. Each route wrapper owns
 // its redirect and fallback semantics; this file owns only the table and the
 // chunk boundary.
-const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route"))
+const PdfViewerRoute = lazy(() => import("./routes/pdf-viewer-route/pdf-viewer-route"))
 
 export default function App() {
   return (

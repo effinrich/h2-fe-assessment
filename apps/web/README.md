@@ -1,6 +1,6 @@
 # `@h2-fe/web`
 
-The route host. Home is `src/app/routes/home` (`/`). The viewer is `src/app/routes/pdf-viewer-route.tsx` (`/viewer`). This app composes pin and camera onto the PDF viewer. It is not a feature library.
+The route host. Home is `src/app/routes/home` (`/`). The viewer is `src/app/routes/pdf-viewer-route/pdf-viewer-route.tsx` (`/viewer`). This app composes pin and camera onto the PDF viewer. It is not a feature library.
 
 Tags: `scope:web`, `type:app`. It may import `scope:web` and `scope:shared`. It must not be imported by `libs/shared/ui`.
 
