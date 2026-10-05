@@ -38,8 +38,8 @@ made during this project's setup.
   before tests run.
 - **Small components, enforced.** Every `*.tsx`: one component per file,
   ≤ 150 lines, ≤ 60 lines per function (blanks and comments not counted);
-  stories and specs ≤ 400 lines. Split a file that grows; never add to the
-  exception list in `.oxlintrc.json`, which only shrinks. Override globs
+  stories and specs ≤ 400 lines. Split a file that grows; never add a
+  per-file exception to `.oxlintrc.json` (there are none). Override globs
   there resolve per project, so write them as `**/<folder>/<file>.tsx`.
 - `nx affected` over `--all` on any branch. `bun run gate` =
   `nx affected -t lint,format,typecheck,test,build,build-storybook,test-storybook`.

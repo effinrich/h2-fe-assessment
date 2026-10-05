@@ -54,8 +54,8 @@ failing check whose message the model can act on.
 component per file (`react/no-multi-comp`), at most 150 lines per file and 60
 per function, blank lines and comments not counted. Stories and specs may hold
 helper components and run to 400 lines, with no per-function limit. A file
-that is too long gets split, not excepted: the exception list in that config
-holds only files waiting for their refactor, and shrinks to empty.
+that is too long gets split, not excepted: the config has no per-file
+exceptions, and none get added.
 
 ## Exclusions, on purpose
 
