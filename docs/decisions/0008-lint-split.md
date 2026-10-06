@@ -27,7 +27,7 @@ signal.
 - The alternative — dropping boundaries to keep a single tool — trades an
   architectural guarantee for tidiness. Declined.
 - `@nx/oxlint` requires Nx 23 while the workspace is on 22.7.12, which pulls a
-  second `nx` into the tree. Unresolved; see the note in HARNESS.md.
+  second `nx` into the tree. Unresolved.
 
 ## Addendum — 2026-10-03
 

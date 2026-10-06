@@ -22,4 +22,4 @@
 
 <!-- nx configuration end-->
 
-Workspace instructions are [AGENTS.md](AGENTS.md). `@h2-fe/source` is this repo root and has no Nx targets. Each app and library has its own `AGENTS.md`.
+Workspace instructions are [AGENTS.md](AGENTS.md). `@h2-fe/source` is this repo root and has no Nx targets.

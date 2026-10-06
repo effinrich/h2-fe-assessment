@@ -29,10 +29,5 @@ jobs:
         uses: nrwl/nx-set-shas@afb73a62d26e41464e9254689e1fd6122ee683c1 # v5.0.1
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Install Playwright Chromium
-        run: bunx playwright install --with-deps --only-shell chromium
       - name: Gate
         run: bun run gate
-
-      - run: bunx nx fix-ci
-        if: always()

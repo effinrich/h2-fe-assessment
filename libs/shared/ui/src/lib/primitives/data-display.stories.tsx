@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 
-import { Avatar } from "../avatar/avatar"
-import { Stat } from "../stat/stat"
-import { AvatarGroup, Badge, Card, List, StatGroup, Table } from "./data-display"
+import { Badge, Card, List, Table } from "./data-display"
 import { HStack, Stack } from "./layout"
 import { Text } from "./typography"
 
@@ -83,24 +81,5 @@ export const Tables: Story = {
         ))}
       </Table.Body>
     </Table.Root>
-  )
-}
-
-export const AvatarGroups: Story = {
-  render: () => (
-    <AvatarGroup size="md" stacking="last-on-top">
-      <Avatar name="Ada Lovelace" />
-      <Avatar name="Grace Hopper" />
-      <Avatar name="Alan Turing" />
-    </AvatarGroup>
-  )
-}
-
-export const StatGroups: Story = {
-  render: () => (
-    <StatGroup gap="8">
-      <Stat label="Shapes" value="1,284" />
-      <Stat label="Pins" value="312" trend={{ direction: "up", value: "4%" }} />
-    </StatGroup>
   )
 }

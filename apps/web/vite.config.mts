@@ -1,5 +1,4 @@
 import react from "@vitejs/plugin-react"
-/// <reference types='vitest' />
 import { defaultClientConditions, defineConfig } from "vite"
 
 export default defineConfig(() => ({
@@ -30,19 +29,6 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true
-    }
-  },
-  test: {
-    name: "@h2-fe/web",
-    watch: false,
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["../../tools/vitest-setup.ts"],
-    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    reporters: ["default"],
-    coverage: {
-      reportsDirectory: "./test-output/vitest/coverage",
-      provider: "v8" as const
     }
   }
 }))

@@ -1,18 +1,11 @@
 import react from "@vitejs/plugin-react"
 import * as path from "path"
-/// <reference types='vitest' />
-import { defaultClientConditions, defineConfig } from "vite"
+import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: "../../../node_modules/.vite/libs/shared/ui",
-  // Storybook globs in feature and web-ui stories. Those files import
-  // workspace packages, which export TypeScript source only under this
-  // condition (the same resolve the web stage already uses).
-  resolve: {
-    conditions: [...defaultClientConditions, "@h2-fe/source"]
-  },
   plugins: [
     react(),
     dts({ entryRoot: "src", tsconfigPath: path.join(import.meta.dirname, "tsconfig.lib.json") })
@@ -50,19 +43,6 @@ export default defineConfig(() => ({
         "lucide-react",
         "next-themes"
       ]
-    }
-  },
-  test: {
-    name: "@h2-fe/ui",
-    watch: false,
-    globals: true,
-    environment: "jsdom",
-    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    passWithNoTests: true,
-    reporters: ["default"],
-    coverage: {
-      reportsDirectory: "./test-output/vitest/coverage",
-      provider: "v8" as const
     }
   }
 }))

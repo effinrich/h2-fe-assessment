@@ -1,6 +1,5 @@
 import react from "@vitejs/plugin-react"
 import * as path from "path"
-/// <reference types='vitest' />
 import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
 
@@ -38,19 +37,6 @@ export default defineConfig(() => ({
       // tldraw and pdfjs are large and shared with the app; @h2-fe/ui resolves
       // through the workspace source condition.
       external: ["react", "react-dom", "react/jsx-runtime", "tldraw", "pdfjs-dist", "@h2-fe/ui"]
-    }
-  },
-  test: {
-    name: "@h2-fe/pdf-viewer",
-    watch: false,
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["../../../../tools/vitest-setup.ts"],
-    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    reporters: ["default"],
-    coverage: {
-      reportsDirectory: "./test-output/vitest/coverage",
-      provider: "v8" as const
     }
   }
 }))

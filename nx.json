@@ -13,19 +13,7 @@
       "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/tsconfig.storybook.json"
     ],
-    "sharedGlobals": [],
-    "storybookTestRunner": [
-      {
-        "externalDependencies": [
-          "vitest",
-          "@vitest/browser-playwright",
-          "@vitest/coverage-v8",
-          "playwright",
-          "storybook",
-          "@storybook/addon-vitest"
-        ]
-      }
-    ]
+    "sharedGlobals": []
   },
   "plugins": [
     {
@@ -63,14 +51,6 @@
       }
     },
     {
-      "plugin": "@nx/vitest",
-      "options": {
-        "testTargetName": "test",
-        "ciTargetName": "test-ci",
-        "testMode": "watch"
-      }
-    },
-    {
       "plugin": "@nx/storybook/plugin",
       "options": {
         "serveStorybookTargetName": "storybook",
@@ -89,9 +69,6 @@
         "{projectRoot}/.storybook/**/*",
         "{projectRoot}/tsconfig.storybook.json"
       ]
-    },
-    "test": {
-      "dependsOn": ["^build"]
     },
     "typecheck": {
       "dependsOn": ["build", "^build"],
@@ -113,16 +90,6 @@
         "cwd": "{projectRoot}"
       },
       "cache": false
-    },
-    "test-storybook": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "vitest run --config vitest.storybook.config.mts --coverage",
-        "cwd": "{projectRoot}"
-      },
-      "cache": true,
-      "inputs": ["default", "^production", "storybookTestRunner"],
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
     }
   },
   "generators": {
@@ -138,13 +105,8 @@
       "library": {
         "style": "css",
         "linter": "oxlint",
-        "unitTestRunner": "vitest"
+        "unitTestRunner": "none"
       }
-    }
-  },
-  "release": {
-    "version": {
-      "preVersionCommand": "bunx nx run-many -t build"
     }
   }
 }

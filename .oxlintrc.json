@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "jsPlugins": ["@nx/oxlint/boundaries-plugin"],
-  "plugins": ["react", "typescript", "import", "jsx-a11y", "unicorn", "vitest", "react-perf"],
+  "plugins": ["react", "typescript", "import", "jsx-a11y", "unicorn", "react-perf"],
   "options": {
     "typeAware": true,
     "typeCheck": false
