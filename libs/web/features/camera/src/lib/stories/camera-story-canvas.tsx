@@ -7,11 +7,11 @@ import { Tldraw, type Editor, type TLComponents } from "tldraw"
 import { Box, toaster } from "@h2-fe/ui"
 import "tldraw/tldraw.css"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
-import { createCameraExtension } from "./camera"
+import { createCameraExtension } from "../camera"
+import { CROP_FRAME, FIRST_USE_HINT_STORAGE_KEY } from "../consts"
 import { CameraStoryToolbar } from "./camera-story-toolbar"
-import { CROP_FRAME, FIRST_USE_HINT_STORAGE_KEY } from "./consts"
 import {
   DOCUMENT_NAME,
   FRAME_FROM,

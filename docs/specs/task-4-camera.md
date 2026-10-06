@@ -200,24 +200,33 @@ libs/web/features/camera/src/
   index.ts                       barrel: createCameraExtension, getCropFrameBounds, isCropFrameShape, CAMERA_TOOL_ID, public types
   lib/
     camera.tsx                   createCameraExtension(options) → CanvasExtension-shaped object; getCropFrameBounds
-    camera-*.stories.tsx         the acceptance stories, one file per theme (web Storybook stage)
-    camera-story-canvas.tsx      the stories' <Tldraw> harness and cameraStoryMeta; camera-story-toolbar.tsx its toolbar
-    story-helpers.ts             shared ids, pointer helpers, toolbar/toast finders
-    camera-tool.ts               StateNode + idle/pointing/dragging children, default-frame drop
+    crop-frame-creation.ts       createCropFrame (insert under the marks, select, back to select), dropDefaultFrame
     crop-shortcuts.ts            Enter / Ctrl+C while a frame is selected
     export-actions.ts            tldraw's export/copy actions minus crop frames (overrides.actions)
-    style-panel-guard.tsx        hides the style panel for crop-only selections (InFrontOfTheCanvas)
     consts.ts                    ids, labels, sizes and limits (shared)
     types.ts                     CropFrameShape (+ TLGlobalShapePropsMap augmentation), CameraExtension(Options), internal types (shared)
     utils/
       utils.ts                   pure: normaliseBox, isBelowMinSize, frameInsertIndex, cropToolbarAnchor, defaultFrameBox, exportShapeIds, exportPixelRatio, exportPixelSize, buildExportFilename, isCropFrameShape
       utils.spec.ts              Vitest for the above
+    classes/                     one class per file; consumers import the index.ts barrel
+      camera-tool.ts             CameraTool StateNode: idle/pointing/dragging children, first-use hint atom
+      camera-idle.ts             CameraIdle: crosshair, Enter drops a default frame
+      camera-pointing.ts         CameraPointing: press before the drag threshold
+      camera-dragging.ts         CameraDragging: the marquee atom, creates the frame on release
+      crop-frame-shape-util.tsx  CropFrameShapeUtil: BaseBoxShapeUtil<CropFrameShape>
+      index.ts                   barrel
+    stories/
+      camera-*.stories.tsx       the acceptance stories, one file per theme (web Storybook stage)
+      camera-story-canvas.tsx    the stories' <Tldraw> harness and cameraStoryMeta; camera-story-toolbar.tsx its toolbar
+      story-helpers.ts           shared ids, pointer helpers, toolbar/toast finders
     crop-frame/
+      crop-frame.tsx             the shape's rendered component (CropFrameShapeUtil.component)
       crop-frame-outline.tsx     the frame's outline, shared by the shape and the marquee
       crop-frame-marks.tsx       its dashed border and corner marks (svg)
       crop-frame-label.tsx       its size label, hidden when too wide for the frame
-      crop-frame-shape-util.tsx  BaseBoxShapeUtil<CropFrameShape>
       crop-marquee.tsx           the in-flight box (InFrontOfTheCanvas)
+    style-panel-guard/
+      style-panel-guard.tsx      hides the style panel for crop-only selections (InFrontOfTheCanvas)
     crop-export/
       crop-export.ts             export plan, exportAs/copyAs, toast reporting
       crop-action-state.ts       per-editor busy/done state, focus restore
@@ -325,7 +334,7 @@ listed in `task-3-pin.md`.
 
 ## Acceptance criteria
 
-Stories live in `libs/web/features/camera/src/lib/camera-{create,export,toolbar,canvas}.stories.tsx`
+Stories live in `libs/web/features/camera/src/lib/stories/camera-{create,export,toolbar,canvas}.stories.tsx`
 (titles `Features/Camera/Create`, `/Export`, `/Toolbar`, `/Canvas`).
 The harness mounts `<Tldraw>` with the camera extension and `documentName: "q3-report.pdf"`, and
 seeds two geo rectangles inside (100,100)–(400,300) and one outside it. Play functions take the

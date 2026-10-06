@@ -5,10 +5,10 @@ import { createShapeId } from "tldraw"
 
 import { toaster } from "@h2-fe/ui"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
+import { CROP_FRAME } from "../consts"
 import { CameraCanvas, cameraStoryMeta } from "./camera-story-canvas"
-import { CROP_FRAME } from "./consts"
 import {
   FRAME_TO,
   DOWNLOAD_NAME,

@@ -4,7 +4,7 @@ import { Box, computed, useEditor, type Computed, type Editor, type TLUiOverride
 
 import type { CameraExtension, CameraExtensionOptions } from "./types"
 
-import { CameraTool, dropDefaultFrame } from "./camera-tool"
+import { CameraTool, CropFrameShapeUtil } from "./classes"
 import {
   CAMERA_KBD,
   CAMERA_TOOL_ID,
@@ -13,13 +13,13 @@ import {
   CROP_FRAME_TOOLBAR_CLASS,
   CROP_FRAME_TOOLBAR_LABEL
 } from "./consts"
+import { dropDefaultFrame } from "./crop-frame-creation"
 import { CropFrameToolbar } from "./crop-frame-toolbar/crop-frame-toolbar"
-import { CropFrameShapeUtil } from "./crop-frame/crop-frame-shape-util"
 import { CropMarquee } from "./crop-frame/crop-marquee"
 import { registerCropShortcuts } from "./crop-shortcuts"
 import { withFramelessExports } from "./export-actions"
 import { FirstUseHint } from "./first-use-hint/first-use-hint"
-import { StylePanelGuard } from "./style-panel-guard"
+import { StylePanelGuard } from "./style-panel-guard/style-panel-guard"
 
 /** Move keyboard focus to the crop toolbar, if a crop frame is what's selected. */
 function focusCropToolbar(editor: Editor): boolean {

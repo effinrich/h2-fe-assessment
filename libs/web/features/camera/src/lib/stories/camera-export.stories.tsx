@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, screen, spyOn, userEvent, waitFor, within } from "storybook/test"
 import { createShapeId, type Editor, type TLShapeId } from "tldraw"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
+import { CROP_FRAME } from "../consts"
 import { CameraCanvas, cameraStoryMeta } from "./camera-story-canvas"
-import { CROP_FRAME } from "./consts"
 import {
   INSIDE_BACK,
   INSIDE_FRONT,

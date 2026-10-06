@@ -9,9 +9,9 @@ import {
   type VecLike
 } from "tldraw"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
-import { CAMERA_TOOL_ID, CROP_FRAME } from "./consts"
+import { CAMERA_TOOL_ID, CROP_FRAME } from "../consts"
 
 export const DOCUMENT_NAME = "q3-report.pdf"
 export const INSIDE_BACK = createShapeId("inside-back")

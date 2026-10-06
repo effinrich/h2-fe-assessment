@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useEditor, useValue } from "tldraw"
 
-import { CROP_FRAME, CROP_ONLY_SELECTION_ATTR } from "./consts"
+import { CROP_FRAME, CROP_ONLY_SELECTION_ATTR } from "../consts"
 
 // tldraw shows an opacity-only panel for shapes without styles; the
 // extension contract has no `StylePanel` slot to swap, so hide it in CSS.

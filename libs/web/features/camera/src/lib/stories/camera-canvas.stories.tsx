@@ -3,13 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, spyOn, userEvent, waitFor, within } from "storybook/test"
 import { createShapeId, react, type BoxModel } from "tldraw"
 
-import type { CropFrameShape } from "./types"
+import type { CropFrameShape } from "../types"
 
-import { getCropFrameBounds } from "./camera"
+import { getCropFrameBounds } from "../camera"
+import { CameraDragging } from "../classes"
+import { CAMERA_TOOL_ID, CROP_FRAME } from "../consts"
+import { getCropExportPlan } from "../crop-export/crop-export"
 import { CameraCanvas, cameraStoryMeta } from "./camera-story-canvas"
-import { CameraDragging } from "./camera-tool"
-import { CAMERA_TOOL_ID, CROP_FRAME } from "./consts"
-import { getCropExportPlan } from "./crop-export/crop-export"
 import {
   OUTSIDE,
   FRAME_BOX,
