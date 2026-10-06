@@ -41,6 +41,10 @@ Nx-generated block only.
   `git commit -n` and `LEFTHOOK=0`. Fix what a hook reports; never route around
   it. The stop hook checks the workspace root, so in a worktree run
   `bun run gate` yourself before reporting done.
+- A fresh worktree needs `bun install` before its first commit or push; the
+  hooks and the pre-push gate fail without `node_modules`.
+- After a project imports a new workspace lib, run `bunx nx sync` to update
+  the TypeScript project references.
 - Chromatic's "UI Review" / "UI Tests" checks stay pending on the plan limit
   and don't block merge; `gh pr checks --watch` never exits on them, so read
   the `Gate` check instead.
@@ -87,6 +91,8 @@ tldraw v5, Storybook 10 + Chromatic.
 - Don't stage local junk (`.gitignore` edits, `.github/agents/`, logs, zips).
 - Don't take over the user's mouse or keyboard: prefer file tools to shell
   calls, and run browsers and recordings headless.
+- PowerShell: write commit messages to a file and use `git commit -F`; don't
+  pass `gh --jq` filters with inner quotes, pipe to `ConvertFrom-Json`.
 - Never write to protected folders under `C:\Users` (Documents, Videos,
   Desktop, Pictures): Controlled Folder Access blocks it and raises Windows
   Security alerts. Put scratch output on `D:` outside the repo; don't retry a
