@@ -5,7 +5,8 @@ import {
   type Editor,
   type TLAssetId,
   type TLImageShape,
-  type TLShapeId
+  type TLShapeId,
+  type TLTheme
 } from "tldraw"
 import { AssetRecordType } from "tldraw"
 
@@ -124,6 +125,21 @@ export function hasUserMarks(shapes: ReadonlyArray<{ id: string }>): boolean {
 
 export function isPdfPageShape(shape: { id: string; type: string }): boolean {
   return shape.type === "image" && PDF_PAGE_SHAPE_ID.test(shape.id)
+}
+
+/**
+ * `theme` with dark mode's shape colours (the `TLDefaultColor` entries) taken
+ * from light mode. Marks sit on white pages, where the dark palette's "black"
+ * is near-white; dark UI colours stay.
+ */
+export function paperTheme(theme: TLTheme): TLTheme {
+  const { light, dark } = theme.colors
+  const shapeColors = Object.fromEntries(
+    Object.entries(light).filter(([, value]) => typeof value === "object")
+  )
+  // Semi fills draw in `solid`; pattern fills and label outlines in `negativeSpace`.
+  const fills = { solid: light.solid, negativeSpace: light.negativeSpace }
+  return { ...theme, colors: { light, dark: { ...dark, ...shapeColors, ...fills } } }
 }
 
 export function mergeCanvasExtensions(

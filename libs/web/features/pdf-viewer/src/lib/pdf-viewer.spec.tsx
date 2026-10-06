@@ -2,7 +2,7 @@ import type * as pdfjs from "pdfjs-dist"
 
 import { act, fireEvent, screen, waitFor } from "@testing-library/react"
 import { Profiler } from "react"
-import { atom } from "tldraw"
+import { atom, DEFAULT_THEME } from "tldraw"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { UiProvider } from "@h2-fe/ui"
@@ -322,6 +322,19 @@ describe("PdfViewerScreen", () => {
     expect(root?.getAttribute("data-color-mode")).toBe("light")
     expect(setColorMode).toHaveBeenCalledWith("light")
     expect(tldrawStub.props?.hideUi).toBeUndefined()
+  })
+
+  it("draws shapes in their light colours in dark mode, because they sit on white pages", () => {
+    renderScreen({ onOpenAnother: vi.fn<() => void>() })
+    const { light, dark } = DEFAULT_THEME.colors
+    const themed = tldrawStub.props?.themes?.default?.colors.dark
+    expect(themed?.black).toEqual(light.black)
+    expect(themed?.red).toEqual(light.red)
+    expect(themed?.solid).toBe(light.solid)
+    expect(themed?.negativeSpace).toBe(light.negativeSpace)
+    expect(themed?.text).toBe(dark.text)
+    expect(themed?.background).toBe(dark.background)
+    expect(tldrawStub.props?.themes?.default?.colors.light).toEqual(light)
   })
 })
 

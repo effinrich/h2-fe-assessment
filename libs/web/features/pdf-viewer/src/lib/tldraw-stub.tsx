@@ -20,9 +20,10 @@ export function resetTldrawStub() {
  * exercised as it runs in the app.
  */
 export async function createTldrawStub() {
-  const { atom, react, unsafe__withoutCapture } =
+  const { atom, react, unsafe__withoutCapture, DEFAULT_THEME } =
     await vi.importActual<typeof TldrawModule>("tldraw")
   return {
+    DEFAULT_THEME,
     atom,
     react,
     unsafe__withoutCapture,
