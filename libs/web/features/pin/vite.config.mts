@@ -1,6 +1,5 @@
 import react from "@vitejs/plugin-react"
 import * as path from "path"
-/// <reference types='vitest' />
 import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
 
@@ -37,19 +36,6 @@ export default defineConfig(() => ({
       // External packages that should not be bundled into your library.
       // tldraw, lucide-react and the design system are shared with the app.
       external: ["react", "react-dom", "react/jsx-runtime", "tldraw", "lucide-react", "@h2-fe/ui"]
-    }
-  },
-  test: {
-    name: "@h2-fe/pin",
-    watch: false,
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["../../../../tools/vitest-setup.ts"],
-    include: ["{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    reporters: ["default"],
-    coverage: {
-      reportsDirectory: "./test-output/vitest/coverage",
-      provider: "v8" as const
     }
   }
 }))

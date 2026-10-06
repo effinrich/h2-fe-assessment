@@ -34,28 +34,7 @@
         }
       },
       "format": {},
-      "format:fix": {},
-      "test-storybook": {
-        "inputs": [
-          "default",
-          "^production",
-          "storybookTestRunner",
-          "{workspaceRoot}/libs/web/features/*/src/**/*",
-          "{workspaceRoot}/apps/web/src/app/routes/home/**/*"
-        ]
-      },
-      "build-storybook": {
-        "inputs": [
-          "production",
-          "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-          "{projectRoot}/.storybook/**/*",
-          "{projectRoot}/tsconfig.storybook.json",
-          "{workspaceRoot}/libs/web/features/*/src/**/*",
-          "!{workspaceRoot}/libs/web/features/*/src/**/*.spec.@(ts|tsx)",
-          "{workspaceRoot}/apps/web/src/app/routes/home/**/*",
-          "!{workspaceRoot}/apps/web/src/app/routes/home/**/*.spec.@(ts|tsx)"
-        ]
-      }
+      "format:fix": {}
     }
   }
 }

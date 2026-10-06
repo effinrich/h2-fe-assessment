@@ -34,6 +34,6 @@ the worst case the code is fine and the submission still cannot be opened.
 - Install speed is worse than bun. Irrelevant at this size.
 - Every project must be generator-created. A hand-made folder never enters the
   project graph, so `nx affected` skips it and tags never apply. A structure
-  gate enforces this (see `HARNESS.md`).
+  gate enforces this.
 - npm 12 blocks install scripts by default; the allowlist is committed in
   `package.json` rather than left in a machine-level config.
