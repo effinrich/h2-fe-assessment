@@ -34,6 +34,9 @@ Nx-generated block only.
   means cut scope; raising a limit is the user's call.
   lefthook: pre-commit lints, formats and typechecks staged files; pre-push runs
   the gate. CI runs the gate too. Don't leave `LEFTHOOK=0` on.
+- Chromatic's "UI Review" / "UI Tests" checks stay pending on the plan limit
+  and don't block merge; `gh pr checks --watch` never exits on them, so read
+  the `Gate` check instead.
 - Actions are pinned to full commit SHAs. LF line endings.
 
 ## Layout
@@ -75,4 +78,10 @@ tldraw v5, Storybook 10 + Chromatic.
   before committing and commit by explicit pathspec; other sessions may share
   the checkout, so do parallel work in a git worktree.
 - Don't stage local junk (`.gitignore` edits, `.github/agents/`, logs, zips).
+- Don't take over the user's mouse or keyboard: prefer file tools to shell
+  calls, and run browsers and recordings headless.
+- Never write to protected folders under `C:\Users` (Documents, Videos,
+  Desktop, Pictures): Controlled Folder Access blocks it and raises Windows
+  Security alerts. Put scratch output on `D:` outside the repo; don't retry a
+  blocked write.
 - An honest "I don't know" is fine; then go and verify.
