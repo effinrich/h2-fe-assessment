@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [{ "command": "node tools/shell-guard.mjs" }],
+    "stop": [{ "command": "node tools/stop-gate.mjs", "timeout": 600, "loop_limit": 3 }]
+  }
+}
