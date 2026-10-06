@@ -63,7 +63,7 @@ bun run storybook  # the design system, http://localhost:4400
 ## Check
 
 ```sh
-bun run gate       # nx affected -t lint,format,typecheck,build,build-storybook
+bun run gate       # size budget, then nx affected -t lint,format,typecheck,build,build-storybook
 ```
 
 lefthook runs lint, format and typecheck on commit and the gate on push; CI runs the same gate. Every GitHub Action is pinned to a commit SHA.
