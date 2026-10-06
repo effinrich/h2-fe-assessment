@@ -46,19 +46,19 @@ flowchart LR
 
 ### Decisions
 
-| Decision                                                                | Why                                                                                            | Record                                                       |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Nx monorepo, libraries over folders, generators only                    | A queryable project graph; `nx affected` runs only what changed; tags are the architecture map | [0001](docs/decisions/0001-workspace-and-package-manager.md) |
-| Vite + React SPA; TanStack Query only for the PDF fetch and export      | No SSR to pay for; loading, error and retry are real states that stories assert                | [0002](docs/decisions/0002-framework.md)                     |
-| tldraw as the canvas engine                                             | Custom shapes, bindings and export are the transferable work                                   | [0003](docs/decisions/0003-canvas-engine.md)                 |
-| Chakra UI v3 over Tailwind: typed tokens and recipes                    | Styles are TypeScript, not class strings nothing checks; accessible components ready to use    | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
-| Spec first, failing test committed first                                | Each criterion has a test that fails without the change, and the history shows it              | [0005](docs/decisions/0005-sdd-and-tdd.md)                   |
-| Every UI component has a story; its play test is its component test     | Interaction, a11y and Chromatic coverage from one file                                         | [0007](docs/decisions/0007-storybook-scope.md)               |
-| oxlint (type-aware) + oxfmt, one tool, boundaries included              | Fast enough for a pre-commit hook; no ESLint                                                   | [0008](docs/decisions/0008-lint-split.md)                    |
-| Sibling feature libs; only the app composes them                        | Features ship and test alone                                                                   | [0011](docs/decisions/0011-feature-pattern.md)               |
-| PDF pages rasterised into locked image shapes, off-screen pages evicted | Memory bounded by the viewport; export works; paging never enters undo                         | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)     |
-| tldraw and Chakra stay two styling systems, bridged by CSS variables    | Chakra for our chrome, tldraw's variables for the canvas; one color mode drives both           | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
-| What was left out, on purpose                                           | Scope stated, not implied                                                                      | [0009](docs/decisions/0009-not-built.md)                     |
+| Decision                                                                | Why                                                                                             | Record                                                       |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Nx monorepo, libraries over folders, generators only                    | A queryable project graph; `nx affected` runs only what changed; tags are the architecture map  | [0001](docs/decisions/0001-workspace-and-package-manager.md) |
+| Vite + React SPA; TanStack Query only for the PDF fetch and export      | No SSR to pay for; loading, error and retry are real states that stories assert                 | [0002](docs/decisions/0002-framework.md)                     |
+| tldraw as the canvas engine                                             | Custom shapes, bindings and export are the transferable work                                    | [0003](docs/decisions/0003-canvas-engine.md)                 |
+| Chakra UI v3 over Tailwind: token and recipe model                      | Theme-aligned style props; strict token checking is planned; accessible components ready to use | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
+| Spec first, failing test committed first                                | Each criterion has a test that fails without the change, and the history shows it               | [0005](docs/decisions/0005-sdd-and-tdd.md)                   |
+| Every UI component has a story; its play test is its component test     | Interaction, a11y and Chromatic coverage from one file                                          | [0007](docs/decisions/0007-storybook-scope.md)               |
+| oxlint (type-aware) + oxfmt, one tool, boundaries included              | Fast enough for a pre-commit hook; no ESLint                                                    | [0008](docs/decisions/0008-lint-split.md)                    |
+| Sibling feature libs; only the app composes them                        | Features ship and test alone                                                                    | [0011](docs/decisions/0011-feature-pattern.md)               |
+| PDF pages rasterised into locked image shapes, off-screen pages evicted | Memory bounded by the viewport; export works; paging never enters undo                          | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)     |
+| tldraw and Chakra stay two styling systems, bridged by CSS variables    | Chakra for our chrome, tldraw's variables for the canvas; one color mode drives both            | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
+| What was left out, on purpose                                           | Scope stated, not implied                                                                       | [0009](docs/decisions/0009-not-built.md)                     |
 
 ## Access
 

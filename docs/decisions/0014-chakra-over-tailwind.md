@@ -41,8 +41,9 @@ Why Chakra over Park UI + Panda:
 Why typed styles over Tailwind:
 
 - Styles are TypeScript: style props, `chakra()` factories and recipes. The
-  vocabulary is our theme (`brand.solid`, `bg.canvas`, `fg.error` in
-  `libs/shared/ui/src/lib/theme/system.ts`), not free-form strings.
+  intended vocabulary is our theme (`brand.solid`, `bg.canvas`, `fg.error` in
+  `libs/shared/ui/src/lib/theme/system.ts`). Until `strictTokens` is on (see
+  Consequences), props still accept free-form strings.
 - No class order to get wrong: a style prop has one value.
 - A token defined once in TypeScript is exported as a CSS variable, which is
   what the tldraw bridge reads (0013). There is no second copy to drift.
