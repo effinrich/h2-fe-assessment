@@ -137,7 +137,9 @@ export function paperTheme(theme: TLTheme): TLTheme {
   const shapeColors = Object.fromEntries(
     Object.entries(light).filter(([, value]) => typeof value === "object")
   )
-  return { ...theme, colors: { light, dark: { ...dark, ...shapeColors } } }
+  // Semi fills draw in `solid`; pattern fills and label outlines in `negativeSpace`.
+  const fills = { solid: light.solid, negativeSpace: light.negativeSpace }
+  return { ...theme, colors: { light, dark: { ...dark, ...shapeColors, ...fills } } }
 }
 
 export function mergeCanvasExtensions(

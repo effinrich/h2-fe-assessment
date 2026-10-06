@@ -208,7 +208,9 @@ and committed failing before the code exists.
       white PDF pages, and tldraw's dark palette turns the default "black"
       into near-white (`#f2f2f2`), which vanished on the page. The viewer
       passes `<Tldraw themes>` a default theme whose dark palette takes every
-      shape colour (`TLDefaultColor` entries) from the light palette; dark UI
+      shape colour (`TLDefaultColor` entries) from the light palette, plus the
+      fill colours `solid` (semi fill) and `negativeSpace` (pattern fill), which
+      otherwise turned a semi-filled rectangle black. Dark UI
       colours (`text`, `background`, selection) are unchanged. Trade-off: black
       drawn off the page, on the dark canvas, is low-contrast, and so is the
       style panel's black swatch. — `pdf-viewer.spec.tsx` › "draws shapes in
