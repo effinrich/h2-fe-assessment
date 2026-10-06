@@ -53,6 +53,13 @@ export function createEditorStub() {
     getAssets: vi.fn<() => StubRecord[]>(() => [...assets.values()]),
     getShape: vi.fn<(id: string) => StubRecord | undefined>((id) => shapes.get(id)),
     zoomToFit: vi.fn<(opts?: unknown) => void>(),
+    zoomToBounds: vi.fn<(bounds: unknown, opts?: unknown) => void>(),
+    getViewportScreenBounds: vi.fn<() => { x: number; y: number; w: number; h: number }>(() => ({
+      x: 0,
+      y: 0,
+      w: 390,
+      h: 791
+    })),
     setColorMode: vi.fn<(mode: "dark" | "light") => unknown>(),
     run: vi.fn<(callback: () => void, options?: RunOptions) => void>((callback, options) => {
       const previous = ignoreShapeLock
