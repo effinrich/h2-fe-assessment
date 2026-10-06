@@ -29,9 +29,9 @@ Draw a rectangle. **Open another** (top right) warns before discarding marks. Ca
 
 Draw two overlapping shapes. Press **P** and click where they overlap. Drag one: the other follows. Pins do not attach to PDF pages, which are locked. Built on tldraw's pin-bindings example.
 
-## Export area
+## Screenshot
 
-Press **C**. Drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. A frame with nothing under it says so in a toast. Built on tldraw's screenshot-tool example.
+Press **C** and drag a box. Releasing downloads everything under it as a PNG; hold **Ctrl** to copy it instead. This is tldraw's screenshot-tool example.
 
 ## Color mode
 

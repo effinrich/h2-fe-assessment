@@ -73,6 +73,6 @@ lefthook runs lint, format and typecheck on commit and the gate on push; CI runs
 1. Open the example from home. The **‹ / ›** arrows and the page field move between pages.
 2. Draw a rectangle. **Open another document** warns before discarding marks.
 3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
-4. Press **C**, drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame.
+4. Press **C**, drag a box. Releasing downloads it as a PNG; hold **Ctrl** to copy it instead.
 5. Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
 6. Add `export { AppHeader } from "@h2-fe/pdf-viewer"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. The module-boundary rule fails it.
