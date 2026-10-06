@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { createCameraExtension, getCropFrameBounds } from "@h2-fe/camera"
+import { createCameraExtension } from "@h2-fe/camera"
 import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
 import type { CanvasExtension } from "@h2-fe/pdf-viewer"
 import { pinExtension } from "@h2-fe/pin"
 
-import { useDocumentLifetime, useLeaveGuard } from "./hooks"
+import { useLeaveGuard } from "./hooks"
 import { LeaveDocumentModal } from "./partials/leave-document-modal"
 
 // The route that owns the document: it reads the file home handed off through
@@ -25,7 +25,6 @@ export default function PdfViewerRoute() {
     [documentName]
   )
   const { setHasMarks, confirmExit, setConfirmExit, onOpenAnother, leave } = useLeaveGuard()
-  useDocumentLifetime(document)
   useEffect(() => {
     if (!file) navigate("/", { replace: true })
   }, [file, navigate])
@@ -45,7 +44,6 @@ export default function PdfViewerRoute() {
         }}
         document={document}
         extensions={extensions}
-        retainPageBounds={getCropFrameBounds}
       />
       <LeaveDocumentModal onDiscard={leave} onOpenChange={setConfirmExit} open={confirmExit} />
     </>

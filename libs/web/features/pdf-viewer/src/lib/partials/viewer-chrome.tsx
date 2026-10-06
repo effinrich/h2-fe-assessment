@@ -51,18 +51,6 @@ export const ViewerPanel = chakra("div", {
   }
 })
 
-export const PageOverlayCard = chakra("div", {
-  base: {
-    alignItems: "center",
-    bg: "bg.panel",
-    color: "fg",
-    display: "flex",
-    justifyContent: "center",
-    pointerEvents: "none",
-    position: "absolute"
-  }
-})
-
 export const ToolbarSlot = chakra("div", {
   base: {
     display: "contents"

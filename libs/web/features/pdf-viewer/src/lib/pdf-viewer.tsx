@@ -9,10 +9,9 @@ import { useColorMode } from "@h2-fe/ui"
 import type { CanvasExtension, PdfViewerScreenProps } from "./types"
 
 import { CANVAS_THEME_CLASS } from "./consts"
-import { useCanvasEditor, useMarksChange, useVisiblePages } from "./hooks"
+import { useCanvasEditor, useMarksChange, usePageNavigation } from "./hooks"
 import { createCanvasComponents } from "./partials/canvas-components"
 import { ViewerCanvas, ViewerRoot } from "./partials/viewer-chrome"
-import { ViewerPageOverlay } from "./partials/viewer-page-overlay"
 import { ViewerStatus } from "./partials/viewer-status"
 import { mergeCanvasExtensions, paperTheme } from "./utils"
 import { ViewerTopBar } from "./viewer-top-bar/viewer-top-bar"
@@ -28,20 +27,15 @@ export function PdfViewerScreen({
   isError,
   onRetry,
   onOpenAnother,
-  extensions = NO_EXTENSIONS,
-  retainPageBounds
+  extensions = NO_EXTENSIONS
 }: PdfViewerScreenProps) {
   const { colorMode } = useColorMode()
   const [initialColorScheme] = useState(colorMode)
   const merged = useMemo(() => mergeCanvasExtensions(extensions), [extensions])
   const components = useMemo(() => createCanvasComponents(merged), [merged])
-  const { editor, handleMount } = useCanvasEditor(colorMode, merged)
+  const { editor, handleMount } = useCanvasEditor(colorMode)
   useMarksChange(editor, onMarksChange)
-  const { page, overlays, jumpToPage, retryPage } = useVisiblePages(
-    editor,
-    document,
-    retainPageBounds
-  )
+  const { page, jumpToPage } = usePageNavigation(editor, document)
 
   return (
     <ViewerRoot className={CANVAS_THEME_CLASS} data-canvas-theme="" data-color-mode={colorMode}>
@@ -58,16 +52,12 @@ export function PdfViewerScreen({
           colorScheme={initialColorScheme}
           components={components}
           onMount={handleMount}
-          overlayUtils={merged.overlayUtils}
           overrides={merged.overrides}
           shapeUtils={merged.shapeUtils}
           themes={THEMES}
           tools={merged.tools}
         />
         <ViewerStatus isError={isError} isLoading={isLoading} onRetry={onRetry} />
-        {overlays.map((overlay) => (
-          <ViewerPageOverlay key={overlay.page} onRetryPage={retryPage} overlay={overlay} />
-        ))}
       </ViewerCanvas>
     </ViewerRoot>
   )

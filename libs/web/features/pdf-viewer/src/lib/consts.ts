@@ -13,8 +13,6 @@ export const CANVAS_THEME_CLASS = "h2-canvas-theme"
 
 export const PDF_PAGE_SHAPE_ID = /^shape:page-\d+$/
 
-export const PDF_PAGE_ASSET_ID = /^asset:page-(\d+)-/
-
 export const DOCUMENT_TOOLS_LABEL = "shortcuts-dialog.document-tools"
 
 export const VIEWER_OVERRIDES: TLUiOverrides = {
