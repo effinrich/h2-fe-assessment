@@ -60,7 +60,7 @@ exceptions, and none get added.
 ## Exclusions, on purpose
 
 - **three.js** — considered and declined. ADR 0003.
-- **Tailwind, Radix, shadcn** — considered and declined. ADR 0004.
+- **Tailwind, Radix, shadcn** — considered and declined. ADRs 0004 and 0014.
 - **SSR** — one route, client-only canvas. ADR 0002. (The router is now in
   use — `home` and `pdf-viewer`; see ADR 0011 and 0002's amendment.)
 - **Backend, auth, persistence** beyond tldraw's local store. ADR 0009.

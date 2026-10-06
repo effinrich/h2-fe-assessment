@@ -1,7 +1,8 @@
 # 0004 — Panda CSS with Ark UI via Park UI
 
-> **Superseded (2026-10-01):** replaced by Chakra UI v3. Panda, Ark (as a direct
-> dependency) and Park UI were removed; the record below is kept as history.
+> **Superseded (2026-10-01):** replaced by Chakra UI v3; see
+> [0014](0014-chakra-over-tailwind.md). Panda, Ark (as a direct dependency) and
+> Park UI were removed; the record below is kept as history.
 
 - Status: superseded by Chakra UI v3
 - Date: 2026-10-01
