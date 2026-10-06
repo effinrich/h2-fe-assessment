@@ -1,1 +1,1 @@
-export { createCameraExtension } from "./lib/camera-extension"
+export { cameraExtension } from "./lib/camera-extension"

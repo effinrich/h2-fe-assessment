@@ -1,13 +1,15 @@
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { createCameraExtension } from "@h2-fe/camera"
+import { cameraExtension } from "@h2-fe/camera"
 import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
 import type { CanvasExtension } from "@h2-fe/pdf-viewer"
 import { pinExtension } from "@h2-fe/pin"
 
 import { useLeaveGuard } from "./hooks"
 import { LeaveDocumentModal } from "./partials/leave-document-modal"
+
+const extensions: readonly CanvasExtension[] = [pinExtension, cameraExtension]
 
 // The route that owns the document: it reads the file home handed off through
 // the navigation state, rasterises it through the lib's query hook, and
@@ -19,11 +21,6 @@ export default function PdfViewerRoute() {
   const file = (location.state as { file?: File } | null)?.file ?? null
   const result = usePdfPages(file)
   const document = result.data
-  const documentName = file?.name
-  const extensions = useMemo<readonly CanvasExtension[]>(
-    () => [pinExtension, createCameraExtension({ documentName })],
-    [documentName]
-  )
   const { setHasMarks, confirmExit, setConfirmExit, onOpenAnother, leave } = useLeaveGuard()
   useEffect(() => {
     if (!file) navigate("/", { replace: true })

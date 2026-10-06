@@ -1,23 +1,6 @@
-import { atom, Box, createShapeId, getIndexBetween, StateNode, type Editor } from "tldraw"
+import { atom, Box, copyAs, exportAs, StateNode } from "tldraw"
 
-import type { CropFrameShape } from "./types"
-
-import { CAMERA_TOOL_ID, CROP_FRAME, MIN_FRAME_SCREEN_PX } from "./consts"
-
-/**
- * Just under the lowest unlocked mark: above the locked PDF pages, so a click
- * inside the (filled) frame selects it, but never over a mark's own hit area.
- */
-function frameIndex(editor: Editor) {
-  const shapes = editor
-    .getSortedChildIdsForParent(editor.getCurrentPageId())
-    .flatMap((id) => editor.getShape(id) ?? [])
-  const lowestMark = shapes.findIndex(
-    (shape) => shape.type !== CROP_FRAME && !editor.isShapeOrAncestorLocked(shape)
-  )
-  if (lowestMark === -1) return undefined
-  return getIndexBetween(shapes[lowestMark - 1]?.index, shapes[lowestMark]?.index)
-}
+export const CAMERA_TOOL_ID = "camera"
 
 class CameraIdle extends StateNode {
   static override id = "idle"
@@ -37,13 +20,17 @@ class CameraPointing extends StateNode {
   override onPointerUp() {
     this.parent.transition("idle")
   }
+
+  override onCancel() {
+    this.parent.transition("idle")
+  }
 }
 
 export class CameraDragging extends StateNode {
   static override id = "dragging"
 
-  /** The box being dragged out, in page space; `CropMarquee` draws it. */
-  readonly box = atom("crop marquee", new Box())
+  /** The box being dragged out, in page space; `ScreenshotBox` draws it. */
+  readonly box = atom("screenshot brush", new Box())
 
   override onEnter() {
     this.update()
@@ -53,26 +40,27 @@ export class CameraDragging extends StateNode {
     this.update()
   }
 
+  // On release, export everything under the box as a PNG cropped to it; ctrl copies instead.
   override onPointerUp() {
     const { editor } = this
     const box = this.box.get()
-    if (Math.min(box.w, box.h) * editor.getZoomLevel() < MIN_FRAME_SCREEN_PX) {
-      this.parent.transition("idle")
-      return
+    const ids = editor
+      .getCurrentPageShapes()
+      .filter((shape) => {
+        const bounds = editor.getShapeMaskedPageBounds(shape)
+        return bounds !== undefined && box.includes(bounds)
+      })
+      .map((shape) => shape.id)
+
+    if (ids.length) {
+      if (editor.inputs.getCtrlKey()) void copyAs(editor, ids, { format: "png", bounds: box })
+      else void exportAs(editor, ids, { format: "png", name: "Screenshot", bounds: box })
     }
-    const id = createShapeId()
-    editor.markHistoryStoppingPoint("create crop frame")
-    editor.createShape<CropFrameShape>({
-      id,
-      type: CROP_FRAME,
-      x: box.x,
-      y: box.y,
-      index: frameIndex(editor),
-      props: { w: box.w, h: box.h }
-    })
-    editor.select(id)
-    // The frame's export toolbar only shows under the select tool.
     editor.setCurrentTool("select")
+  }
+
+  override onCancel() {
+    this.editor.setCurrentTool("select")
   }
 
   private update() {
@@ -81,6 +69,7 @@ export class CameraDragging extends StateNode {
   }
 }
 
+/** tldraw's screenshot-tool example: drag a box, release to export it. */
 export class CameraTool extends StateNode {
   static override id = CAMERA_TOOL_ID
   static override initial = "idle"
@@ -95,10 +84,10 @@ export class CameraTool extends StateNode {
   }
 
   override onInterrupt() {
-    this.editor.setCurrentTool("select")
+    this.parent.transition("select", {})
   }
 
   override onCancel() {
-    this.editor.setCurrentTool("select")
+    this.parent.transition("select", {})
   }
 }
