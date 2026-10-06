@@ -15,12 +15,16 @@ interface AppHeaderProps {
 
 // The app's one chrome row. It sits in the page flow, above whatever surface
 // fills the rest of the screen, so it never shares a pixel with canvas UI.
+// Stacked above that surface: tldraw's composited background bleeds one row
+// upward and would cover the bottom stroke.
 const Bar = chakra("header", {
   base: {
+    position: "relative",
+    zIndex: "docked",
     alignItems: "center",
     bg: "bg.panel",
     borderBottomWidth: "1px",
-    borderColor: "border",
+    borderColor: "border.emphasized",
     color: "fg",
     columnGap: { base: "2", md: "3" },
     display: "grid",

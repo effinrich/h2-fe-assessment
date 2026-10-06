@@ -349,6 +349,12 @@ export const ChromeSitsAboveCanvas: Story = {
     await expect(boxesOverlap(header.getBoundingClientRect(), menu.getBoundingClientRect())).toBe(
       false
     )
+    // tldraw's composited background bleeds a row upward and hid the
+    // header's bottom stroke; the header's last row must be the header.
+    const { bottom, left, width } = header.getBoundingClientRect()
+    await expect(header.contains(document.elementFromPoint(left + width / 2, bottom - 0.8))).toBe(
+      true
+    )
   }
 }
 
