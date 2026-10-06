@@ -99,3 +99,15 @@ had paired each route with a feature lib.
   `@h2-fe/home` leaves the project graph.
 - pdf-viewer stays a feature: displaying a document on the canvas is a
   capability, and the viewer route hosts it.
+
+## Amendment (2026-10-06): no web-scoped UI tier
+
+`libs/web/ui` (`@h2-fe/web-ui`) held two components and is removed; the
+promotion ladder above skips that rung.
+
+- `ViewerTopBar` serves only the viewer, so it moves into pdf-viewer
+  (`src/lib/viewer-top-bar/`).
+- `AppHeader` is used by `ViewerTopBar` and by the home route. A lib cannot
+  import the app, so it moves into pdf-viewer too (`src/lib/app-header/`)
+  and pdf-viewer exports it; the app may import features. It is app-branded
+  chrome, not a design-system component, so it stays out of `libs/shared/ui`.

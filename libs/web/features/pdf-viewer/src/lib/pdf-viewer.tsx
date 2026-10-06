@@ -5,7 +5,6 @@ import "tldraw/tldraw.css"
 import "./tldraw-theme.css"
 
 import { useColorMode } from "@h2-fe/ui"
-import { ViewerTopBar } from "@h2-fe/web-ui"
 
 import type { CanvasExtension, PdfViewerScreenProps } from "./types"
 
@@ -16,6 +15,7 @@ import { ViewerCanvas, ViewerRoot } from "./partials/viewer-chrome"
 import { ViewerPageOverlay } from "./partials/viewer-page-overlay"
 import { ViewerStatus } from "./partials/viewer-status"
 import { mergeCanvasExtensions, paperTheme } from "./utils"
+import { ViewerTopBar } from "./viewer-top-bar/viewer-top-bar"
 
 const NO_EXTENSIONS: readonly CanvasExtension[] = []
 const THEMES = { default: paperTheme(DEFAULT_THEME) }

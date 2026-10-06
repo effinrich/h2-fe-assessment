@@ -14,20 +14,15 @@ flowchart TB
     web["@h2-fe/web<br/>routes: / (home, drop a PDF) and /viewer"]
   end
   subgraph features["libs/web/features · scope:web · type:feature"]
-    pdf["@h2-fe/pdf-viewer<br/>pages as locked image shapes"]
+    pdf["@h2-fe/pdf-viewer<br/>pages as locked image shapes; app header"]
     pin["@h2-fe/pin<br/>P: pin shapes together"]
     camera["@h2-fe/camera<br/>C: export an area"]
-  end
-  subgraph webui["libs/web/ui · scope:web · type:ui"]
-    wui["@h2-fe/web-ui<br/>AppHeader, ViewerTopBar"]
   end
   subgraph shared["libs/shared/ui · scope:shared · type:ui"]
     ui["@h2-fe/ui<br/>Chakra v3 system, primitives, components"]
   end
-  web --> pdf & pin & camera & wui & ui
-  pdf --> wui
+  web --> pdf & pin & camera & ui
   pdf & pin & camera --> ui
-  wui --> ui
 ```
 
 `@nx/enforce-module-boundaries` runs inside oxlint: `scope:shared` may import only `scope:shared`, so the design system can never reach into the app.
@@ -80,4 +75,4 @@ lefthook runs lint, format and typecheck on commit and the gate on push; CI runs
 3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
 4. Press **C**, drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame.
 5. Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
-6. Add `export { AppHeader } from "@h2-fe/web-ui"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. The module-boundary rule fails it.
+6. Add `export { AppHeader } from "@h2-fe/pdf-viewer"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. The module-boundary rule fails it.
