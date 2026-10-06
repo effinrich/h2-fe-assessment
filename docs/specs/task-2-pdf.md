@@ -204,6 +204,17 @@ and committed failing before the code exists.
       bridge. — `pdf-viewer.stories.tsx` › `FollowsAppColorMode`;
       `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode"
       (red `e59f932`).
+- [x] **In dark mode, shapes keep their light-mode colours.** Marks sit on
+      white PDF pages, and tldraw's dark palette turns the default "black"
+      into near-white (`#f2f2f2`), which vanished on the page. The viewer
+      passes `<Tldraw themes>` a default theme whose dark palette takes every
+      shape colour (`TLDefaultColor` entries) from the light palette, plus the
+      fill colours `solid` (semi fill) and `negativeSpace` (pattern fill), which
+      otherwise turned a semi-filled rectangle black. Dark UI
+      colours (`text`, `background`, selection) are unchanged. Trade-off: black
+      drawn off the page, on the dark canvas, is low-contrast, and so is the
+      style panel's black swatch. — `pdf-viewer.spec.tsx` › "draws shapes in
+      their light colours in dark mode" (red `8fb96cc`).
 - [x] **The first page opens filling 90% of a phone's width.** tldraw's
       `zoomToFit` padding left it at 72% on a 390px screen. The viewer fits
       page 1 with `zoomToBounds` and an inset of 10% of the viewport width
