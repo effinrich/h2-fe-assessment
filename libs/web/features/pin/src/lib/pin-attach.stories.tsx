@@ -4,7 +4,7 @@ import type { TLShape } from "tldraw"
 import { expect, waitFor, within } from "storybook/test"
 import { createShapeId } from "tldraw"
 
-import { ATTACH_FLASH_MS, PIN_HEAD, PIN_SIZE } from "./consts"
+import { ATTACH_FLASH_MS, PIN_HEAD } from "./consts"
 import { createPinExtension } from "./pin-extension"
 import { feedbackOf } from "./pin-feedback-overlay"
 import { PinStoryCanvas } from "./pin-story-canvas"
@@ -133,11 +133,11 @@ export const PinKeepsMinimumSize: Story = {
     const hitBounds = () => editor.getShapeGeometry(pin).bounds.toJson()
 
     editor.setCamera({ ...editor.getCamera(), z: 1 }, { immediate: true })
-    await waitFor(() => expect(height()).toBeCloseTo(PIN_SIZE.h, 0))
+    await waitFor(() => expect(height()).toBeCloseTo(72, 0))
     const pageHitBounds = hitBounds()
 
     editor.setCamera({ ...editor.getCamera(), z: 0.25 }, { immediate: true })
-    await waitFor(() => expect(height()).toBeCloseTo(PIN_SIZE.h * 0.5, 0))
+    await waitFor(() => expect(height()).toBeCloseTo(36, 0))
     const tip = editor.pageToScreen(tipOf(editor, pin))
     await expect(glyphOf(canvasElement, pin).getBoundingClientRect().bottom).toBeCloseTo(tip.y, 0)
     await expect(hitBounds()).toEqual(pageHitBounds)
