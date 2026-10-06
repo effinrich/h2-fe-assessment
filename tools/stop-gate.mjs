@@ -6,7 +6,8 @@ import { readFileSync } from "node:fs"
 
 let input = {}
 try {
-  input = JSON.parse(readFileSync(0, "utf8") || "{}")
+  // Cursor on Windows prefixes the payload with a byte-order mark.
+  input = JSON.parse(readFileSync(0, "utf8").replace(/^\uFEFF/, "") || "{}")
 } catch {
   // No or malformed payload: treat it as a normal completed turn.
 }
