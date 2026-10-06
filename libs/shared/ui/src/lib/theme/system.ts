@@ -14,7 +14,7 @@ const config = defineConfig({
       fonts: {
         heading: { value: `"Inter Variable", ${systemSans}` },
         body: { value: `"Inter Variable", ${systemSans}` },
-        mono: { value: `"JetBrains Mono Variable", ${systemMono}` }
+        mono: { value: systemMono }
       },
       colors: {
         brand: {
