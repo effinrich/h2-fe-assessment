@@ -1,122 +1,133 @@
 import {
-  Circle2d,
-  Group2d,
+  Box,
+  HTMLContainer,
   Rectangle2d,
   ShapeUtil,
-  Vec,
+  invLerp,
   type RecordProps,
-  type SvgExportContext,
-  type TLShapePartial,
+  type TLShape,
   type TLShapeUtilCanBindOpts
 } from "tldraw"
 
-import type { PinShape, PinState } from "./types"
+export const PIN_TYPE = "pin"
 
-import {
-  PIN_BINDING,
-  PIN_HEAD,
-  PIN_NEEDLE_HIT,
-  PIN_OUTLINE_PATH,
-  PIN_SHAPE,
-  PIN_SIZE,
-  PIN_TIP
-} from "./consts"
-import { PinGlyph } from "./partials/pin-glyph"
-import { PinView } from "./partials/pin-view"
-import { feedbackOf } from "./pin-feedback-overlay"
-import { badgeLabel, glyphScale, pinColors } from "./utils"
+declare module "tldraw" {
+  export interface TLGlobalShapePropsMap {
+    [PIN_TYPE]: Record<string, never>
+  }
+}
+
+export type PinShape = TLShape<typeof PIN_TYPE>
+
+// The geometry is offset so the shape's origin (0,0) is the pin's tip: the point that binds.
+// Sized for PDF pages, which are rasterised at 2x.
+const SIZE = 64
+const OFFSET_X = -32
+const OFFSET_Y = -52
 
 export class PinShapeUtil extends ShapeUtil<PinShape> {
-  static override type = PIN_SHAPE
+  static override type = PIN_TYPE
   static override props: RecordProps<PinShape> = {}
 
-  override getDefaultProps(): PinShape["props"] {
+  override getDefaultProps() {
     return {}
   }
 
-  /** Head and needle only, so clicks beside the needle still reach the shapes below. */
-  override getGeometry() {
-    return new Group2d({
-      children: [
-        new Circle2d({
-          x: PIN_HEAD.cx - PIN_HEAD.r,
-          y: PIN_HEAD.cy - PIN_HEAD.r,
-          radius: PIN_HEAD.r,
-          isFilled: true
-        }),
-        new Rectangle2d({
-          x: PIN_NEEDLE_HIT.x,
-          y: PIN_NEEDLE_HIT.y,
-          width: PIN_NEEDLE_HIT.w,
-          height: PIN_SIZE.h - PIN_NEEDLE_HIT.y,
-          isFilled: true
-        })
-      ]
-    })
+  // Pins can't pin pins, but other bindings (arrows) can still target a pin.
+  override canBind({ toShape, bindingType }: TLShapeUtilCanBindOpts<PinShape>) {
+    return bindingType === PIN_TYPE ? toShape.type !== PIN_TYPE : true
   }
 
-  override component(shape: PinShape) {
-    const count = this.editor.getBindingsFromShape(shape, PIN_BINDING).length
-    const state: PinState = count > 0 ? "holding" : "free"
-    const theme = this.editor.getCurrentTheme().colors[this.editor.getColorMode()]
-    return (
-      <PinView
-        id={shape.id}
-        state={state}
-        colors={pinColors(theme, state)}
-        badge={badgeLabel(count)}
-        attaching={feedbackOf(this.editor)?.isAttaching(shape.id) ?? false}
-        scale={glyphScale(this.editor.getEfficientZoomLevel())}
-      />
-    )
-  }
-
-  override getIndicatorPath() {
-    return new Path2D(PIN_OUTLINE_PATH)
-  }
-
-  override toSvg(shape: PinShape, ctx: SvgExportContext) {
-    const holding = this.editor.getBindingsFromShape(shape, PIN_BINDING).length > 0
-    const theme = this.editor.getCurrentTheme().colors[ctx.colorMode]
-    return <PinGlyph colors={pinColors(theme, holding ? "holding" : "free")} />
-  }
-
-  /** Only a pin can be the `from` end of a pin binding, and never the `to` end. */
-  override canBind({ fromShape, toShape, bindingType }: TLShapeUtilCanBindOpts<PinShape>) {
-    if (bindingType !== PIN_BINDING) return true
-    return fromShape.type === PIN_SHAPE && toShape.type !== PIN_SHAPE
-  }
-
-  /**
-   * Stays upright. Alone it doesn't move at all; with other shapes its tip
-   * goes where the rotation took it.
-   */
-  override onRotate(initial: PinShape, current: PinShape): TLShapePartial<PinShape> {
-    const { x, y, rotation } = initial
-    const alone = this.editor.getSelectedShapeIds().length <= 1
-    if (alone) return { id: current.id, type: current.type, x, y, rotation }
-    const tip = Vec.Add(current, Vec.Rot(PIN_TIP, current.rotation))
-    const origin = Vec.Sub(tip, Vec.Rot(PIN_TIP, rotation))
-    return { id: current.id, type: current.type, x: origin.x, y: origin.y, rotation }
+  override canEdit() {
+    return false
   }
 
   override canResize() {
     return false
   }
 
-  override hideResizeHandles() {
-    return true
-  }
-
   override hideRotateHandle() {
     return true
   }
 
-  override hideSelectionBoundsBg() {
+  override isAspectRatioLocked() {
     return true
   }
 
-  override hideSelectionBoundsFg() {
-    return true
+  override getGeometry() {
+    return new Rectangle2d({
+      width: SIZE,
+      height: SIZE,
+      x: OFFSET_X,
+      y: OFFSET_Y,
+      isFilled: true
+    })
+  }
+
+  override component() {
+    return (
+      <HTMLContainer
+        style={{
+          marginLeft: OFFSET_X,
+          marginTop: OFFSET_Y,
+          width: SIZE,
+          height: SIZE,
+          fontSize: SIZE * 0.8,
+          lineHeight: `${SIZE}px`,
+          textAlign: "center"
+        }}
+      >
+        📍
+      </HTMLContainer>
+    )
+  }
+
+  override toSvg() {
+    return (
+      <text x={OFFSET_X} y={OFFSET_Y + SIZE * 0.8} fontSize={SIZE * 0.8}>
+        📍
+      </text>
+    )
+  }
+
+  override getIndicatorPath() {
+    const path = new Path2D()
+    path.rect(OFFSET_X, OFFSET_Y, SIZE, SIZE)
+    return path
+  }
+
+  // Dragging a pin unpins it; dropping it pins every unlocked shape under its tip.
+  override onTranslateStart(shape: PinShape) {
+    this.editor.deleteBindings(this.editor.getBindingsFromShape(shape, PIN_TYPE))
+  }
+
+  override onTranslateEnd(_initial: PinShape, pin: PinShape) {
+    const tip = this.editor.getShapePageTransform(pin).applyToPoint({ x: 0, y: 0 })
+    const targets = this.editor
+      .getShapesAtPoint(tip, { hitInside: true })
+      .filter(
+        (shape) =>
+          !shape.isLocked &&
+          shape.parentId === pin.parentId &&
+          shape.index < pin.index &&
+          this.editor.canBindShapes({ fromShape: pin, toShape: shape, binding: PIN_TYPE })
+      )
+
+    for (const target of targets) {
+      const bounds = Box.ZeroFix(this.editor.getShapeGeometry(target).bounds)
+      const point = this.editor.getPointInShapeSpace(target, tip)
+      this.editor.createBinding({
+        type: PIN_TYPE,
+        fromId: pin.id,
+        toId: target.id,
+        props: {
+          // Normalised within the target's bounds, so the pin keeps its spot through a resize.
+          anchor: {
+            x: invLerp(bounds.minX, bounds.maxX, point.x),
+            y: invLerp(bounds.minY, bounds.maxY, point.y)
+          }
+        }
+      })
+    }
   }
 }
