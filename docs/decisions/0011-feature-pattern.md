@@ -111,3 +111,13 @@ promotion ladder above skips that rung.
   import the app, so it moves into pdf-viewer too (`src/lib/app-header/`)
   and pdf-viewer exports it; the app may import features. It is app-branded
   chrome, not a design-system component, so it stays out of `libs/shared/ui`.
+
+## Amendment (2026-10-06): a smaller extension seam
+
+Pin and camera were rebuilt from tldraw's own examples, and pdf-viewer no
+longer virtualises pages (ADR 0012). `CanvasExtension` keeps only what they
+use: `toolIds`, `shapeUtils`, `bindingUtils`, `tools`, `overrides` and
+`InFrontOfTheCanvas`. `overlayUtils`, `onMount` and the route's
+`retainPageBounds` wiring are gone, and the pin's `canAttach` option became
+"never bind to a locked shape". The extension stories and specs mentioned
+above were removed with the rest of the test suite.

@@ -1,11 +1,7 @@
 import type { ComponentType } from "react"
 import type {
-  BoxModel,
-  Editor,
   TLAnyBindingUtilConstructor,
-  TLAnyOverlayUtilConstructor,
   TLAnyShapeUtilConstructor,
-  TLOnMountHandler,
   TLStateNodeConstructor,
   TLUiOverrides
 } from "tldraw"
@@ -14,25 +10,15 @@ export interface PdfPage {
   pageNumber: number
   width: number
   height: number
+  /** The rasterised page, as a PNG data URL. */
+  src: string
 }
 
-export interface RenderedPdfPage extends PdfPage {
-  dataUrl: string
-}
-
-export interface PdfDocumentSummary {
+export interface PdfDocument {
   pages: PdfPage[]
-  renderPages: (pageNumbers: number[]) => Promise<RenderedPdfPage[]>
-  destroy: () => Promise<void>
 }
 
 export type FileToken = string
-
-export interface PageOverlay {
-  page: number
-  state: "loading" | "error"
-  style: { left: number; top: number; width: number; height: number }
-}
 
 /**
  * Editor capabilities a feature contributes to the viewer's canvas. Create
@@ -44,10 +30,8 @@ export interface CanvasExtension {
   shapeUtils?: readonly TLAnyShapeUtilConstructor[]
   bindingUtils?: readonly TLAnyBindingUtilConstructor[]
   tools?: readonly TLStateNodeConstructor[]
-  overlayUtils?: readonly TLAnyOverlayUtilConstructor[]
   overrides?: TLUiOverrides
   InFrontOfTheCanvas?: ComponentType
-  onMount?: TLOnMountHandler
 }
 
 export interface MergedCanvasExtensions {
@@ -55,24 +39,17 @@ export interface MergedCanvasExtensions {
   shapeUtils: readonly TLAnyShapeUtilConstructor[]
   bindingUtils: readonly TLAnyBindingUtilConstructor[]
   tools: readonly TLStateNodeConstructor[]
-  overlayUtils: readonly TLAnyOverlayUtilConstructor[]
   overrides: TLUiOverrides[]
   inFrontOfTheCanvas: readonly ComponentType[]
-  onMount: readonly TLOnMountHandler[]
 }
 
 export interface PdfViewerScreenProps {
   filename?: string
   onMarksChange?: (hasMarks: boolean) => void
-  document?: PdfDocumentSummary
+  document?: PdfDocument
   isLoading?: boolean
   isError?: boolean
   onRetry?: () => void
   onOpenAnother: () => void
   extensions?: readonly CanvasExtension[]
-  /**
-   * Page-space boxes whose pages stay on the canvas even when off-screen.
-   * Read reactively: store reads made here re-run page virtualisation.
-   */
-  retainPageBounds?: (editor: Editor) => readonly BoxModel[]
 }

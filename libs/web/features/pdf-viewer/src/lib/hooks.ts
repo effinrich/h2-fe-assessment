@@ -1,30 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import { useCallback, useEffect, useRef, useState } from "react"
-import { react, unsafe__withoutCapture, type BoxModel, type Editor } from "tldraw"
+import { useCallback, useEffect, useState } from "react"
+import { react, type Editor } from "tldraw"
 
-import type {
-  FileToken,
-  MergedCanvasExtensions,
-  PageOverlay,
-  PdfViewerScreenProps,
-  RenderedPdfPage
-} from "./types"
+import type { FileToken, PdfViewerScreenProps } from "./types"
 
-import {
-  activePageNumber,
-  hasUserMarks,
-  keptPageNumbers,
-  openPdf,
-  pageBounds,
-  pageOverlays,
-  placePagesOnCanvas,
-  sameOverlays,
-  samePageNumbers,
-  syncVisiblePages,
-  visiblePageNumbers
-} from "./utils"
-
-const NO_BOXES: readonly BoxModel[] = []
+import { activePageNumber, hasUserMarks, openPdf, pageBounds, placePages } from "./utils"
 
 const fileTokens = new WeakMap<File, string>()
 let nextFileToken = 0
@@ -48,9 +28,7 @@ export function usePdfPages(file: File | null) {
     queryFn: async ({ signal }) => {
       const data = await file!.arrayBuffer()
       if (signal.aborted) throw signal.reason
-      const document = await openPdf(data)
-      if (signal.aborted) await document.destroy()
-      return document
+      return openPdf(data)
     },
     queryKey: ["pdf-pages", pdfFileToken(file)],
     retry: false,
@@ -59,19 +37,15 @@ export function usePdfPages(file: File | null) {
   })
 }
 
-/** The mounted editor, kept in the app's colour mode, with every extension's `onMount` run. */
-export function useCanvasEditor(colorMode: "light" | "dark", merged: MergedCanvasExtensions) {
+/** The mounted editor, kept in the app's colour mode. */
+export function useCanvasEditor(colorMode: "light" | "dark") {
   const [editor, setEditor] = useState<Editor | null>(null)
   const handleMount = useCallback(
     (mountedEditor: Editor) => {
       mountedEditor.setColorMode(colorMode)
       setEditor(mountedEditor)
-      const teardowns = merged.onMount.map((onMount) => onMount(mountedEditor))
-      return () => {
-        for (const teardown of teardowns) teardown?.()
-      }
     },
-    [colorMode, merged]
+    [colorMode]
   )
   useEffect(() => {
     editor?.setColorMode(colorMode)
@@ -96,125 +70,22 @@ export function useMarksChange(
   }, [editor, onMarksChange])
 }
 
-/**
- * Page virtualisation: only pages on screen (or under a retained box) are
- * shapes, rasterised on demand. Reports the active page and the loading /
- * failed overlays, and navigates by page.
- */
-export function useVisiblePages(
+/** Puts the document's pages on the canvas, tracks the page in view and navigates by page. */
+export function usePageNavigation(
   editor: Editor | null,
-  document: PdfViewerScreenProps["document"],
-  retainPageBounds: PdfViewerScreenProps["retainPageBounds"]
+  document: PdfViewerScreenProps["document"]
 ) {
-  const retainPageBoundsRef = useRef(retainPageBounds)
-  useEffect(() => {
-    retainPageBoundsRef.current = retainPageBounds
-  }, [retainPageBounds])
   const [page, setPage] = useState(1)
-  const [overlays, setOverlays] = useState<PageOverlay[]>([])
-  const retryPage = useRef<(pageNumber: number) => void>(() => {})
 
   useEffect(() => {
     if (!editor || !document || document.pages.length === 0) return () => {}
-    placePagesOnCanvas(editor, document.pages)
-
-    let active = true
-    const renderedPages = new Map<number, RenderedPdfPage>()
-    const renderingPages = new Set<number>()
-    const failedPages = new Set<number>()
-    // What React and the store were last told; an update that would repeat
-    // either is skipped, so panning within the same pages costs no commit.
-    let visible: number[] = []
-    let retained: readonly BoxModel[] = NO_BOXES
-    let shownPage: number | undefined
-    let shownOverlays: PageOverlay[] | undefined
-
-    const requestRasters = () => {
-      for (const pageNumber of visible) {
-        if (
-          renderedPages.has(pageNumber) ||
-          renderingPages.has(pageNumber) ||
-          failedPages.has(pageNumber)
-        )
-          continue
-        renderingPages.add(pageNumber)
-        void document
-          .renderPages([pageNumber])
-          .then((pages) => {
-            if (!active) return
-            const rendered = pages.filter((renderedPage) =>
-              visible.includes(renderedPage.pageNumber)
-            )
-            for (const renderedPage of rendered) {
-              renderedPages.set(renderedPage.pageNumber, renderedPage)
-            }
-            syncVisiblePages(editor, document.pages, visible, rendered)
-          })
-          .catch(() => {
-            if (!active) return
-            failedPages.add(pageNumber)
-          })
-          .finally(() => {
-            renderingPages.delete(pageNumber)
-            if (active) update(editor.getViewportPageBounds())
-          })
-      }
-    }
-
-    const update = (bounds: BoxModel) => {
-      if (!active) return
-      const onScreen = visiblePageNumbers(document.pages, bounds)
-      const nextVisible = keptPageNumbers(document.pages, bounds, retained)
-      if (!samePageNumbers(nextVisible, visible)) {
-        visible = nextVisible
-        for (const pageNumber of renderedPages.keys()) {
-          if (!visible.includes(pageNumber)) renderedPages.delete(pageNumber)
-        }
-        syncVisiblePages(editor, document.pages, visible, [])
-      }
-
-      const nextPage = activePageNumber(document.pages, bounds)
-      if (nextPage !== shownPage) {
-        shownPage = nextPage
-        setPage(nextPage)
-      }
-
-      requestRasters()
-
-      const nextOverlays = pageOverlays(
-        editor,
-        document.pages,
-        onScreen,
-        renderingPages,
-        failedPages
-      )
-      if (!shownOverlays || !sameOverlays(nextOverlays, shownOverlays)) {
-        shownOverlays = nextOverlays
-        setOverlays(nextOverlays)
-      }
-    }
-
-    retryPage.current = (pageNumber) => {
-      failedPages.delete(pageNumber)
-      update(editor.getViewportPageBounds())
-    }
-    // Tracks only the viewport (camera + screen bounds) and the retained
-    // boxes, never the pointer. Store reads made while syncing pages must not
-    // become dependencies.
-    const stopReacting = react("pdf-viewer visible pages", () => {
-      const bounds = editor.getViewportPageBounds()
-      const nextRetained = retainPageBoundsRef.current?.(editor) ?? NO_BOXES
-      unsafe__withoutCapture(() => {
-        retained = nextRetained
-        update(bounds)
-      })
+    const removePages = placePages(editor, document.pages)
+    const stopTracking = react("pdf-viewer active page", () => {
+      setPage(activePageNumber(document.pages, editor.getViewportPageBounds()))
     })
     return () => {
-      active = false
-      retryPage.current = () => {}
-      stopReacting()
-      syncVisiblePages(editor, document.pages, [], [])
-      renderedPages.clear()
+      stopTracking()
+      removePages()
     }
   }, [editor, document])
 
@@ -226,7 +97,6 @@ export function useVisiblePages(
     },
     [editor, document]
   )
-  const handleRetryPage = useCallback((pageNumber: number) => retryPage.current(pageNumber), [])
 
-  return { page, overlays, jumpToPage, retryPage: handleRetryPage }
+  return { page, jumpToPage }
 }

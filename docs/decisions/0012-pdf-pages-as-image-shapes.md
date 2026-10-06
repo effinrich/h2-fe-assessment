@@ -74,3 +74,17 @@ without a rewrite.
 - **Scroll-back re-rasterises** until a raster cache lands.
 - **Revisit** if pages ever need bindings, or if zoomed-in sharpness is
   judged unacceptable before the resolution fix ships.
+
+## Amendment (2026-10-06): every page up front, no virtualisation
+
+Option A stays, without the viewport eviction. `openPdf` rasterises every
+page once, the way tldraw's PDF editor example does, and the viewer places
+them all as locked image shapes in one history-ignored `editor.run`. That
+removes the pending/raster asset swap, the per-page loading overlays, and
+`retainPageBounds` (crop frames no longer need their pages kept alive).
+
+- **Memory** now grows with page count, not viewport: one PNG data URL per
+  page in the store. Acceptable for documents of tens of pages; long
+  documents would bring eviction back.
+- **Opening** waits for every page, behind the existing loading state.
+- Pins still skip page shapes, now because the pages are locked.
