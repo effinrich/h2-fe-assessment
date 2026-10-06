@@ -1,72 +1,29 @@
-import {
-  atom,
-  createShapeId,
-  StateNode,
-  type BoxModel,
-  type Editor,
-  type TLKeyboardEventInfo,
-  type TLPointerEventInfo
-} from "tldraw"
+import { atom, Box, createShapeId, getIndexBetween, StateNode, type Editor } from "tldraw"
 
 import type { CropFrameShape } from "./types"
 
-import { CAMERA_TOOL_ID, CROP_FRAME } from "./consts"
-import { claimFirstUseHint } from "./first-use-hint/first-use-hint"
-import { defaultFrameBox, frameInsertIndex, isBelowMinSize, normaliseBox } from "./utils/utils"
+import { CAMERA_TOOL_ID, CROP_FRAME, MIN_FRAME_SCREEN_PX } from "./consts"
 
-function cropFrameInsertIndex(editor: Editor) {
-  const siblings = editor
+/**
+ * Just under the lowest unlocked mark: above the locked PDF pages, so a click
+ * inside the (filled) frame selects it, but never over a mark's own hit area.
+ */
+function frameIndex(editor: Editor) {
+  const shapes = editor
     .getSortedChildIdsForParent(editor.getCurrentPageId())
-    .flatMap((childId) => {
-      const shape = editor.getShape(childId)
-      if (!shape) return []
-      const isMark = shape.type !== CROP_FRAME && !editor.isShapeOrAncestorLocked(shape)
-      return [{ index: shape.index, isMark }]
-    })
-  return frameInsertIndex(siblings)
-}
-
-function createCropFrame(editor: Editor, box: BoxModel) {
-  const id = createShapeId()
-  editor.markHistoryStoppingPoint("crop-frame")
-  editor.createShape<CropFrameShape>({
-    id,
-    type: CROP_FRAME,
-    x: box.x,
-    y: box.y,
-    index: cropFrameInsertIndex(editor),
-    props: { w: box.w, h: box.h }
-  })
-  editor.select(id)
-  // Always back to select, even with tool lock: the frame's export actions
-  // only show while it is selected.
-  editor.setCurrentTool("select")
-}
-
-/** The keyboard path: a default-size frame centred in the viewport. */
-export function dropDefaultFrame(editor: Editor) {
-  createCropFrame(editor, defaultFrameBox(editor.getViewportPageBounds(), editor.getZoomLevel()))
+    .flatMap((id) => editor.getShape(id) ?? [])
+  const lowestMark = shapes.findIndex(
+    (shape) => shape.type !== CROP_FRAME && !editor.isShapeOrAncestorLocked(shape)
+  )
+  if (lowestMark === -1) return undefined
+  return getIndexBetween(shapes[lowestMark - 1]?.index, shapes[lowestMark]?.index)
 }
 
 class CameraIdle extends StateNode {
   static override id = "idle"
 
-  override onEnter() {
-    this.editor.setCursor({ type: "cross", rotation: 0 })
-  }
-
-  override onPointerDown(info: TLPointerEventInfo) {
-    if (info.button !== 0) return
+  override onPointerDown() {
     this.parent.transition("pointing")
-  }
-
-  override onKeyDown(info: TLKeyboardEventInfo) {
-    const hasModifier = info.ctrlKey || info.metaKey || info.altKey || info.shiftKey
-    if (info.key === "Enter" && !hasModifier) dropDefaultFrame(this.editor)
-  }
-
-  override onCancel() {
-    this.editor.setCurrentTool("select")
   }
 }
 
@@ -80,85 +37,68 @@ class CameraPointing extends StateNode {
   override onPointerUp() {
     this.parent.transition("idle")
   }
-
-  override onCancel() {
-    this.parent.transition("idle")
-  }
-
-  override onInterrupt() {
-    this.parent.transition("idle")
-  }
 }
 
 export class CameraDragging extends StateNode {
   static override id = "dragging"
 
-  /** The in-flight crop box in page space; read by `CropMarquee`. */
-  readonly marquee = atom<BoxModel | null>("crop marquee", null)
+  /** The box being dragged out, in page space; `CropMarquee` draws it. */
+  readonly box = atom("crop marquee", new Box())
 
   override onEnter() {
-    this.editor.getStateDescendant<CameraTool>(CAMERA_TOOL_ID)?.hint.set(false)
-    this.updateMarquee()
+    this.update()
   }
 
   override onPointerMove() {
-    this.updateMarquee()
-  }
-
-  override onTick({ elapsed }: { elapsed: number }) {
-    this.editor.edgeScrollManager.updateEdgeScrolling(elapsed)
-    this.updateMarquee()
+    this.update()
   }
 
   override onPointerUp() {
-    this.complete()
-  }
-
-  override onComplete() {
-    this.complete()
-  }
-
-  override onCancel() {
-    this.parent.transition("idle")
-  }
-
-  override onInterrupt() {
-    this.parent.transition("idle")
-  }
-
-  override onExit() {
-    this.marquee.set(null)
-  }
-
-  private updateMarquee() {
-    const { inputs } = this.editor
-    this.marquee.set(normaliseBox(inputs.getOriginPagePoint(), inputs.getCurrentPagePoint()))
-  }
-
-  private complete() {
-    const box = this.marquee.get()
-    if (!box || isBelowMinSize(box, this.editor.getZoomLevel())) {
+    const { editor } = this
+    const box = this.box.get()
+    if (Math.min(box.w, box.h) * editor.getZoomLevel() < MIN_FRAME_SCREEN_PX) {
       this.parent.transition("idle")
       return
     }
-    createCropFrame(this.editor, box)
+    const id = createShapeId()
+    editor.markHistoryStoppingPoint("create crop frame")
+    editor.createShape<CropFrameShape>({
+      id,
+      type: CROP_FRAME,
+      x: box.x,
+      y: box.y,
+      index: frameIndex(editor),
+      props: { w: box.w, h: box.h }
+    })
+    editor.select(id)
+    // The frame's export toolbar only shows under the select tool.
+    editor.setCurrentTool("select")
+  }
+
+  private update() {
+    const { inputs } = this.editor
+    this.box.set(Box.FromPoints([inputs.getOriginPagePoint(), inputs.getCurrentPagePoint()]))
   }
 }
 
 export class CameraTool extends StateNode {
   static override id = CAMERA_TOOL_ID
   static override initial = "idle"
-  static override isLockable = false
   static override children = () => [CameraIdle, CameraPointing, CameraDragging]
 
-  /** Whether the first-use hint shows; read by `FirstUseHint`. */
-  readonly hint = atom("camera first-use hint", false)
-
   override onEnter() {
-    if (claimFirstUseHint()) this.hint.set(true)
+    this.editor.setCursor({ type: "cross", rotation: 0 })
   }
 
   override onExit() {
-    this.hint.set(false)
+    this.editor.setCursor({ type: "default", rotation: 0 })
+  }
+
+  override onInterrupt() {
+    this.editor.setCurrentTool("select")
+  }
+
+  override onCancel() {
+    this.editor.setCurrentTool("select")
   }
 }
