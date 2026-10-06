@@ -4,7 +4,7 @@ import { Box, computed, useEditor, type Computed, type Editor, type TLUiOverride
 
 import type { CameraExtension, CameraExtensionOptions } from "./types"
 
-import { CameraTool, dropDefaultFrame } from "./camera-tool"
+import { CameraTool, CropFrameShapeUtil, dropDefaultFrame } from "./classes"
 import {
   CAMERA_KBD,
   CAMERA_TOOL_ID,
@@ -14,7 +14,6 @@ import {
   CROP_FRAME_TOOLBAR_LABEL
 } from "./consts"
 import { CropFrameToolbar } from "./crop-frame-toolbar/crop-frame-toolbar"
-import { CropFrameShapeUtil } from "./crop-frame/crop-frame-shape-util"
 import { CropMarquee } from "./crop-frame/crop-marquee"
 import { registerCropShortcuts } from "./crop-shortcuts"
 import { withFramelessExports } from "./export-actions"

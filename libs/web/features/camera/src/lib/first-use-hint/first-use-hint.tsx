@@ -2,7 +2,7 @@ import { useEditor, useValue } from "tldraw"
 
 import { Box, Text } from "@h2-fe/ui"
 
-import type { CameraTool } from "../camera-tool"
+import type { CameraTool } from "../classes"
 
 import { CAMERA_TOOL_ID, FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY } from "../consts"
 

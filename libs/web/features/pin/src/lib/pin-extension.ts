@@ -2,15 +2,13 @@ import { createElement } from "react"
 
 import type { PinExtension, PinExtensionOptions } from "./types"
 
+import { createPinTool, PinBindingUtil, PinFeedbackOverlayUtil, PinShapeUtil } from "./classes"
 import { PIN_KBD, PIN_LABEL, PIN_LABEL_KEY, PIN_TOOL_ID } from "./consts"
-import { FirstUseHint } from "./first-use-hint"
+import { FirstUseHint } from "./first-use-hint/first-use-hint"
 import { PinIcon } from "./partials/pin-icon"
-import { PinBindingUtil } from "./pin-binding-util"
-import { feedbackOf, PinFeedbackOverlayUtil } from "./pin-feedback-overlay"
+import { feedbackOf } from "./pin-feedback-overlay"
 import { listenForAncestorMoves } from "./pin-follow"
 import { listenForLocks, listenForRest, settlePins, type Settle } from "./pin-settle"
-import { PinShapeUtil } from "./pin-shape-util"
-import { createPinTool } from "./pin-tool"
 
 /**
  * The pin tool as a canvas extension. Create it once (module scope or

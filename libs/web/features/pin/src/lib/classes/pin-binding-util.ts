@@ -7,11 +7,11 @@ import {
   type TLShapeId
 } from "tldraw"
 
-import type { PinBinding } from "./types"
+import type { PinBinding } from "../types"
 
-import { PIN_BINDING } from "./consts"
-import { deleteOrphans, follow, rebaseline } from "./pin-follow"
-import { classifyChange } from "./utils"
+import { PIN_BINDING } from "../consts"
+import { deleteOrphans, follow, rebaseline } from "../pin-follow"
+import { classifyChange } from "../utils"
 
 /**
  * Pin bindings run from a pin to a held shape, with the shape's page origin

@@ -10,7 +10,7 @@ import {
   type TLShapeUtilCanBindOpts
 } from "tldraw"
 
-import type { PinShape, PinState } from "./types"
+import type { PinShape, PinState } from "../types"
 
 import {
   PIN_BINDING,
@@ -20,11 +20,11 @@ import {
   PIN_SHAPE,
   PIN_SIZE,
   PIN_TIP
-} from "./consts"
-import { PinGlyph } from "./partials/pin-glyph"
-import { PinView } from "./partials/pin-view"
-import { feedbackOf } from "./pin-feedback-overlay"
-import { badgeLabel, glyphScale, pinColors } from "./utils"
+} from "../consts"
+import { PinGlyph } from "../partials/pin-glyph"
+import { PinView } from "../partials/pin-view"
+import { feedbackOf } from "../pin-feedback-overlay"
+import { badgeLabel, glyphScale, pinColors } from "../utils"
 
 export class PinShapeUtil extends ShapeUtil<PinShape> {
   static override type = PIN_SHAPE

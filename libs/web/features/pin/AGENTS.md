@@ -1,6 +1,6 @@
 # `@h2-fe/pin`
 
-Feature at `libs/web/features/pin`. A canvas extension, not a route.
+Feature at `libs/web/features/pin`. A canvas extension, not a route. Classes live in `src/lib/classes/` (`PinTool`, `PinIdle`, `PinPointing`, `PinShapeUtil`, `PinBindingUtil`, `PinFeedbackOverlayUtil`).
 
 ## Boundaries
 

@@ -2,9 +2,9 @@ import { useEditor, useValue } from "tldraw"
 
 import { Box, Text } from "@h2-fe/ui"
 
-import type { PinTool } from "./pin-tool"
+import type { PinTool } from "../classes/pin-tool"
 
-import { FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY, PIN_TOOL_ID } from "./consts"
+import { FIRST_USE_HINT, FIRST_USE_HINT_STORAGE_KEY, PIN_TOOL_ID } from "../consts"
 
 /** Whether to show the hint on this tool entry: once per browser session. */
 export function claimFirstUseHint(): boolean {

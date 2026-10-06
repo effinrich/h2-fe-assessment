@@ -1,6 +1,6 @@
 # `@h2-fe/pdf-viewer`
 
-Feature at `libs/web/features/pdf-viewer`. The screen and the PDF-page shapes. `apps/web` composes pin and camera onto it.
+Feature at `libs/web/features/pdf-viewer`. The screen and the PDF-page shapes. `apps/web` composes pin and camera onto it. Classes live in `src/lib/classes/`.
 
 ## Boundaries
 
