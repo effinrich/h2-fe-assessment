@@ -16,7 +16,7 @@ slow_ is the engineering being assessed.
 
 ## What the demo does
 
-From `docs/demos.md` — OCR of the video, so labels and sequence are reliable and
+From OCR of the reference video, so labels and sequence are reliable and
 spatial detail is not:
 
 | Time     | Observed                                                           |

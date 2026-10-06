@@ -10,7 +10,7 @@ the ambiguity is the interesting part and it should survive into this document.
 
 ## What the demos do
 
-From `docs/demos.md`. Note explicitly whether this is observed from the video or
+From the reference video. Note explicitly whether this is observed from the video or
 inferred, so a guess never reads as a fact.
 
 ## What we do differently, and why
