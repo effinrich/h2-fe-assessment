@@ -2,14 +2,12 @@ import { useEffect, useMemo } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { createCameraExtension, getCropFrameBounds } from "@h2-fe/camera"
-import { isPdfPageShape, PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
+import { PdfViewerScreen, usePdfPages } from "@h2-fe/pdf-viewer"
 import type { CanvasExtension } from "@h2-fe/pdf-viewer"
-import { createPinExtension } from "@h2-fe/pin"
+import { pinExtension } from "@h2-fe/pin"
 
 import { useDocumentLifetime, useLeaveGuard } from "./hooks"
 import { LeaveDocumentModal } from "./partials/leave-document-modal"
-
-const pinExtension = createPinExtension({ canAttach: (shape) => !isPdfPageShape(shape) })
 
 // The route that owns the document: it reads the file home handed off through
 // the navigation state, rasterises it through the lib's query hook, and

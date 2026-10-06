@@ -1,58 +1,33 @@
+import type { TLUiOverrides } from "tldraw"
+
 import { createElement } from "react"
 
-import type { PinExtension, PinExtensionOptions } from "./types"
-
-import { PIN_KBD, PIN_LABEL, PIN_LABEL_KEY, PIN_TOOL_ID } from "./consts"
-import { FirstUseHint } from "./first-use-hint"
 import { PinIcon } from "./partials/pin-icon"
 import { PinBindingUtil } from "./pin-binding-util"
-import { feedbackOf, PinFeedbackOverlayUtil } from "./pin-feedback-overlay"
-import { listenForAncestorMoves } from "./pin-follow"
-import { listenForLocks, listenForRest, settlePins, type Settle } from "./pin-settle"
-import { PinShapeUtil } from "./pin-shape-util"
-import { createPinTool } from "./pin-tool"
+import { PIN_TYPE, PinShapeUtil } from "./pin-shape-util"
+import { PinTool } from "./pin-tool"
 
-/**
- * The pin tool as a canvas extension. Create it once (module scope or
- * `useMemo`): tldraw expects stable util and tool arrays.
- */
-export function createPinExtension({
-  canAttach = () => true
-}: PinExtensionOptions = {}): PinExtension {
-  const settle: Settle = (editor, pinIds) => {
-    const attached = settlePins(editor, pinIds, canAttach)
-    if (attached.size > 0) feedbackOf(editor)?.flash(attached)
-  }
+const LABEL_KEY = "tool.pin"
 
-  return {
-    toolIds: [PIN_TOOL_ID],
-    shapeUtils: [PinShapeUtil],
-    bindingUtils: [PinBindingUtil],
-    tools: [createPinTool(settle)],
-    overlayUtils: [PinFeedbackOverlayUtil],
-    overrides: {
-      tools: (editor, tools) => ({
-        ...tools,
-        [PIN_TOOL_ID]: {
-          id: PIN_TOOL_ID,
-          label: PIN_LABEL_KEY,
-          icon: createElement(PinIcon),
-          kbd: PIN_KBD,
-          onSelect: () => editor.setCurrentTool(PIN_TOOL_ID)
-        }
-      }),
-      translations: { en: { [PIN_LABEL_KEY]: PIN_LABEL } }
-    },
-    InFrontOfTheCanvas: FirstUseHint,
-    onMount: (editor) => {
-      const stopRest = listenForRest(editor, settle)
-      const stopLocks = listenForLocks(editor, settle)
-      const stopAncestors = listenForAncestorMoves(editor)
-      return () => {
-        stopRest()
-        stopLocks()
-        stopAncestors()
-      }
+const overrides: TLUiOverrides = {
+  tools: (editor, tools) => ({
+    ...tools,
+    [PIN_TYPE]: {
+      id: PIN_TYPE,
+      label: LABEL_KEY,
+      icon: createElement(PinIcon),
+      kbd: "p",
+      onSelect: () => editor.setCurrentTool(PIN_TYPE)
     }
-  }
+  }),
+  translations: { en: { [LABEL_KEY]: "Pin" } }
+}
+
+/** The pin tool (`P`) for a tldraw canvas. Pins never attach to locked shapes, such as PDF pages. */
+export const pinExtension = {
+  toolIds: [PIN_TYPE],
+  shapeUtils: [PinShapeUtil],
+  bindingUtils: [PinBindingUtil],
+  tools: [PinTool],
+  overrides
 }
