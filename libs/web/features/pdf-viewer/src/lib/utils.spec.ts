@@ -50,7 +50,18 @@ describe("placePagesOnCanvas", () => {
         props: expect.objectContaining({ src: null, w: 100, h: 140 })
       })
     ])
-    expect(editorStub.zoomToFit).toHaveBeenCalledTimes(1)
+    expect(editorStub.zoomToBounds).toHaveBeenCalledTimes(1)
+  })
+
+  it("fits the first page with a 10% inset, so it fills 90% of a phone's width", () => {
+    const editorStub = createEditorStub()
+    Reflect.apply(placePagesOnCanvas, undefined, [editorStub, [page, page2]])
+
+    expect(editorStub.zoomToFit).not.toHaveBeenCalled()
+    expect(editorStub.zoomToBounds).toHaveBeenCalledWith(
+      { x: 0, y: 0, w: 100, h: 140 },
+      expect.objectContaining({ inset: 390 * 0.1 })
+    )
   })
 
   it("lands each raster on a fresh asset and repoints the page shape", () => {

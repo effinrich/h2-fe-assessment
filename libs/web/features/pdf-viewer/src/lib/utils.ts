@@ -19,7 +19,13 @@ import type {
   RenderedPdfPage
 } from "./types"
 
-import { PDF_PAGE_ASSET_ID, PDF_PAGE_GAP, PDF_PAGE_SHAPE_ID, VIEWER_OVERRIDES } from "./consts"
+import {
+  FIT_INSET_SHARE,
+  PDF_PAGE_ASSET_ID,
+  PDF_PAGE_GAP,
+  PDF_PAGE_SHAPE_ID,
+  VIEWER_OVERRIDES
+} from "./consts"
 
 // pdfjs renders off the main thread; the worker URL is resolved by the bundler.
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc
@@ -248,8 +254,15 @@ export function pageOverlays(
 export function placePagesOnCanvas(editor: Editor, pages: PdfPage[]): void {
   if (pages.length === 0) return
 
-  syncVisiblePages(editor, pages, [pages[0].pageNumber], [])
-  editor.zoomToFit({ animation: { duration: 200 } })
+  const first = pages[0]
+  syncVisiblePages(editor, pages, [first.pageNumber], [])
+  editor.zoomToBounds(
+    { x: 0, y: 0, w: first.width, h: first.height },
+    {
+      inset: editor.getViewportScreenBounds().w * FIT_INSET_SHARE,
+      animation: { duration: 200 }
+    }
+  )
 }
 
 let rasterSequence = 0
