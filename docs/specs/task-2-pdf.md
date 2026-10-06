@@ -204,6 +204,15 @@ and committed failing before the code exists.
       bridge. — `pdf-viewer.stories.tsx` › `FollowsAppColorMode`;
       `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode"
       (red `e59f932`).
+- [ ] **In dark mode, shapes keep their light-mode colours.** Marks sit on
+      white PDF pages, and tldraw's dark palette turns the default "black"
+      into near-white (`#f2f2f2`), which vanished on the page. The viewer
+      passes `<Tldraw themes>` a default theme whose dark palette takes every
+      shape colour (`TLDefaultColor` entries) from the light palette; dark UI
+      colours (`text`, `background`, selection) are unchanged. Trade-off: black
+      drawn off the page, on the dark canvas, is low-contrast. —
+      `pdf-viewer.spec.tsx` › "draws shapes in their light colours in dark
+      mode".
 
 Dropped: **"The renderer element is mounted exactly once across pan, zoom,
 resize and reparent."** It described the `getAppOwnedElement` design that was
