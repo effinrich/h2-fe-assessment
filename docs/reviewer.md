@@ -19,17 +19,17 @@ On `/`, choose **Open PDF** or **Use an example**, or drop a PDF anywhere on the
 
 ## The canvas
 
-The ‹ / › arrows and the page field in the header move between pages. Pages you cannot see are not redrawn.
+The ‹ / › arrows and the page field in the header move between pages. Every page is rendered once and placed on the canvas as a locked image.
 
 Draw a rectangle. **Open another** (top right) warns before discarding marks. Cancel keeps the canvas.
 
 ## Pin
 
-Press **P**. Click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
+Draw two overlapping shapes. Press **P** and click where they overlap. Drag one: the other follows. Pins do not attach to PDF pages, which are locked. Built on tldraw's pin-bindings example.
 
 ## Export area
 
-Press **C**. Drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. An empty frame leaves those actions disabled.
+Press **C**. Drag a frame. **Download PNG**, **Copy image**, and **Download SVG** sit on the frame. A frame with nothing under it says so in a toast. Built on tldraw's screenshot-tool example.
 
 ## Color mode
 
