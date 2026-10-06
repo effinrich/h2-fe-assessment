@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "sb-mcp-server": {
+      "url": "http://localhost:4400/mcp"
+    }
+  }
+}
