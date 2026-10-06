@@ -16,7 +16,10 @@ judgement. This is the cheapest credibility in the submission.
 - **No SSR.** Still true. (The router is no longer excluded — two routes are
   live; see 0002's amendment and ADR 0011.)
 - **three.js.** Considered and declined; see 0003.
-- **Tailwind, Radix, shadcn.** Considered and declined; see 0004.
+- **Tailwind, Radix, shadcn.** Considered and declined; see 0004 and 0014.
+- **Build-time CSS (Panda + Ark).** Chakra generates CSS at runtime. Panda
+  would compile it; Chakra's tokens and recipes already follow Panda's model,
+  so the move stays open. See 0014.
 - **Publishing the UI library.** It is a real workspace package with enforced
   boundaries, and it stays publishable — but publishable is not published, and
   no release process is implied.
