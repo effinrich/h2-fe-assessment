@@ -330,6 +330,8 @@ describe("PdfViewerScreen", () => {
     const themed = tldrawStub.props?.themes?.default?.colors.dark
     expect(themed?.black).toEqual(light.black)
     expect(themed?.red).toEqual(light.red)
+    expect(themed?.solid).toBe(light.solid)
+    expect(themed?.negativeSpace).toBe(light.negativeSpace)
     expect(themed?.text).toBe(dark.text)
     expect(themed?.background).toBe(dark.background)
     expect(tldrawStub.props?.themes?.default?.colors.light).toEqual(light)
