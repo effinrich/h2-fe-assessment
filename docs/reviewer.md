@@ -2,6 +2,8 @@
 
 A PDF annotation canvas. About five minutes, from the repo root.
 
+Watch the [narrated video walkthrough on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be).
+
 The open-document screen is the `/` route in `apps/web`; pin, camera, and the PDF viewer are separate capabilities, and the viewer route composes pin and camera.
 
 ## Run
