@@ -8,9 +8,9 @@
 
 Most of the code here is written with an AI agent. AI-written styles fail in
 predictable ways: invented spacing, colors and token names; raw pixel and hex
-values that bypass the design system; utility classes that conflict, where the
-outcome depends on their order. The browser accepts all of these silently. The
-case is made in
+values that bypass the design system; utility classes that conflict silently,
+with the winner determined by generated stylesheet order, not class-string
+order. The browser accepts these conflicts without warning. The case is made in
 [The case for compiled, typed CSS (blame AI)](https://dev.to/slafleche/the-case-for-compiled-typed-css-blame-ai-8m8):
 TypeScript catches most of what AI gets wrong, but CSS has no compiler. The
 deciding property is verification, not where the styles are written.
@@ -27,7 +27,7 @@ follow Panda's API.
 
 ## Decision
 
-**Chakra UI v3 for app chrome, with typed tokens and recipes.**
+**Chakra UI v3 for app chrome, with theme tokens and recipes.**
 
 Why Chakra over Park UI + Panda:
 
@@ -44,7 +44,9 @@ Why typed styles over Tailwind:
   intended vocabulary is our theme (`brand.solid`, `bg.canvas`, `fg.error` in
   `libs/shared/ui/src/lib/theme/system.ts`). Until `strictTokens` is on (see
   Consequences), props still accept free-form strings.
-- No class order to get wrong: a style prop has one value.
+- A style prop has one value per property; Tailwind silently accepts conflicting
+  utilities, whose winner follows generated stylesheet order and can contradict
+  author intent.
 - A token defined once in TypeScript is exported as a CSS variable, which is
   what the tldraw bridge reads (0013). There is no second copy to drift.
 
