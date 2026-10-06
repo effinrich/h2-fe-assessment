@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { Tldraw } from "tldraw"
+import { DEFAULT_THEME, Tldraw } from "tldraw"
 import "tldraw/tldraw.css"
 
 import "./tldraw-theme.css"
@@ -15,9 +15,10 @@ import { createCanvasComponents } from "./partials/canvas-components"
 import { ViewerCanvas, ViewerRoot } from "./partials/viewer-chrome"
 import { ViewerPageOverlay } from "./partials/viewer-page-overlay"
 import { ViewerStatus } from "./partials/viewer-status"
-import { mergeCanvasExtensions } from "./utils"
+import { mergeCanvasExtensions, paperTheme } from "./utils"
 
 const NO_EXTENSIONS: readonly CanvasExtension[] = []
+const THEMES = { default: paperTheme(DEFAULT_THEME) }
 
 export function PdfViewerScreen({
   filename,
@@ -60,6 +61,7 @@ export function PdfViewerScreen({
           overlayUtils={merged.overlayUtils}
           overrides={merged.overrides}
           shapeUtils={merged.shapeUtils}
+          themes={THEMES}
           tools={merged.tools}
         />
         <ViewerStatus isError={isError} isLoading={isLoading} onRetry={onRetry} />
