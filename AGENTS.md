@@ -45,6 +45,13 @@ Nx-generated block only.
 - `libs/web/features/{pdf-viewer,pin,camera}`: must not import each other.
   pdf-viewer also owns the app chrome (`AppHeader`, exported for home, and
   `ViewerTopBar`).
+- Inside a lib: flat files, one per concern (`<thing>-tool.ts`,
+  `<thing>-shape-util.tsx`, `hooks.ts`, `utils.ts`, `types.ts`, `consts.ts`),
+  with `partials/` for components that only serve one parent. No `classes/`
+  folder.
+- Functional only: function components, hooks and plain functions. The only
+  classes are the tldraw subclasses its API requires (`ShapeUtil`,
+  `BindingUtil`, `StateNode`), kept beside the feature that owns them.
 
 Stack: Vite, React 19, TypeScript strict, Chakra UI v3, TanStack Query,
 tldraw v5, Storybook 10 + Chromatic.
