@@ -203,20 +203,18 @@ libs/web/features/camera/src/
     camera-*.stories.tsx         the acceptance stories, one file per theme (web Storybook stage)
     camera-story-canvas.tsx      the stories' <Tldraw> harness and cameraStoryMeta; camera-story-toolbar.tsx its toolbar
     story-helpers.ts             shared ids, pointer helpers, toolbar/toast finders
-    camera-tool.ts               StateNode + idle/pointing/dragging children, default-frame drop
+    classes/
+      camera-tool.ts             StateNode (`CameraTool`)
+      camera-idle.ts             `CameraIdle` state node
+      camera-pointing.ts         `CameraPointing` state node
+      camera-dragging.ts         `CameraDragging` state node
+      crop-frame-shape-util.tsx  BaseBoxShapeUtil<CropFrameShape>
+      camera-tool-helpers.ts     default-frame drop & frame creation helpers
+      index.ts                   barrel for classes
     crop-shortcuts.ts            Enter / Ctrl+C while a frame is selected
     export-actions.ts            tldraw's export/copy actions minus crop frames (overrides.actions)
-    style-panel-guard.tsx        hides the style panel for crop-only selections (InFrontOfTheCanvas)
-    consts.ts                    ids, labels, sizes and limits (shared)
-    types.ts                     CropFrameShape (+ TLGlobalShapePropsMap augmentation), CameraExtension(Options), internal types (shared)
-    utils/
-      utils.ts                   pure: normaliseBox, isBelowMinSize, frameInsertIndex, cropToolbarAnchor, defaultFrameBox, exportShapeIds, exportPixelRatio, exportPixelSize, buildExportFilename, isCropFrameShape
-      utils.spec.ts              Vitest for the above
-    crop-frame/
-      crop-frame-outline.tsx     the frame's outline, shared by the shape and the marquee
-      crop-frame-marks.tsx       its dashed border and corner marks (svg)
-      crop-frame-label.tsx       its size label, hidden when too wide for the frame
-      crop-frame-shape-util.tsx  BaseBoxShapeUtil<CropFrameShape>
+    style-panel-guard/
+      style-panel-guard.tsx      hides the style panel for crop-only selections (InFrontOfTheCanvas)
       crop-marquee.tsx           the in-flight box (InFrontOfTheCanvas)
     crop-export/
       crop-export.ts             export plan, exportAs/copyAs, toast reporting

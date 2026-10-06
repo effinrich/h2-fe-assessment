@@ -158,12 +158,17 @@ libs/web/features/pin/src/
     utils.ts                   pure: isFar, pinOrigin, classifyChange, ancestorChange, connectedGroup, diffAttachments, solveGroup, pinColors, badgeLabel, glyphScale
     utils.spec.ts              Vitest for the above
     pin-queries.ts             editor reads: isPin, pinPointOf, pageOrigin, positionOf, neighbours, linksOf, eligibleAt
-    pin-shape-util.tsx         ShapeUtil<PinShape>: geometry, free/holding state, badge, getIndicatorPath, toSvg
-    pin-binding-util.ts        BindingUtil<PinBinding>: records drivers/reshapes/orphans, solves in onOperationComplete
+    classes/
+      pin-tool.ts                StateNode (`PinTool` and `createPinTool`)
+      pin-idle.ts                `PinIdle` state node
+      pin-pointing.ts            `PinPointing` state node factory
+      pin-shape-util.tsx         ShapeUtil<PinShape>: geometry, free/holding state, badge, getIndicatorPath, toSvg
+      pin-binding-util.ts        BindingUtil<PinBinding>: records drivers/reshapes/orphans, solves in onOperationComplete
+      pin-feedback-overlay-util.ts OverlayUtil: attach flash + held-shape outlines
+      index.ts                   barrel for classes
     pin-follow.ts              follow, rebaselineBindings/rebaseline, deleteOrphans, and the frame/group (ancestor move) listener
     pin-settle.ts              settlePins(editor, pinIds, canAttach), the rest listener (interaction end, nudge) and the lock listener
-    pin-tool.ts                StateNode: press places + settles + selects in one step; drag hands off to select.translating
-    pin-feedback-overlay.ts    OverlayUtil: attach flash + held-shape outlines (tldraw 5 overlay API)
+    pin-feedback-overlay.ts    overlay helper function `feedbackOf`
     pin-extension.ts           createPinExtension(options) → the extension object below
     partials/                  pin-view (canvas markup) composing attach-rings, head-ring, pin-badge; pin-glyph (SVG), pin-icon (lucide)
     pin-story-canvas.tsx       story-only <Tldraw> carrying the extension, with
