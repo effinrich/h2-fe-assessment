@@ -1,4 +1,5 @@
 export * from "./lib/pdf-viewer"
+export { AppHeader } from "./lib/app-header/app-header"
 export * from "./lib/types"
 export * from "./lib/hooks"
 export { isPdfPageShape } from "./lib/utils"

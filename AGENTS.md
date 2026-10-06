@@ -39,8 +39,9 @@ Nx-generated block only.
 - `libs/shared/ui` (`@h2-fe/ui`): the design system. Chakra primitives
   re-exported, a few wrapped components, each with a story. The only Storybook;
   Chromatic publishes it.
-- `libs/web/ui`: app chrome (header, viewer top bar).
 - `libs/web/features/{pdf-viewer,pin,camera}`: must not import each other.
+  pdf-viewer also owns the app chrome (`AppHeader`, exported for home, and
+  `ViewerTopBar`).
 
 Stack: Vite, React 19, TypeScript strict, Chakra UI v3, TanStack Query,
 tldraw v5, Storybook 10 + Chromatic.

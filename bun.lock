@@ -64,10 +64,6 @@
       "name": "@h2-fe/pin",
       "version": "0.0.1",
     },
-    "libs/web/ui": {
-      "name": "@h2-fe/web-ui",
-      "version": "0.0.1",
-    },
   },
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.5.0", "", {}, ""],
@@ -407,8 +403,6 @@
     "@h2-fe/ui": ["@h2-fe/ui@workspace:libs/shared/ui"],
 
     "@h2-fe/web": ["@h2-fe/web@workspace:apps/web"],
-
-    "@h2-fe/web-ui": ["@h2-fe/web-ui@workspace:libs/web/ui"],
 
     "@humanfs/core": ["@humanfs/core@0.19.2", "", { "dependencies": { "@humanfs/types": "^0.15.0" } }, ""],
 
