@@ -182,6 +182,10 @@ and committed failing before the code exists.
       top-left menu, and the style panel was pushed down by a 5rem padding
       hack. — `pdf-viewer.stories.tsx` › `ChromeSitsAboveCanvas` (real
       tldraw; red `45489d6`).
+- [ ] **The white header reads against white PDF pages: its bottom stroke is
+      `border.emphasized`, a step darker than the default border. The canvas
+      under it stays the plain `bg.canvas` gray; the dot grid is home-only.** —
+      `app-header.stories.tsx` › `Home`.
 - [x] **Our top-bar chrome and tldraw's style panel do not share a pixel slot.
       "Open another document" stays fully readable and clickable; the style
       panel fill is opaque.** jsdom cannot prove stacking or computed panel

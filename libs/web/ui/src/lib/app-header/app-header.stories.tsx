@@ -10,6 +10,16 @@ const PHONE_VIEWPORT = {
   phone: { name: "Phone", styles: { width: "390px", height: "844px" }, type: "mobile" }
 } as const
 
+/** A token's computed colour, for comparing against a computed style. */
+function tokenColor(token: string) {
+  const probe = document.createElement("span")
+  probe.style.color = `var(--chakra-colors-${token})`
+  document.body.append(probe)
+  const color = getComputedStyle(probe).color
+  probe.remove()
+  return color
+}
+
 // Spec: one in-flow chrome row; the brand is decoration, never a tab stop.
 const meta = {
   title: "Chrome/AppHeader",
@@ -22,8 +32,11 @@ type Story = StoryObj<typeof meta>
 
 export const Home: Story = {
   play: async ({ canvas, userEvent }) => {
-    await expect(canvas.getByRole("banner")).toBeVisible()
+    const banner = canvas.getByRole("banner")
+    await expect(banner).toBeVisible()
     await expect(canvas.getByText("Annotate")).toBeVisible()
+    // White header over white pages: the stroke, not the fill, separates them.
+    await expect(getComputedStyle(banner).borderBottomColor).toBe(tokenColor("border-emphasized"))
 
     await userEvent.tab()
     await expect(canvas.getByRole("button", { name: /Switch to (light|dark) mode/ })).toHaveFocus()
