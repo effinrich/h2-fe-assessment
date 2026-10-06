@@ -204,6 +204,13 @@ and committed failing before the code exists.
       bridge. — `pdf-viewer.stories.tsx` › `FollowsAppColorMode`;
       `pdf-viewer.spec.tsx` › "scopes the canvas to the app color mode"
       (red `e59f932`).
+- [x] **The first page opens filling 90% of a phone's width.** tldraw's
+      `zoomToFit` padding left it at 72% on a 390px screen. The viewer fits
+      page 1 with `zoomToBounds` and an inset of 10% of the viewport width
+      (tldraw subtracts the inset once per axis, so it is the total margin);
+      on a landscape screen the page height still limits the zoom.
+      — `utils.spec.ts` › "fits the first page with a 10% inset" (red
+      `c85cfe5`).
 
 Dropped: **"The renderer element is mounted exactly once across pan, zoom,
 resize and reparent."** It described the `getAppOwnedElement` design that was
