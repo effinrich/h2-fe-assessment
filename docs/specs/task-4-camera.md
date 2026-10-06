@@ -19,7 +19,7 @@ the obvious other routes back to the user.
 
 ## What the demo does
 
-Observed from the stills (`task-4.mp4`, frames f018–f054; see `docs/demos.md`). Anything marked
+Observed from the stills (`task-4.mp4`, frames f018–f054). Anything marked
 _inferred_ was not visible on screen.
 
 - The toolbar's first tool is a camera icon (f018).

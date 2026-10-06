@@ -21,7 +21,7 @@ spec → failing test → build → gates (hook) → verifier → scope-guard �
    the failures.
 5. **`verifier`** — every third-party call checked against installed types.
 6. **`scope-guard`** — the diff against the spec: what is extra, what is unmet.
-7. **`ux-critic`** — our UI against `docs/demos.md`.
+7. **`ux-critic`** — our UI against the reference videos.
 8. **Commit** — constraints → agents → work, in that order historically.
 
 ## Agents

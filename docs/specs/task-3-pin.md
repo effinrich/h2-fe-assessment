@@ -20,7 +20,7 @@ ones from older examples.
 
 ## What the demo does
 
-Observed from the stills (`task-3.mp4`, frames f015–f078; see `docs/demos.md`). Anything marked
+Observed from the stills (`task-3.mp4`, frames f015–f078). Anything marked
 _inferred_ was not visible on screen.
 
 - The toolbar's first tool is the pin, shown as tldraw's `?` fallback icon: no icon was supplied.
