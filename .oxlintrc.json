@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "jsPlugins": ["@nx/oxlint/boundaries-plugin"],
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "@nx/enforce-module-boundaries": [
+      "error",
+      {
+        "depConstraints": [
+          {
+            "sourceTag": "scope:shared",
+            "onlyDependOnLibsWithTags": ["scope:shared"]
+          },
+          {
+            "sourceTag": "scope:web",
+            "onlyDependOnLibsWithTags": ["scope:web", "scope:shared"]
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "builtin": true
+  }
+}

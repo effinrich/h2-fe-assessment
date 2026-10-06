@@ -1,0 +1,27 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.format.oxc": "always", // run formatter first
+    "source.fixAll.oxc": "always" // run lint fixes after
+  },
+  "oxc.configPath": ".oxlintrc.json",
+  "oxc.fmt.configPath": ".oxfmtrc.json",
+  "oxc.fixKind": "safe_fix_or_suggestion",
+  "oxc.unusedDisableDirectives": "warn",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.lightbulb.enabled": "onCode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "search.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/bun.lock": true
+  },
+  "json.schemaDownload.enable": true
+}

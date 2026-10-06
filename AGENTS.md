@@ -1,0 +1,75 @@
+# Agent instructions
+
+Canonical. Mirrors live in `.cursor/rules/` and `.windsurf/rules/`; when you edit
+a rule here, edit those in the same change. `CLAUDE.md` carries the Nx-generated
+block only.
+
+## Nx: never infer, always ask the graph
+
+**A config file is not evidence.** Nx infers targets and tags from plugins and
+`package.json`, so a sparse `project.json` says nothing about what a project can
+do. Reading `"targets": {}` and concluding "no build target" is a real mistake
+made during this project's setup.
+
+- Ask, don't read: `nx show project <name>` (targets, tags, metadata),
+  `nx show projects`, `nx graph` (dependencies).
+- Before asserting any Nx behaviour — a flag, a default, whether something is
+  inferred — check `nx_docs` or `--help`. Do not reason from how other tools work.
+- The installed `nx-workspace-patterns` skill covers workspace queries.
+
+## Workspace
+
+- **Nx 23 + bun.** Prefer `bunx nx` over a global CLI. `nx` and every `@nx/*`
+  stay on one exact version; mixing majors crashes every plugin
+  (`The "path" argument must be of type string`).
+- **Install at the root.** Every dependency goes in the root `package.json`
+  (`bun install` from the repo root, no `-w`). Workspace `package.json` files
+  list no dependencies and no proxy scripts. The root `package.json`'s `nx`
+  block holds only `includedScripts: []`.
+- **No manual linking.** Nx infers project edges from imports and bun workspaces
+  resolve `@h2-fe/*`; don't add workspace packages to an app's `package.json`.
+  Tags restrict imports; they don't link.
+- **Generators only.** Never hand-create a project folder. A hand-made folder
+  never enters the project graph, so `nx affected` skips it and tags never apply.
+  `nx g @nx/react:lib <name> --directory=libs/<scope>/<name> --tags=scope:<scope>,type:<type>`
+- **Tags are mandatory** on every project, and `@nx/enforce-module-boundaries`
+  in the root `.oxlintrc.json` enforces them. An illegal import fails lint
+  before tests run.
+- `nx affected` over `--all` on any branch. `bun run gate` =
+  `nx affected -t lint,format,typecheck,test,build,build-storybook`.
+- **oxlint only, no ESLint.** `@nx/oxlint` has no executors: `lint` is its
+  inferred target (`args: ["--type-aware"]` in `project.json`); never write
+  `@nx/oxlint:lint`. Two plugins must not claim the same target name.
+- **Target names are `lint` and `format`.** `oxlint` and `oxfmt` are only the
+  binaries behind those targets — never target names. `format` / `format:fix`
+  live in nx.json `targetDefaults`; root scripts mirror `lint` / `lint:fix`.
+- LF line endings (`.gitattributes`). Every Action in every workflow is pinned
+  to a full commit SHA with a `# vX.Y.Z` comment. `ci.yml` runs `bun run gate`
+  after `nrwl/nx-set-shas`.
+
+## Stack
+
+Vite + React 19 + TypeScript (strict) · Chakra UI v3 · TanStack Query · tldraw v5 ·
+Storybook 10 (play tests via `storybook/test`) + Chromatic · Vitest
+
+## Layout
+
+- `libs/shared/ui` — the design system. Every `type:ui` component has a story;
+  its play tests are the component tests (no Vitest unit tests here). Public API
+  is the `src/index.ts` barrel, consumed as named imports from `@h2-fe/ui`. Simple Chakra primitives are re-exported unchanged
+  (`src/lib/primitives/`); compound components get thin wrappers, one folder each.
+- `libs/<scope>/features/<name>` — feature libs; inside them, the
+  feature-based-architecture skill governs the file layout.
+- `apps/web` — a thin shell. Logic belongs in libs.
+
+## Rules that do not bend
+
+1. **Verify every third-party API call against the installed types** before it
+   lands. tldraw is under-represented in training data relative to React, and
+   this is where models invent plausible method names.
+2. **Spec before code; failing test before implementation.** See
+   `docs/specs/README.md`.
+3. **The gate hook is authoritative.** A red gate is not a finishable turn.
+4. **Never guess a CLI flag.** Check `--help` first.
+5. **Be terse.** The user is a long-time Nx user; don't over-explain. Re-read a
+   file before editing it — never overwrite the user's concurrent edits.

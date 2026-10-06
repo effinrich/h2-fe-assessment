@@ -1,0 +1,127 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "analytics": false,
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/.oxlintrc.json",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
+    ],
+    "sharedGlobals": []
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        },
+        "build": {
+          "targetName": "build",
+          "configName": "tsconfig.lib.json",
+          "buildDepsName": "build-deps",
+          "watchDepsName": "watch-deps"
+        }
+      }
+    },
+    {
+      "plugin": "@nx/oxlint",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "devTargetName": "dev",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "typecheckTargetName": "typecheck",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test",
+        "ciTargetName": "test-ci",
+        "testMode": "watch"
+      }
+    },
+    {
+      "plugin": "@nx/storybook/plugin",
+      "options": {
+        "serveStorybookTargetName": "storybook",
+        "buildStorybookTargetName": "build-storybook",
+        "staticStorybookTargetName": "static-storybook",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    }
+  ],
+  "targetDefaults": {
+    "build-storybook": {
+      "inputs": [
+        "production",
+        "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["build", "^build"]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --check .",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "{workspaceRoot}/.oxfmtrc.json", { "externalDependencies": ["oxfmt"] }]
+    },
+    "format:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --write .",
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    }
+  },
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "style": "css",
+        "linter": "oxlint",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "oxlint",
+        "unitTestRunner": "vitest"
+      }
+    }
+  },
+  "release": {
+    "version": {
+      "preVersionCommand": "bunx nx run-many -t build"
+    }
+  }
+}

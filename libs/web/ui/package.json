@@ -1,0 +1,52 @@
+{
+  "name": "@h2-fe/web-ui",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@h2-fe/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "tags": [
+      "scope:web",
+      "type:ui"
+    ],
+    "targets": {
+      "lint": {
+        "options": {
+          "args": [
+            "--type-aware"
+          ]
+        }
+      },
+      "build": {
+        "dependsOn": []
+      },
+      "format": {},
+      "format:fix": {},
+      "build-storybook": {
+        "inputs": [
+          "production",
+          "{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+          "{projectRoot}/.storybook/**/*",
+          "{projectRoot}/tsconfig.storybook.json",
+          "{workspaceRoot}/libs/web/features/**/src/lib/**/*.stories.@(js|jsx|ts|tsx)"
+        ]
+      },
+      "lint:fix": {
+        "command": "oxlint . --type-aware --fix",
+        "options": {
+          "cwd": "libs/web/ui"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+# 0011 — features are routes; screens are lib compositions
+
+- Status: accepted
+- Date: 2026-10-03
+
+## Context
+
+The strip-down review landed two linked findings. First: the app rendered two
+views through one `hasDocument` boolean inside a single component, with a
+`BrowserRouter` mounted but never routing — the review asked why there are no
+pages/routes at all but at least two distinct views, and named the benefits a
+real route layer brings (telemetry, reporting, tracking, ads, chunk
+separation). Second: the owner's feature pattern (carried from
+their rh-nx-monorepo standard) is more specific than "features are libs": the
+route file holds business logic plus a thin wrapper, the entire dumb screen
+lives in a lib, and screens are Storybook-tested as compositions.
+
+## Decision
+
+- **Route layer** (`apps/web/src/app`): the route table plus thin per-route
+  wrappers — business logic only (busy state, handoff, navigation, retry
+  wiring).
+- **Feature libs** (`libs/web/features/<route>`): the dumb screen
+  (`<route>.tsx`, props in, handlers out, zero fetching) beside per-concern
+  siblings: `types.ts`, `consts.ts`, `hooks.ts` (react-query), `utils.ts`,
+  `api.ts`, and `partials/` when a section earns it.
+- **Web-scoped UI tier** (`libs/web/ui`, `@h2-fe/web-ui`, tags
+  `["scope:web","type:ui"]`): route-germane components that are not plausibly
+  reusable outside this app — the same structure as `libs/shared/ui`
+  (like-named component folders, colocated stories, public barrel, lib-mode
+  build) including its own Storybook, which is the **web stage**: its stories
+  glob covers this lib and the feature screens' stories, so every web
+  composition stages in one place. `libs/shared/ui` keeps its own stage for
+  shared primitives only.
+- **Promotion ladder for markup**: inline in the screen → a feature
+  `partials/<part>.tsx` → `libs/web/ui` when the piece earns a story of its
+  own or a second route wants it → `libs/shared/ui` when another app would.
+  The story travels with the component at each promotion.
+- **Handoff across routes**: the chosen `File` travels through react-router's
+  `location.state` (in-memory by reference; structured-clone persisted across
+  history entries in real browsers). This refines the plan's earlier intent to
+  carry it on the TanStack Query cache: the query cache keeps doing what
+  ADR 0002 assigned it — the PDF rasterisation's loading/error/retry — and
+  nothing more. A direct link to `/viewer` with no handoff redirects home; a
+  refresh re-rasterises the same file because the browser keeps history state.
+- The viewer route is `React.lazy`, so tldraw, pdfjs, and `tldraw.css` are not
+  in the initial chunk.
+
+## Consequences
+
+- Screens never fetch; they render props and call handler props. Subsequent
+  behavior changes land in the wrappers; the screens' shape is a function of
+  their props.
+- Screen-level coverage is Storybook-first: stories mount screens with props
+  alone; colocated jsdom specs cover interactions stories cannot assert.
+- The gate gains a second `storybook` stage (the web stage); its
+  `build-storybook` cost is accepted. Chromatic project-token decisions for
+  the new stages are deferred.
+- jsdom needed three polyfills for tldraw-mounted surfaces (`image.decode`,
+  `FontFace`, `document.fonts`); they live in `tools/vitest-setup.ts` since
+  three projects include it.
