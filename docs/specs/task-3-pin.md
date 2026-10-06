@@ -76,9 +76,10 @@ The attach rule is the reference's rule, generalised. "Better" is everything aro
 ## Decided behaviour
 
 - **Pin point.** The tip of the needle: the pin's page origin plus `PIN_TIP` (`consts.ts`). The
-  pin has a fixed page size (`PIN_SIZE`, 36×54), like the reference. The glyph is drawn in a
-  24×36 box and scaled by `PIN_SCALE` (1.5): at 24×36 a pin read too small on a page at fit
-  zoom. It can't be resized or rotated: a
+  pin has a fixed page size (`PIN_SIZE`, 48×72), like the reference. The glyph is drawn in a
+  24×36 box and scaled by `PIN_SCALE` (2), because PDF pages are laid out at 2 page units per
+  PDF point (`openPdf`): at 24×36 page units a pin drew half its intended size against the
+  page, about 18px tall at desktop fit. It can't be resized or rotated: a
   selected pin shows no resize or rotate handles, rotating it alone (Shift+. / Shift+,) leaves
   it unchanged, and rotating it with other shapes carries its tip round with the selection while
   the pin stays upright. A multi-shape resize only translates it (`canResize` is false).
@@ -383,8 +384,8 @@ real pointer events (`userEvent.pointer`) at `editor.pageToScreen(...)` coordina
 - [x] **`FreePinContrast`** _(added)_ — a free pin's rendered head outline, blended at its
       rendered opacity over the theme background, has a contrast ratio of at least 3:1 against
       that background, in light mode and in dark mode. — `pin-attach.stories.tsx`
-- [x] **`PinKeepsMinimumSize`** _(added)_ — at 100% zoom the pin's glyph is 54px tall on
-      screen. At 25% it is 27px tall (its size at 50%), its bottom still at the tip's screen
+- [x] **`PinKeepsMinimumSize`** _(added)_ — at 100% zoom the pin's glyph is 72px tall on
+      screen. At 25% it is 36px tall (its size at 50%), its bottom still at the tip's screen
       point, and its geometry bounds are those it had at 100%. — `pin-attach.stories.tsx`
 - [x] **`AttachFeedback`** — right after attaching A and B, `editor.overlays.getCurrentOverlays()`
       contains `pin-attach:<A>` and `pin-attach:<B>`. After `ATTACH_FLASH_MS` they are gone.

@@ -133,11 +133,11 @@ export const PinKeepsMinimumSize: Story = {
     const hitBounds = () => editor.getShapeGeometry(pin).bounds.toJson()
 
     editor.setCamera({ ...editor.getCamera(), z: 1 }, { immediate: true })
-    await waitFor(() => expect(height()).toBeCloseTo(54, 0))
+    await waitFor(() => expect(height()).toBeCloseTo(72, 0))
     const pageHitBounds = hitBounds()
 
     editor.setCamera({ ...editor.getCamera(), z: 0.25 }, { immediate: true })
-    await waitFor(() => expect(height()).toBeCloseTo(27, 0))
+    await waitFor(() => expect(height()).toBeCloseTo(36, 0))
     const tip = editor.pageToScreen(tipOf(editor, pin))
     await expect(glyphOf(canvasElement, pin).getBoundingClientRect().bottom).toBeCloseTo(tip.y, 0)
     await expect(hitBounds()).toEqual(pageHitBounds)
