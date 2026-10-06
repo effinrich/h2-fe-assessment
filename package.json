@@ -18,7 +18,8 @@
     "format:fix": "nx run-many -t format:fix",
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
-    "gate": "nx affected -t lint,format,typecheck,build,build-storybook"
+    "budget": "bun tools/size-budget.mjs",
+    "gate": "bun run budget && nx affected -t lint,format,typecheck,build,build-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",

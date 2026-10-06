@@ -28,7 +28,10 @@ Nx-generated block only.
   `@nx/enforce-module-boundaries` in `.oxlintrc.json` enforces them.
 - `lint` is oxlint (`--type-aware`), `format` is oxfmt. No ESLint. Projects
   extend the root `.oxlintrc.json`; never add a nested `.oxfmtrc.json`.
-- `bun run gate` = `nx affected -t lint,format,typecheck,build,build-storybook`.
+- `bun run gate` = the size budget (`tools/size-budget.mjs`: source files and
+  non-blank lines in `apps/` and `libs/`) then
+  `nx affected -t lint,format,typecheck,build,build-storybook`. Over budget
+  means cut scope; raising a limit is the user's call.
   lefthook: pre-commit lints, formats and typechecks staged files; pre-push runs
   the gate. CI runs the gate too. Don't leave `LEFTHOOK=0` on.
 - Actions are pinned to full commit SHAs. LF line endings.
