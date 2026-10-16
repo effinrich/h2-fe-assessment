@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react"
 
-import { AppHeader } from "@h2-fe/pdf-viewer"
+import { AppHeader } from "@h2-fe/pdf-viewer/app-header"
 import { ColorModeButton, Heading, Icon, Stack, Text } from "@h2-fe/ui"
 
 import type { HomeScreenProps } from "./types"
