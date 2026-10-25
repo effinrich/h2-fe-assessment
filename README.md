@@ -4,6 +4,16 @@ A PDF annotation canvas: open a document, mark it, pin shapes together, export a
 
 The five-minute product walkthrough is available as a [narrated video on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be) and written in [docs/reviewer.md](docs/reviewer.md).
 
+## Reviewing this
+
+You have read access to this repository. Everything you need is here:
+
+1. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
+2. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
+3. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
+
+If the video asks you to sign in, skip it. The written walkthrough covers the same ground.
+
 ## Architecture
 
 Every box is an Nx project, created by a generator and tagged. Arrows are the imports `nx graph` reports. Pin, camera and the PDF viewer never import each other; only the app composes them.
@@ -58,7 +68,7 @@ bun run start      # http://localhost:4200
 bun run storybook  # the design system, http://localhost:4400
 ```
 
-`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic. Accept the invite from the Chromatic dashboard to view it.
+`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic. Viewing it there needs a Chromatic account and an invite to this project. If you do not have one, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
 
 ## Check
 

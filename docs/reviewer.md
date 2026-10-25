@@ -2,7 +2,9 @@
 
 A PDF annotation canvas. About five minutes, from the repo root.
 
-Watch the [narrated video walkthrough on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be).
+Watch the [narrated video walkthrough on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be). If it asks you to sign in, skip it — this page is the same walkthrough in full.
+
+Questions and findings belong in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions).
 
 The open-document screen is the `/` route in `apps/web`; pin, camera, and the PDF viewer are separate capabilities, and the viewer route composes pin and camera.
 
