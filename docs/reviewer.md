@@ -1,6 +1,6 @@
 # Reviewer walkthrough
 
-A PDF annotation canvas. About five minutes, from the repo root.
+A PDF annotation canvas. Ninety seconds, from the repo root.
 
 Watch the [narrated video walkthrough on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be). If it asks you to sign in, skip it — this page is the same walkthrough in full.
 

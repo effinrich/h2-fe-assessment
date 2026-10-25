@@ -2,7 +2,7 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-The five-minute product walkthrough is available as a [narrated video on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be) and written in [docs/reviewer.md](docs/reviewer.md).
+A ninety-second narrated walkthrough of the product is available as a [video on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be) and written in [docs/reviewer.md](docs/reviewer.md).
 
 ## Reviewing this
 
