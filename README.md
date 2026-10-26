@@ -48,6 +48,7 @@ flowchart TB
 | Vite + React SPA; TanStack Query for loading the PDF                 | [0002](docs/decisions/0002-framework.md)                     |
 | tldraw as the canvas engine                                          | [0003](docs/decisions/0003-canvas-engine.md)                 |
 | oxlint (type-aware) + oxfmt; boundaries enforced in lint             | [0008](docs/decisions/0008-lint-split.md)                    |
+| Nx dependency trims: a verification protocol and a ledger            | [0010](docs/decisions/0010-nx-dependency-trims.md)           |
 | Sibling feature libs; only the app composes them                     | [0011](docs/decisions/0011-feature-pattern.md)               |
 | PDF pages rasterised into locked image shapes                        | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)     |
 | tldraw and Chakra stay two styling systems, bridged by CSS variables | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
@@ -84,8 +85,8 @@ lefthook runs lint, format and typecheck on commit and the gate on push; CI runs
 ## What a reviewer should try
 
 1. Open the example from home. The **‹ / ›** arrows and the page field move between pages.
-2. Draw a rectangle. **Open another document** warns before discarding marks.
+2. Draw a rectangle. **Open another** (top right) warns before discarding marks.
 3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
 4. Press **C**, drag a box. Releasing downloads it as a PNG; hold **Ctrl** to copy it instead.
-5. Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
+5. Toggle color mode. Chrome and the canvas follow it. The page and your marks keep their colors, but a crop taken in dark mode carries the dark background with it.
 6. Add `export { AppHeader } from "@h2-fe/pdf-viewer"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. The module-boundary rule fails it.

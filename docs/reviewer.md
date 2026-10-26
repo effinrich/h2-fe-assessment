@@ -39,4 +39,4 @@ Press **C** and drag a box. Releasing downloads everything under it as a PNG; ho
 
 ## Color mode
 
-Toggle color mode. Chrome and the canvas follow it. PNG export stays light.
+Toggle color mode. Chrome and the canvas follow it. The page and your marks keep their colors, but a crop taken in dark mode carries the dark background with it.
