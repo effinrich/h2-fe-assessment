@@ -2,18 +2,18 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-A narrated walkthrough of the product, ninety-eight seconds, is on [YouTube](https://www.youtube.com/watch?v=ZUvDPpslRx0) and written in [docs/reviewer.md](docs/reviewer.md).
+A narrated walkthrough of the product, ninety-eight seconds, is in [docs/media.mp4](docs/media.mp4) and written out in [docs/reviewer.md](docs/reviewer.md).
 
 ## Reviewing this
 
 You have read access to this repository. Everything you need is here:
 
-1. Watch the [walkthrough video](https://www.youtube.com/watch?v=ZUvDPpslRx0) — ninety-eight seconds, narrated, 1920x1080.
+1. Watch the [walkthrough video](docs/media.mp4) — ninety-eight seconds, narrated, 1920x1080. It plays in GitHub's own player.
 2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
 3. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
 4. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
 
-The video is unlisted, so the link is all you need and no YouTube account is involved. If you would rather not watch a video, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) and downloads as an MP4.
+If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) and downloads as an MP4.
 
 The "Get a license for production" button in the bottom right of the canvas is tldraw's own licensing prompt. This repository ships without a production license key, so the SDK shows that badge wherever it runs.
 
