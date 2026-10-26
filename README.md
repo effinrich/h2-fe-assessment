@@ -2,17 +2,18 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-A ninety-second narrated walkthrough of the product is available as a [video on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be) and written in [docs/reviewer.md](docs/reviewer.md).
+A ninety-second narrated walkthrough of the product is available as a [video download](https://github.com/effinrich/h2-fe-assessment/releases/download/reviewer-walkthrough-v1/annotate-h2-walkthrough.mp4) and written in [docs/reviewer.md](docs/reviewer.md).
 
 ## Reviewing this
 
 You have read access to this repository. Everything you need is here:
 
-1. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
-2. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
-3. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
+1. Watch the [ninety-second walkthrough](https://github.com/effinrich/h2-fe-assessment/releases/download/reviewer-walkthrough-v1/annotate-h2-walkthrough.mp4) — a narrated screen recording of the running app, 1920x1080, about 3.4 MB.
+2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
+3. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
+4. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
 
-If the video asks you to sign in, skip it. The written walkthrough covers the same ground.
+The recording is attached to the [reviewer-walkthrough-v1 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v1), so it downloads with the GitHub account you already have. No other sign-in is involved.
 
 ## Architecture
 
