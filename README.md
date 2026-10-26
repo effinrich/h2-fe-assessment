@@ -2,7 +2,18 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-The five-minute product walkthrough is available as a [narrated video on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be) and written in [docs/reviewer.md](docs/reviewer.md).
+A ninety-second narrated walkthrough of the product is available as a [video download](https://github.com/effinrich/h2-fe-assessment/releases/download/reviewer-walkthrough-v1/annotate-h2-walkthrough.mp4) and written in [docs/reviewer.md](docs/reviewer.md).
+
+## Reviewing this
+
+You have read access to this repository. Everything you need is here:
+
+1. Watch the [ninety-second walkthrough](https://github.com/effinrich/h2-fe-assessment/releases/download/reviewer-walkthrough-v1/annotate-h2-walkthrough.mp4) — a narrated screen recording of the running app, 1920x1080, about 3.4 MB.
+2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
+3. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
+4. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
+
+The recording is attached to the [reviewer-walkthrough-v1 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v1), so it downloads with the GitHub account you already have. No other sign-in is involved.
 
 ## Architecture
 
@@ -58,7 +69,7 @@ bun run start      # http://localhost:4200
 bun run storybook  # the design system, http://localhost:4400
 ```
 
-`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic. Accept the invite from the Chromatic dashboard to view it.
+`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic. Viewing it there needs a Chromatic account and an invite to this project. If you do not have one, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
 
 ## Check
 

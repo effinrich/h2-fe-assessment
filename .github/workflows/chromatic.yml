@@ -1,4 +1,4 @@
-name: 'Chromatic'
+name: "Chromatic"
 
 on: push
 
@@ -35,3 +35,4 @@ jobs:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: dist/storybook/shared-ui
+          storybookBaseDir: libs/shared/ui
