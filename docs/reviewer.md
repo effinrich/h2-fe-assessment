@@ -17,6 +17,8 @@ bun run start
 
 Open [http://localhost:4200/](http://localhost:4200/).
 
+You will see a "Get a license for production" button in the bottom right corner of the canvas. That is tldraw's own licensing prompt, not part of this app: the repository ships without a production license key, so the SDK shows the badge wherever it runs.
+
 ## Open a document
 
 On `/`, choose **Open PDF** or **Use an example**, or drop a PDF anywhere on the page. Anything that isn't a single PDF is refused with a toast. The example opens `/viewer` with page 1 on the canvas.

@@ -15,6 +15,8 @@ You have read access to this repository. Everything you need is here:
 
 The video is unlisted, so the link is all you need and no YouTube account is involved. If you would rather not watch a video, the same recording is attached to the [reviewer-walkthrough-v1 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v1) and downloads as an MP4.
 
+The "Get a license for production" button in the bottom right of the canvas is tldraw's own licensing prompt. This repository ships without a production license key, so the SDK shows that badge wherever it runs.
+
 ## Architecture
 
 Every box is an Nx project, created by a generator and tagged. Arrows are the imports `nx graph` reports. Pin, camera and the PDF viewer never import each other; only the app composes them.
