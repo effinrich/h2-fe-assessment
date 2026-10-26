@@ -1,8 +1,10 @@
 # Reviewer walkthrough
 
-A PDF annotation canvas. About five minutes, from the repo root.
+A PDF annotation canvas. Ninety-eight seconds, from the repo root.
 
-Watch the [narrated video walkthrough on YouTube](https://www.youtube.com/watch?v=3GQCGT5aT0M&feature=youtu.be).
+Watch the [narrated walkthrough on YouTube](https://www.youtube.com/watch?v=ZUvDPpslRx0) — ninety-eight seconds, 1920x1080. The video is unlisted, so the link is all you need and no YouTube account is involved. If you would rather not watch a video, the same recording is attached to the [reviewer-walkthrough-v1 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v1) in this repository and downloads as an MP4. This page is the same walkthrough in full, in text.
+
+Questions and findings belong in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions).
 
 The open-document screen is the `/` route in `apps/web`; pin, camera, and the PDF viewer are separate capabilities, and the viewer route composes pin and camera.
 
