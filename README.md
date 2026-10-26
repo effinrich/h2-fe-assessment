@@ -72,7 +72,7 @@ bun run start      # http://localhost:4200
 bun run storybook  # the design system, http://localhost:4400
 ```
 
-`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic. Viewing it there needs a Chromatic account and an invite to this project. If you do not have one, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
+`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic on every push; the preview link is on the pull request checks. If you would rather not use an account at all, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
 
 ## Check
 
