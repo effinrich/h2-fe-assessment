@@ -60,7 +60,7 @@ flowchart TB
 | What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
 | The verification surface: the gate, the stories, the snapshots       | [0015](docs/decisions/0015-verification-surface.md)          |
 | The pin: a custom shape, a custom binding, a constraint solver       | [0016](docs/decisions/0016-pin-tool.md)                      |
-| The camera: the region exported, and the crop shape declined         | [0017](docs/decisions/0017-camera-tool.md)                   |
+| The camera: a crop shape, and the done state for it                  | [0017](docs/decisions/0017-camera-tool.md)                   |
 
 0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
 
@@ -98,6 +98,6 @@ The agent instructions, the git hooks and the guardrail manifest that checks the
 1. Open the example from home. The **‹ / ›** arrows and the page field move between pages.
 2. Draw a rectangle. **Open another** (top right) warns before discarding marks.
 3. Press **P**, click two overlapping shapes. Drag one: the other follows. Pins do not attach to PDF pages.
-4. Press **C**, drag a box. Releasing downloads it as a PNG; hold **Ctrl** to copy it instead.
+4. Press **C**, drag a box. The crop stays on the canvas, where you can resize it from its corners; **Export PNG** writes out what is under it, and hold **Ctrl** to copy it instead.
 5. Toggle color mode. Chrome and the canvas follow it. The page and your marks keep their colors, but a crop taken in dark mode carries the dark background with it.
 6. Add `export { AppHeader } from "@h2-fe/pdf-viewer"` to any file in `libs/shared/ui/src/lib`, then run `bunx nx lint shared-ui`. The module-boundary rule fails it.

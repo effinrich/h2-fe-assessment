@@ -1,6 +1,11 @@
-import { atom, Box, copyAs, exportAs, StateNode } from "tldraw"
+import { atom, Box, StateNode } from "tldraw"
+
+import { CROP_TYPE } from "./crop-shape-util"
 
 export const CAMERA_TOOL_ID = "camera"
+
+// A drag shorter than this is a click, not a crop.
+const MIN_SIZE = 8
 
 class CameraIdle extends StateNode {
   static override id = "idle"
@@ -40,25 +45,23 @@ export class CameraDragging extends StateNode {
     this.update()
   }
 
-  // On release, export everything under the box as an image cropped to it; ctrl copies
-  // instead of downloading, and alt asks for SVG rather than PNG.
+  // On release the drag becomes a crop shape: a region that stays on the
+  // canvas, can be resized from its corners and exported from there.
   override onPointerUp() {
     const { editor } = this
     const box = this.box.get()
-    const ids = editor
-      .getCurrentPageShapes()
-      .filter((shape) => {
-        const bounds = editor.getShapeMaskedPageBounds(shape)
-        return bounds !== undefined && box.includes(bounds)
-      })
-      .map((shape) => shape.id)
-
-    if (ids.length) {
-      const format = editor.inputs.getAltKey() ? "svg" : "png"
-      if (editor.inputs.getCtrlKey()) void copyAs(editor, ids, { format, bounds: box })
-      else void exportAs(editor, ids, { format, name: "Screenshot", bounds: box })
-    }
     editor.setCurrentTool("select")
+    if (box.w < MIN_SIZE || box.h < MIN_SIZE) return
+
+    const before = new Set(editor.getCurrentPageShapes().map((shape) => shape.id))
+    editor.createShape({
+      type: CROP_TYPE,
+      x: box.x,
+      y: box.y,
+      props: { w: box.w, h: box.h }
+    })
+    const crop = editor.getCurrentPageShapes().find((shape) => !before.has(shape.id))
+    if (crop) editor.select(crop)
   }
 
   override onCancel() {
@@ -71,7 +74,7 @@ export class CameraDragging extends StateNode {
   }
 }
 
-/** tldraw's screenshot-tool example: drag a box, release to export it. */
+/** The camera tool (`C`): drag out a crop, then export it from the shape. */
 export class CameraTool extends StateNode {
   static override id = CAMERA_TOOL_ID
   static override initial = "idle"

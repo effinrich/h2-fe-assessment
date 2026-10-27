@@ -120,30 +120,27 @@ them where they overlap, and moves one.
 ## Task 4 — the camera
 
 **The brief asks for a tool that creates a shape, crops part of the canvas
-and exports that part as an image.** 0017 is the record, and it is a record
-of a decision rather than of a gap.
+and exports that part as an image.** 0017 is the record, and it holds the done
+state for the task: five statements, each checkable by looking at the app.
 
-What ships is tldraw's own
-[screenshot tool](https://tldraw.dev/examples/screenshot-tool), wired into the
-document: a custom `StateNode` with three states, a box drawn above the
-canvas, and on release the shapes under the box exported through the SDK's
-export path — cropped to the box, as a PNG or an SVG, to the file or to the
-clipboard. The export is of the content under the box, not of a screen
-region, so the page and the marks on it come out with it.
+What ships is a crop shape. Press `C`, drag on the canvas, and the drag is
+left behind as a shape — corner brackets around a region, selectable and
+movable like any other, resized from its corners and not locked to an aspect
+ratio. The brackets are drawn rather than filled, so the region stays
+visible: what will be exported can be seen before it is exported.
 
-**Against the reference:** the demo that came with the brief is the same
-primitive, and the brief is explicit that the demos are "not our own design"
-and that the submission should be better than them. Two things are different
-here. What is exported is the content under the box rather than a screen
-region, so a PDF page and the marks on it come out together, at the size
-they are on the canvas. And the whole thing is three states of a tool and a
-box, in 163 lines.
+Exporting is an action on the crop. It writes out the content under the
+region — the PDF page and the marks on it, at the size they are on the
+canvas, cropped to the crop — as a PNG, or to the clipboard with `Ctrl`, or
+as SVG with `Alt`. The crop stays where it is afterwards, so it can be
+adjusted and exported again.
 
-**The trade:** the brief asks for a shape and this leaves none behind. 0017
-records what the other side of that trade was, and what the bespoke camera it
-replaced cost — 36 files and about 3,400 lines that never reached `main`. The
-rule it lands on is the simple one: when the platform has a supported
-primitive for the job, use it and go deep on it.
+**Against the reference:** the demo that came with the brief is tldraw's
+[screenshot tool](https://tldraw.dev/examples/screenshot-tool), and the brief
+is explicit that the demos are "not our own design" and that the submission
+should be better than them. The demo exports the region and leaves nothing
+behind; this leaves the region on the canvas, where it can be moved, resized
+and exported again.
 
 ## The three expectations
 
@@ -159,12 +156,13 @@ records — including the ones that record a decision _not_ to do something.
 **Teamwork** is answered by a narrated walkthrough of the product, by fifteen
 decision records, and by the commit history, which names the agent that had
 a hand in each commit. It is also answered by the record of what went wrong:
-0017 tells the camera from both ends — four agents building a camera the
-platform already had, a directive that did not land, and the decision that
-followed — and [safeguards.md](safeguards.md) is the wider account of the
-same period and of what the process had to become to be trustworthy. The
-brief also names session transcripts with AI agents as evidence it likes, and
-those are the one thing here that is missing: see the next section.
+0017 tells the camera from both ends — four agents building a frame and
+an export pipeline of their own, a directive that did not land, and the
+decision that followed — and [safeguards.md](safeguards.md) is the wider
+account of the same period and of what the process had to become to be
+trustworthy. The brief also names session transcripts with AI agents as
+evidence it likes, and those are the one thing here that is missing: see the
+next section.
 
 ## Where this is behind
 

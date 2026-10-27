@@ -1,9 +1,10 @@
 import type { TLUiOverrides } from "tldraw"
 
-import { Camera } from "lucide-react"
+import { Crop } from "lucide-react"
 
 import { CAMERA_TOOL_ID, CameraTool } from "./camera-tool"
-import { ScreenshotBox } from "./partials/screenshot-box"
+import { CropShapeUtil } from "./crop-shape-util"
+import { CameraOverlay } from "./partials/camera-overlay"
 
 const LABEL_KEY = "tool.camera"
 
@@ -13,18 +14,19 @@ const overrides: TLUiOverrides = {
     [CAMERA_TOOL_ID]: {
       id: CAMERA_TOOL_ID,
       label: LABEL_KEY,
-      icon: <Camera size={18} strokeWidth={1.75} />,
+      icon: <Crop size={18} strokeWidth={1.75} />,
       kbd: "c",
       onSelect: () => editor.setCurrentTool(CAMERA_TOOL_ID)
     }
   }),
-  translations: { en: { [LABEL_KEY]: "Screenshot" } }
+  translations: { en: { [LABEL_KEY]: "Crop" } }
 }
 
-/** The screenshot tool (`C`) for a tldraw canvas. */
+/** The camera tool (`C`) for a tldraw canvas: drag out a crop, then export it. */
 export const cameraExtension = {
   toolIds: [CAMERA_TOOL_ID],
+  shapeUtils: [CropShapeUtil],
   tools: [CameraTool],
   overrides,
-  InFrontOfTheCanvas: ScreenshotBox
+  InFrontOfTheCanvas: CameraOverlay
 }
