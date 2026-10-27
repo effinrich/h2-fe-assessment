@@ -47,6 +47,8 @@ flowchart TB
 | Nx monorepo, libraries over folders, generators only                 | [0001](docs/decisions/0001-workspace-and-package-manager.md) |
 | Vite + React SPA; TanStack Query for loading the PDF                 | [0002](docs/decisions/0002-framework.md)                     |
 | tldraw as the canvas engine                                          | [0003](docs/decisions/0003-canvas-engine.md)                 |
+| Panda CSS with Ark UI, later replaced by Chakra UI v3                | [0004](docs/decisions/0004-styling-and-primitives.md)        |
+| Typed judgement for the gates a compiler cannot write (proposed)     | [0006](docs/decisions/0006-judgement-layer.md)               |
 | oxlint (type-aware) + oxfmt; boundaries enforced in lint             | [0008](docs/decisions/0008-lint-split.md)                    |
 | Nx dependency trims: a verification protocol and a ledger            | [0010](docs/decisions/0010-nx-dependency-trims.md)           |
 | Sibling feature libs; only the app composes them                     | [0011](docs/decisions/0011-feature-pattern.md)               |
@@ -54,6 +56,8 @@ flowchart TB
 | tldraw and Chakra stay two styling systems, bridged by CSS variables | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
 | Chakra UI v3 over Tailwind                                           | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
 | What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
+
+0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
 
 ## Getting started
 
@@ -72,7 +76,7 @@ bun run start      # http://localhost:4200
 bun run storybook  # the design system, http://localhost:4400
 ```
 
-`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic on every push; the preview link is on the pull request checks. If you would rather not use an account at all, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
+`.github/workflows/chromatic.yml` builds this Storybook and publishes it to Chromatic on every push; the preview link is on the pull request checks. The published Storybook is public and needs no account: [main--6abe484afd9c0c336f0e71fb.chromatic.com](https://main--6abe484afd9c0c336f0e71fb.chromatic.com) always serves the latest build from `main`. If you would rather not use an account at all, `bun run storybook` serves the same Storybook locally on http://localhost:4400.
 
 ## Check
 
