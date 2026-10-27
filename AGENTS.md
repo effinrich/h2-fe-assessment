@@ -28,9 +28,14 @@ did not ask for it, and do not read a safeguard as clutter.
 
 `tools/guardrails.mjs` checks `tools/guardrails.manifest.json` — hashes,
 invariants, and the files that must exist — and runs inside `bun run gate`
-and in the `Guardrails` job. `.github/CODEOWNERS` puts those paths behind the
-owner's review, and `main` requires the `Gate` and `Guardrails` checks.
+and in the `Guardrails` job. `.github/CODEOWNERS` asks for the owner's review
+on those paths, and `main` requires the `Gate` and `Guardrails` checks.
 Changing one is the owner's call and needs an explicit instruction.
+
+A protected file is edited in two places, in one commit: the file, and its
+hash in `tools/guardrails.manifest.json`. That is the sanctioned way to change
+one, and the pair is visible in the diff. A file that changes without its
+hash is the failure the check exists to catch.
 
 The harness (`HARNESS.md`, `docs/specs/`) and ADRs 0005 and 0007 went with
 the test harness in #43, because testing is not required by the brief. The

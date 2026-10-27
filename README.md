@@ -88,7 +88,7 @@ bun run gate       # size budget, guardrails, then nx affected -t lint,format,ty
 
 lefthook runs lint, format and typecheck on commit and the gate on push; CI runs the same gate. Every GitHub Action is pinned to a commit SHA.
 
-The agent instructions, the git hooks and the guardrail manifest that checks them are protected by `tools/guardrails.mjs`, which runs in the gate and in its own `Guardrails` check. `.github/CODEOWNERS` puts them behind the owner's review, and `main` requires both checks. [docs/safeguards.md](docs/safeguards.md) is the record of what is protected, what the branch ruleset does, and what was found this way.
+The agent instructions, the git hooks and the guardrail manifest that checks them are protected by `tools/guardrails.mjs`, which runs in the gate and in its own `Guardrails` check. `.github/CODEOWNERS` asks for the owner's review on them, and `main` requires both checks. [docs/safeguards.md](docs/safeguards.md) is the record of what is protected, what the branch ruleset does, and what was found this way.
 
 ## What a reviewer should try
 

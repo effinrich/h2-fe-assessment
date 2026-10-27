@@ -43,8 +43,10 @@ token, the two Actions secrets, and the agent runtime's own tokens.
 
 ## What is protected
 
-`tools/guardrails.manifest.json` lists them. Each one is hashed, so a rewrite
-fails as well as a deletion:
+`tools/guardrails.manifest.json` lists them, in three tiers.
+
+**Hashed.** A change that is not paired with an update to the manifest fails
+the build, so a rewrite fails as well as a deletion:
 
 - `AGENTS.md` and `CLAUDE.md` — the instructions every agent reads first.
 - `lefthook.yml` — the commit and push hooks.
@@ -53,11 +55,28 @@ fails as well as a deletion:
   turn ends with changes and sends a red gate back.
 - `tools/shell-guard.mjs`, `tools/stop-gate.mjs`, `tools/size-budget.mjs`,
   `tools/guardrails.mjs`.
-- The decision records in `docs/decisions/`.
+
+**Required to exist.** Every decision record in `docs/decisions/` is named in
+the manifest, so deleting one fails the build. Their contents are not hashed:
+a decision that changes is a decision worth changing, and the record's own
+history is the audit trail for why it changed.
+
+**Asserted.** The gate has to run the check, the gate has to keep deriving
+its targets from the project graph, the boundary rule has to stay in
+`.oxlintrc.json`, and both workflows have to keep calling them. A rewrite that
+drops any of those fails too.
 
 `tools/guardrails.mjs` checks the manifest and runs inside `bun run gate` and
 in its own `Guardrails` job, so taking the check out of the gate is itself a
-failure. `.github/CODEOWNERS` puts the same paths behind the owner's review.
+failure.
+
+What the hashes do not do is stop a change that updates the manifest in the
+same commit — that is the sanctioned way to edit a protected file, and it is
+the owner's call. The lock that actually holds is the combination: the build
+fails on an unpaired change, the ruleset requires a pull request, and
+`.github/CODEOWNERS` asks for the owner's review on the same paths. It is a
+request rather than a requirement, because this repository has no second
+approver and the ruleset requires no approving review.
 
 Three of its rules came out of a compromised machine. Every tracked file is
 scanned for the shape of a token, and paths that hold credentials are refused
