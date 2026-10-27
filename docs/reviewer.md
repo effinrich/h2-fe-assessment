@@ -33,9 +33,9 @@ Draw a rectangle. **Open another** (top right) warns before discarding marks. Ca
 
 Draw two overlapping shapes. Press **P** and click where they overlap. Drag one: the other follows. Pins do not attach to PDF pages, which are locked. Built on tldraw's pin-bindings example.
 
-## Screenshot
+## Crop
 
-Press **C** and drag a box. Releasing downloads everything under it as a PNG; hold **Ctrl** to copy it instead, and hold **Alt** for SVG. This is tldraw's screenshot-tool example.
+Press **C** and drag a box. The drag is left behind as a crop — corner brackets around a region, which you can move and resize from its corners. **Export PNG** writes out what is under the brackets: the page and your marks, cropped to the region. Hold **Ctrl** to copy it to the clipboard, or **Alt** to export SVG. The crop stays on the canvas, so you can adjust it and export again.
 
 ## Color mode
 

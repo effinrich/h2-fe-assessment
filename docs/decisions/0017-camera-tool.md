@@ -1,12 +1,20 @@
-# 0017 — The camera is tldraw's screenshot tool, and that is the decision
+# 0017 — The camera is a crop shape, and this is what "done" means
 
 - Status: accepted
 - Date: 2026-10-26
 
 ## Context
 
-Task 4 asks for a camera tool: "The tool should create a shape that: 1. lets
+Task 4 asks for a camera tool. "The tool should create a shape that: 1. lets
 the user 'crop' a part of the canvas, 2. then export that part as an image."
+
+The framing is deliberate — it is the same "create a shape that" the pin in
+Task 3 asks for. The demo that came with the brief for this task is tldraw's
+own screenshot tool: drag a box, release, and the image is on your disk.
+
+That demo is a gesture, not a shape. It exports the region and leaves nothing
+behind, so the region cannot be adjusted afterwards and it cannot be exported
+twice.
 
 The name needs untangling first, because tldraw has two things it could mean
 and only one of them is this task. The SDK exports no camera component. What
@@ -17,10 +25,6 @@ zoom steps, and the constraints that keep it inside a bounded area
 crop-and-export primitive is a different thing: the screenshot tool, which
 tldraw ships as its own example and backs with the SDK's `exportAs` and
 `copyAs` ([screenshot-tool](https://tldraw.dev/examples/screenshot-tool)).
-
-The reference that came with the brief is that screenshot tool, and the brief
-is explicit that the demos it ships with are "competitors' references, not
-our own design".
 
 ## What was built before this decision
 
@@ -38,77 +42,75 @@ changing course.
 
 The history has the rest of it. PR #47 rebuilt the feature from tldraw's
 example (29 files, 1,561 lines deleted) and PR #57 took the example as it is.
-What ships today is four source files and 163 lines.
+
+## The done state
+
+The brief specifies a product, not an implementation, so the first question is
+what the product is. These five statements are what task 4 is, and each one
+is checkable by looking at the app.
+
+1. **The camera leaves a crop shape behind.** Press `C`, drag on the canvas,
+   release: a crop shape stays where the drag was. It is a shape like any
+   other — selectable, movable, undoable — and it is still there after the
+   export.
+2. **The crop is resized from its corners, freely.** The selected crop has
+   corner handles. Dragging one moves that corner, and the crop is not locked
+   to an aspect ratio: it can be any rectangle.
+3. **The crop does not hide what it frames.** The region inside the frame
+   stays visible on the canvas. The frame is drawn as corner brackets, not a
+   panel over the content, so what will be exported can be seen before it is
+   exported.
+4. **Exporting the crop produces an image of the region under it.** The export
+   is of the content under the crop — the PDF page and the marks on it come
+   out together, at the size they are on the canvas, cropped to the crop. It
+   is a PNG by default, `Ctrl` copies it to the clipboard instead of
+   downloading it, and `Alt` asks for SVG. The home screen's promise,
+   "Export an area as PNG or SVG", is true of the crop.
+5. **The crop can be exported again.** Exporting does not consume the shape.
+   The user can move it, resize it and export again, and the file that comes
+   out is the region as it is at that moment.
 
 ## Decision
 
-**Keep tldraw's screenshot tool, wired into the document.**
+**A custom crop shape, and the platform's own export path.**
 
-- `CameraTool` (`camera-tool.ts`) is a custom `StateNode` with three states —
-  idle, pointing, dragging — so a click without a drag is a no-op rather than
-  a zero-sized export.
-- The box is drawn by `ScreenshotBox`, registered `InFrontOfTheCanvas` so it
-  sits above the document.
-- On release, the shapes whose masked page bounds fall inside the box are
-  exported through `exportAs` / `copyAs` with `bounds: box`. What comes out is
-  the _content_ under the box, not a screen region: the PDF page, the marks
-  on it and the shapes on top of it are all in the image, at the size they are
-  on the canvas.
-- `Ctrl` copies the image to the clipboard instead of downloading it, and
-  `Alt` asks for SVG rather than PNG. The home screen says "Export an area as
-  PNG or SVG", and both are true.
-
-## The shape that was not built
-
-The brief asks for a shape, and this leaves none behind: the crop is
-exported and nothing stays on the canvas. That is the trade, and the other
-side of it is worth stating.
-
-A shape that frames a region and exports it has to show what it frames, or
-it is worse than a screenshot — a frame the user cannot see inside is a frame
-they have to guess at. A live preview means re-rendering the region as the
-canvas changes, and the rest of the app does not pay that cost today: the
-document is rasterised once and the marks are vector shapes.
-
-That design is buildable, and the agents built it. Most of what it cost was
-the platform already having: the frame's own shape util, its outline, its
-export path. What is left of the idea is one line — export the region, and
-the region is the image — which is what the shipped tool does.
-
-So the decision is not that the brief's shape is wrong. It is that the shape
-was not worth thirty files, and that the honest answer to "the brief asks for
-a shape" is to say so rather than to ship something that looks like one.
-
-A reviewer who wants the shape can still build it on top of this tool
-cheaply: capture the region, place it on the canvas as an image shape, and
-the user can move it and annotate around it. What that does not give is the
-live preview — the frame would still be a picture of a region rather than a
-window onto one.
+- `CropShapeUtil` (`crop-shape-util.tsx`) is a custom shape with `w` and `h`
+  props and a `Rectangle2d` geometry, so the region is the shape. It extends
+  `BaseBoxShapeUtil`, which brings tldraw's own box resize with it:
+  `onResize` delegates to `resizeBox`, so a corner drag scales the region and
+  the crop is not aspect-locked. The brackets are drawn by the shape's own
+  component, and nothing under the region is covered.
+- The camera tool (`camera-tool.ts`) keeps its three states — idle, pointing,
+  dragging — and its drag box, but on release it creates the crop shape
+  instead of exporting. The shape is selected, so its corner handles are
+  there immediately.
+- The export is the SDK's: the shapes whose masked page bounds meet the
+  region are passed to `exportAs` / `copyAs` with `bounds` set to the region,
+  so what comes out is the content under the crop rather than a screen region.
+  The crop shapes themselves are left out of the export.
+- The export is triggered from the selected crop, in an overlay above the
+  canvas: `Ctrl` is the clipboard and `Alt` is SVG, the same two modifiers
+  the gesture used.
 
 ## Consequences
 
-- The user gets their data back in one gesture, which is what the task's
-  framing is about — "our products don't stop until the user has their data
-  back to them, in formats that are familiar and universal". `Ctrl` is the
-  same gesture towards the clipboard, and `Alt` the same gesture towards a
-  vector format.
-- SVG is a real second format rather than a promise.
-- A crop of a region containing a PDF page contains the page at the size it
-  is on the canvas. A crop taken in dark mode carries the dark background
-  with it — the same behaviour the walkthrough records for the pages.
-- A screenshot cannot be re-edited, and it cannot be re-exported after the
-  canvas has changed under it. That is the cost of this design, stated rather
-  than hidden.
-- The rule this records is not about the camera. When the platform has a
-  supported primitive for the job, use it and go deep on it. A parallel
-  implementation is thirty files of code that has to be right before it is
-  worth anything, and it is a worse thing to hand a user than the primitive
-  it replaced.
-- The test for that is whether the code gets there. A less respected library
-  or vanilla JavaScript is a fine answer when it is the shortest path to
-  working software; a library's reputation is not part of the question. The
-  stack in the brief is not the only stack, and reaching for the supported
-  path is the part that transfers.
+- The brief's wording is met: the tool creates a shape, the shape crops a part
+  of the canvas, and that part is exported as an image. It does more than the
+  reference demo, which exports and leaves nothing.
+- The crop is a region in page space, not a picture of one. Nothing is
+  re-rendered when the canvas changes, so the region costs what a rectangle
+  costs, and the export is taken when it is asked for.
+- A crop of a region containing a PDF page contains the page at the size it is
+  on the canvas. A crop taken in dark mode carries the dark background with
+  it — the same behaviour the walkthrough records for the pages.
+- The region is not aspect-locked, so a crop can be any rectangle. There is no
+  polygonal crop: the brief asks for a shape that crops a part of the canvas,
+  and a rectangle is the part.
+- The record moves with the decision. An earlier version of this file promised
+  a camera shape as the next change, on the grounds that the brief asks for
+  one. What the brief asks for is a crop that can be adjusted and exported,
+  and that is cheaper to build as the shape itself than to promise in a
+  record.
 - The wider account of how this repository was worked on, and what the
   process had to become to be trustworthy, is in
   [safeguards.md](../safeguards.md). This is one decision inside it.
