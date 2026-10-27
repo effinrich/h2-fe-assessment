@@ -12,6 +12,7 @@ You have read access to this repository. Everything you need is here:
 2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
 3. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
 4. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
+5. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
 
 If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) and downloads as an MP4.
 
@@ -86,7 +87,7 @@ bun run gate       # size budget, guardrails, then nx affected -t lint,format,ty
 
 lefthook runs lint, format and typecheck on commit and the gate on push; CI runs the same gate. Every GitHub Action is pinned to a commit SHA.
 
-The agent instructions, the git hooks and the guardrail manifest that checks them are protected by `tools/guardrails.mjs`, which runs in the gate and in its own `Guardrails` check. `.github/CODEOWNERS` puts them behind the owner's review, and `main` requires both checks.
+The agent instructions, the git hooks and the guardrail manifest that checks them are protected by `tools/guardrails.mjs`, which runs in the gate and in its own `Guardrails` check. `.github/CODEOWNERS` puts them behind the owner's review, and `main` requires both checks. [docs/safeguards.md](docs/safeguards.md) is the record of what is protected, what the branch ruleset does, and what was found this way.
 
 ## What a reviewer should try
 
