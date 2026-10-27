@@ -64,9 +64,11 @@ manifest records that, so the next reader finds the reason instead of a gap.
   hooks and the pre-push gate fail without `node_modules`.
 - After a project imports a new workspace lib, run `bunx nx sync` to update
   the TypeScript project references.
-- Chromatic's "UI Review" / "UI Tests" checks stay pending on the plan limit
-  and don't block merge; `gh pr checks --watch` never exits on them, so read
-  the `Gate` check instead.
+- Chromatic's "UI Tests" check runs on pull requests and reports the visual
+  diff against the accepted baselines. The plan rolled over and the baselines
+  were accepted, so a UI change shows up as a change to accept rather than as
+  a permanently pending check. Accept it in Chromatic when the UI moves. It
+  is reported, not required — the required checks are `Gate` and `Guardrails`.
 - Actions are pinned to full commit SHAs. LF line endings.
 
 ## Layout
