@@ -49,14 +49,16 @@ because the second merge made it worth looking for.
 
 - Interaction coverage lives next to the component, in the story. Visual
   coverage lives in Chromatic, against a baseline someone accepted.
-- **The features and the screens have no automated interaction coverage.** The
-  specs that covered them were removed with the harness and are not coming
-  back. What stands in for them is the type system, the boundary rules, and
-  the walkthrough, which a reviewer can watch. That is a known gap rather
-  than an oversight, and it is written down here so the next reader finds the
-  decision instead of the hole.
-- A new interaction in a feature is verified by a story or by hand, not by a
-  test file. That is the trade: less to maintain, and less caught.
+- **The features and the screens have no automated interaction coverage, and
+  the brief does not ask for any.** The specs that covered them were the first
+  agent's priority rather than the brief's, and they went with the harness in
+  #43. What stands in for them is the type system, the boundary rules, and
+  the walkthrough, which a reviewer can watch. Nothing here falls short of
+  the brief — it is the same recorded exclusion as ADR 0009's, written down
+  so the next reader finds the decision instead of the hole.
+- A new interaction in a feature is verified by a story or by hand. That is
+  the trade the exclusion makes: less to maintain, and a reviewer's eye on
+  the walkthrough instead of a suite.
 - Nothing in this decision is allowed to be deleted quietly. The gate's
   targets, the boundary rule and the decision records are all in
   `tools/guardrails.manifest.json`, so removing one fails the build.
