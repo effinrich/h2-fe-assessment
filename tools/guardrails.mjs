@@ -156,6 +156,9 @@ for (const path of tracked) {
   try {
     json = JSON.parse(readFileSync(join(root, path), "utf8"))
   } catch {
+    // Skipping an unparseable file would be a check that passes for the wrong
+    // reason: the project would look fine because the checker never read it.
+    problems.push(`project file could not be parsed: ${path}`)
     continue
   }
 
