@@ -109,6 +109,14 @@ tldraw v5, Storybook 10 + Chromatic.
 - Commit and push in small PRs without waiting to be asked. Check the branch
   before committing and commit by explicit pathspec; other sessions may share
   the checkout, so do parallel work in a git worktree.
+- A commit written with an agent's help carries a `Co-authored-by:` trailer
+  naming that agent — `MiniMax Code <noreply@minimax.invalid>` for this
+  runtime. The history is the provenance record: if the agent sessions are the
+  exposure, then what an agent wrote has to be readable after the fact.
+- Before you trust a check, read why it failed. A check that fails because a
+  tool is missing has proven nothing, and neither has one that passes for the
+  wrong reason. When the order of the work matters, make it visible in the
+  commit, because order cannot be checked afterwards.
 - Don't stage local junk (`.gitignore` edits, `.github/agents/`, logs, zips).
 - Don't take over the user's mouse or keyboard: prefer file tools to shell
   calls, and run browsers and recordings headless.

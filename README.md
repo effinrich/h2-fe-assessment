@@ -57,6 +57,7 @@ flowchart TB
 | tldraw and Chakra stay two styling systems, bridged by CSS variables | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
 | Chakra UI v3 over Tailwind                                           | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
 | What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
+| The verification surface: the gate, the stories, the snapshots       | [0015](docs/decisions/0015-verification-surface.md)          |
 
 0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
 
