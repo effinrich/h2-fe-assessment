@@ -38,10 +38,12 @@ proven nothing. It generalises to every check in this repository: a gate that
 fails because a tool is missing has proven nothing, and neither has a check
 that passes for the wrong reason.
 
-Two checks that passed for the wrong reason were written and fixed while this
+Three checks that passed for the wrong reason were written and fixed while this
 record was being made — a forbidden-path rule that only matched at the
-repository root, and a tag check that skipped a project with no tags. The rule
-is not inherited from the old harness; it is what caught them.
+repository root, a tag check that skipped a project with no tags, and a tag
+check that skipped a project file it could not parse. The rule is not inherited
+from the old harness; it is what caught them, and it caught the third one only
+because the second merge made it worth looking for.
 
 ## Consequences
 

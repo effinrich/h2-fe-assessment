@@ -20,7 +20,7 @@
       "sha256": "a48b21e3a30ad6de50b1a09d8062c2fddca45e5a28eed3757d0c43290a4b0342"
     },
     "tools/guardrails.mjs": {
-      "sha256": "ceb235ea33d4b525f3301a2a07e39caf6f4f8335d6f15a84afd4b7e94ce1d7e2"
+      "sha256": "03d8ca1c484461b30386979ce2e4ebc982c502f22acecb96f3ec4bbd7e80722e"
     }
   },
   "assertions": [
