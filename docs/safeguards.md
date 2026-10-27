@@ -135,14 +135,20 @@ one.
 ## Provenance
 
 The history says who wrote what. Commits an agent had a hand in carry a
-`Co-authored-by:` trailer naming it — Cursor, CommandCodeBot, Copilot — and 47
-of the 90 commits on `main` carry one.
+`Co-authored-by:` trailer naming it — Cursor, MiniMax Code, Copilot. Counted
+on 2026-10-27, 57 of the 98 commits on `main` carried one: `git rev-list
+--count main` for the denominator, `git log main --grep="Co-authored-by:"
+--oneline | wc -l` for the numerator.
 
-Thirteen do not: pull requests #63 through #75, merged on 2026-10-26 and
-2026-10-27. They were written with an agent's help at the owner's direction,
-and the convention was only written down afterwards. They are named here
-rather than in the history because rewriting thirteen published commits to add
-a trailer means a force push to `main` — the thing the ruleset now refuses.
+Forty-one did not. Thirteen of them are pull requests #63 through #75, merged
+on 2026-10-26 and 2026-10-27. They were written with an agent's help at the
+owner's direction, and the convention was only written down afterwards. They
+are named here rather than in the history because rewriting thirteen
+published commits to add a trailer means a force push to `main` — the thing
+the ruleset now refuses.
+
+The remaining twenty-eight are older: the initial scaffold, the merge
+commits from before there was a convention, and a handful of chores.
 
 Going forward the trailer is required, and `AGENTS.md` says so.
 
