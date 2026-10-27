@@ -1,6 +1,12 @@
 {
-  "$comment": "The safeguards this repository depends on. tools/guardrails.mjs checks this list inside `bun run gate` and in the Guardrails job; .github/CODEOWNERS puts these paths behind the owner's review. Changing a hash here is a two-key edit: the file and this manifest. Removing a safeguard is the owner's call and needs an explicit instruction.",
+  "$comment": "The safeguards this repository depends on. `files` is hashed, so a change without a matching hash update fails the build; `directories` must exist; `assertions` are the invariants inside files that legitimately change; `gateTargets` keeps the gate from running checks the brief does not require. tools/guardrails.mjs checks this list inside `bun run gate` and in the Guardrails job; .github/CODEOWNERS asks for the owner's review on the same paths. Changing a hash here is a two-key edit: the file and this manifest. Removing a safeguard is the owner's call and needs an explicit instruction.",
   "files": {
+    "AGENTS.md": {
+      "sha256": "146ed4dbe19faef2ff001fcfe5f0352c15565826625ec9b50b5f16de7661dfa7"
+    },
+    "CLAUDE.md": {
+      "sha256": "674a2c5b70b33fef26bfbff4c5daa866918b060a2772cab154c0221c3b797171"
+    },
     "lefthook.yml": {
       "sha256": "3c8824ee1fff14e2f5828b96bd4d553a41b9fb6eabac2faf0a27d13e455e3bf9"
     },
@@ -20,8 +26,13 @@
       "sha256": "a48b21e3a30ad6de50b1a09d8062c2fddca45e5a28eed3757d0c43290a4b0342"
     },
     "tools/guardrails.mjs": {
-      "sha256": "03d8ca1c484461b30386979ce2e4ebc982c502f22acecb96f3ec4bbd7e80722e"
+      "sha256": "f5c8464064693c89328c0513074a2fea7989569fd1ec13ec6fba131ad9b3106f"
     }
+  },
+  "gateTargets": {
+    "script": "gate",
+    "forbidden": ["test", "test-storybook"],
+    "why": "the brief states precisely what is required and does not ask for a test suite. The first agent's harness had to be removed in #43, and agents default to more verification than the brief asks for, so the decision is enforced by the build rather than by a sentence in a record."
   },
   "assertions": [
     {

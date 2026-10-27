@@ -56,6 +56,33 @@ for (const rule of manifest.assertions ?? []) {
   }
 }
 
+// --- the gate does not run checks the brief does not require ----------------
+//
+// The brief states precisely what is required, and it does not ask for a test
+// suite. The first agent's harness had to be removed in #43 for that reason.
+// Agents default to more verification rather than to the brief, so the
+// decision is enforced here rather than left as a sentence in a record.
+
+const gateRule = manifest.gateTargets
+if (gateRule) {
+  const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"))
+  const gate = pkg.scripts?.[gateRule.script] ?? ""
+  const match = /nx\s+affected\s+-t\s+([^\s&|]+)/.exec(gate)
+  const targets = match ? match[1].split(",").map((t) => t.trim()) : []
+  if (targets.length === 0) {
+    problems.push(
+      `the ${gateRule.script} script does not derive its targets from the project graph`
+    )
+  }
+  for (const target of gateRule.forbidden ?? []) {
+    if (targets.includes(target)) {
+      problems.push(
+        `the ${gateRule.script} script runs "${target}", which the brief does not require (${gateRule.why ?? ""})`.trim()
+      )
+    }
+  }
+}
+
 // --- protected records ---------------------------------------------------
 
 for (const [dir, rule] of Object.entries(manifest.directories ?? {})) {
