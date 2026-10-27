@@ -63,3 +63,6 @@ storybook-static
 .github/copilot-instructions.md
 .gitignore.*-original
 .hermes.md
+
+# Cursor's own hook state — local paths and session ids, not part of the repo
+.cursor/hooks/state/
