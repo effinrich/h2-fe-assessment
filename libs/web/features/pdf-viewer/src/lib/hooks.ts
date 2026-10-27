@@ -9,7 +9,7 @@ import { activePageNumber, hasUserMarks, openPdf, pageBounds, placePages } from 
 const fileTokens = new WeakMap<File, string>()
 let nextFileToken = 0
 
-export function pdfFileToken(file: File | null): FileToken | null {
+function pdfFileToken(file: File | null): FileToken | null {
   if (!file) return null
   let token = fileTokens.get(file)
   if (!token) {

@@ -121,3 +121,9 @@ use: `toolIds`, `shapeUtils`, `bindingUtils`, `tools`, `overrides` and
 `retainPageBounds` wiring are gone, and the pin's `canAttach` option became
 "never bind to a locked shape". The extension stories and specs mentioned
 above were removed with the rest of the test suite.
+
+### Amendment (2026-10-26): the test harness went too
+
+PR #43 removed the harness itself, so the colocated jsdom specs and
+`tools/vitest-setup.ts` named in the Consequences above are gone as well. What
+covers behaviour now is the gate and the stories.
