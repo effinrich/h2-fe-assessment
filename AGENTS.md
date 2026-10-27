@@ -18,6 +18,24 @@ Nx-generated block only.
 5. **Never guess a CLI flag.** Check `--help` or `nx_docs`.
 6. **Ask before deleting any config file.**
 
+## Guardrails
+
+`AGENTS.md`, `lefthook.yml`, `.cursor/hooks.json`, `.claude/settings.json`,
+the scripts in `tools/`, the decision records in `docs/decisions/` and the
+gate itself are load-bearing. They are not scaffolding, and they are not "the
+test harness". Do not delete, weaken or reframe one of them because a task
+did not ask for it, and do not read a safeguard as clutter.
+
+`tools/guardrails.mjs` checks `tools/guardrails.manifest.json` — hashes,
+invariants, and the files that must exist — and runs inside `bun run gate`
+and in the `Guardrails` job. `.github/CODEOWNERS` puts those paths behind the
+owner's review, and `main` requires the `Gate` and `Guardrails` checks.
+Changing one is the owner's call and needs an explicit instruction.
+
+The harness (`HARNESS.md`, `docs/specs/`) and ADRs 0005 and 0007 went with
+the test harness in #43, because testing is not required by the brief. The
+manifest records that, so the next reader finds the reason instead of a gap.
+
 ## Workspace
 
 - Nx 23 + bun: `bun` / `bunx nx`, never npm or npx. `nx` and every `@nx/*`
@@ -30,7 +48,8 @@ Nx-generated block only.
 - `lint` is oxlint (`--type-aware`), `format` is oxfmt. No ESLint. Projects
   extend the root `.oxlintrc.json`; never add a nested `.oxfmtrc.json`.
 - `bun run gate` = the size budget (`tools/size-budget.mjs`: source files and
-  non-blank lines in `apps/` and `libs/`) then
+  non-blank lines in `apps/` and `libs/`), the guardrail check
+  (`tools/guardrails.mjs`), then
   `nx affected -t lint,format,typecheck,build,build-storybook`. Over budget
   means cut scope; raising a limit is the user's call.
   lefthook: pre-commit lints, formats and typechecks staged files; pre-push runs

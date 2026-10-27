@@ -19,7 +19,8 @@
     "storybook": "nx run shared-ui:storybook",
     "build-storybook": "nx run shared-ui:build-storybook",
     "budget": "bun tools/size-budget.mjs",
-    "gate": "bun run budget && nx affected -t lint,format,typecheck,build,build-storybook"
+    "guardrails": "bun tools/guardrails.mjs",
+    "gate": "bun run budget && bun run guardrails && nx affected -t lint,format,typecheck,build,build-storybook"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
