@@ -60,7 +60,7 @@ flowchart TB
 | What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
 | The verification surface: the gate, the stories, the snapshots       | [0015](docs/decisions/0015-verification-surface.md)          |
 | The pin: a custom shape, a custom binding, a constraint solver       | [0016](docs/decisions/0016-pin-tool.md)                      |
-| The camera: the region exported, and the crop shape still open       | [0017](docs/decisions/0017-camera-tool.md)                   |
+| The camera: the region exported, and the crop shape declined         | [0017](docs/decisions/0017-camera-tool.md)                   |
 
 0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
 

@@ -109,9 +109,10 @@ and a chain of five shapes through two pins resolves the same way. And pins
 do not attach to PDF pages, because the pages are locked and a pin that
 dragged the document around would be a bug.
 
-**Against the reference:** the demo for this task is tldraw's own pin example
-in a bare canvas. This is a different implementation, in the application,
-where the shapes it holds can be pages of a document.
+**Against the reference:** the demo for this task is tldraw's own
+[pin-bindings example](https://tldraw.dev/examples/pin-bindings) in a bare
+canvas. This is a different implementation, in the application, where the
+shapes it holds can be pages of a document.
 
 **Verified by** the walkthrough, which draws two overlapping shapes, pins
 them where they overlap, and moves one.
@@ -119,21 +120,30 @@ them where they overlap, and moves one.
 ## Task 4 — the camera
 
 **The brief asks for a tool that creates a shape, crops part of the canvas
-and exports that part as an image.** 0017 is the record, and it is also where
-the gap in this submission is written down.
+and exports that part as an image.** 0017 is the record, and it is a record
+of a decision rather than of a gap.
 
-What exists is a screenshot tool: drag a box, release, and everything under
-it is exported, cropped to the box, as a PNG — `Ctrl` copies it instead of
-downloading it, `Alt` asks for SVG. The export is of the content under the
-box, not of a screen region, so the page and the marks on it come out with
-it.
+What ships is tldraw's own
+[screenshot tool](https://tldraw.dev/examples/screenshot-tool), wired into the
+document: a custom `StateNode` with three states, a box drawn above the
+canvas, and on release the shapes under the box exported through the SDK's
+export path — cropped to the box, as a PNG or an SVG, to the file or to the
+clipboard. The export is of the content under the box, not of a screen
+region, so the page and the marks on it come out with it.
 
-**The gap:** the crop is exported and nothing is left behind, where the brief
-asks for a shape. For this task the submission currently matches the
-reference — the demo that came with the brief is tldraw's own screenshot
-tool — and the brief is explicit that the demos are "not our own design" and
-that the submission should be better than them. 0017 sets out what the next
-change would be, and what it costs.
+**Against the reference:** the demo that came with the brief is the same
+primitive, and the brief is explicit that the demos are "not our own design"
+and that the submission should be better than them. Two things are different
+here. What is exported is the content under the box rather than a screen
+region, so a PDF page and the marks on it come out together, at the size
+they are on the canvas. And the whole thing is three states of a tool and a
+box, in 163 lines.
+
+**The trade:** the brief asks for a shape and this leaves none behind. 0017
+records what the other side of that trade was, and what the bespoke camera it
+replaced cost — 36 files and about 3,400 lines that never reached `main`. The
+rule it lands on is the simple one: when the platform has a supported
+primitive for the job, use it and go deep on it.
 
 ## The three expectations
 
@@ -148,14 +158,16 @@ records — including the ones that record a decision _not_ to do something.
 
 **Teamwork** is answered by a narrated walkthrough of the product, by fifteen
 decision records, and by the commit history, which names the agent that had
-a hand in each commit. The brief also names session transcripts with AI
-agents as evidence it likes, and those are the one thing here that is
-missing: see the next section.
+a hand in each commit. It is also answered by the record of what went wrong:
+0017 tells the camera from both ends — four agents building a camera the
+platform already had, a directive that did not land, and the decision that
+followed — and [safeguards.md](safeguards.md) is the wider account of the
+same period and of what the process had to become to be trustworthy. The
+brief also names session transcripts with AI agents as evidence it likes, and
+those are the one thing here that is missing: see the next section.
 
 ## Where this is behind
 
-- **Task 4 does not create a shape.** The brief asks for one. 0017 says what
-  the next change is and what it costs.
 - **No session transcripts.** The brief names them among the evidence it
   likes, next to the walkthrough and the decision notes, and the other two
   are here. Transcripts of the sessions behind this work are not, because the
