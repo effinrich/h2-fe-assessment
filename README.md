@@ -15,7 +15,7 @@ You have read access to this repository. Everything you need is here:
 5. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
 6. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
 
-If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) and downloads as an MP4.
+If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v3 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v3) and downloads as an MP4.
 
 The "Get a license for production" button in the bottom right of the canvas is tldraw's own licensing prompt. This repository ships without a production license key, so the SDK shows that badge wherever it runs.
 
