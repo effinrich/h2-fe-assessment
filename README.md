@@ -77,10 +77,12 @@ bun run storybook  # the design system, http://localhost:4400
 ## Check
 
 ```sh
-bun run gate       # size budget, then nx affected -t lint,format,typecheck,build,build-storybook
+bun run gate       # size budget, guardrails, then nx affected -t lint,format,typecheck,build,build-storybook
 ```
 
 lefthook runs lint, format and typecheck on commit and the gate on push; CI runs the same gate. Every GitHub Action is pinned to a commit SHA.
+
+The agent instructions, the git hooks and the guardrail manifest that checks them are protected by `tools/guardrails.mjs`, which runs in the gate and in its own `Guardrails` check. `.github/CODEOWNERS` puts them behind the owner's review, and `main` requires both checks.
 
 ## What a reviewer should try
 

@@ -1,0 +1,73 @@
+{
+  "$comment": "The safeguards this repository depends on. tools/guardrails.mjs checks this list inside `bun run gate` and in the Guardrails job; .github/CODEOWNERS puts these paths behind the owner's review. Changing a hash here is a two-key edit: the file and this manifest. Removing a safeguard is the owner's call and needs an explicit instruction.",
+  "files": {
+    "lefthook.yml": {
+      "sha256": "3c8824ee1fff14e2f5828b96bd4d553a41b9fb6eabac2faf0a27d13e455e3bf9"
+    },
+    ".cursor/hooks.json": {
+      "sha256": "3696d6fcf4187ecad448fe2bab7b5fd354d7f59df44afce014d28e9722934fb5"
+    },
+    ".claude/settings.json": {
+      "sha256": "9d4b8fbbf46c735cc3e3ea7ad4f1dd17d62acdc10f7bd9a93a226a8a2061fbcb"
+    },
+    "tools/shell-guard.mjs": {
+      "sha256": "c15eda67e22ffbbcff1411a913543855e47bac1b83ce67f6c54a15c5e853c954"
+    },
+    "tools/stop-gate.mjs": {
+      "sha256": "832d34f7fe86ea6789f95f79d8a6976af0f79c8e07edc29b3ac8818e994bc4c7"
+    },
+    "tools/size-budget.mjs": {
+      "sha256": "a48b21e3a30ad6de50b1a09d8062c2fddca45e5a28eed3757d0c43290a4b0342"
+    },
+    "tools/guardrails.mjs": {
+      "sha256": "7aa0f4a4880087ea7a7ee6c12eef10eab450f0473954bd31fc7b8464d5b33fe6"
+    }
+  },
+  "assertions": [
+    {
+      "path": "package.json",
+      "contains": ["\"guardrails\": \"bun tools/guardrails.mjs\"", "bun run guardrails"],
+      "why": "the gate has to run the check, or one line of package.json skips it"
+    },
+    {
+      "path": "AGENTS.md",
+      "contains": ["## Guardrails", "tools/guardrails.mjs"],
+      "why": "the rule that tells an agent these files are load-bearing"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "contains": ["bun run gate"],
+      "why": "CI has to run the gate"
+    },
+    {
+      "path": ".github/workflows/guardrails.yml",
+      "contains": ["node tools/guardrails.mjs", "name: Guardrails"],
+      "why": "the standalone job whose name main requires"
+    }
+  ],
+  "directories": {
+    "docs/decisions": {
+      "mustExist": [
+        "0001-workspace-and-package-manager.md",
+        "0002-framework.md",
+        "0003-canvas-engine.md",
+        "0004-styling-and-primitives.md",
+        "0006-judgement-layer.md",
+        "0008-lint-split.md",
+        "0009-not-built.md",
+        "0010-nx-dependency-trims.md",
+        "0011-feature-pattern.md",
+        "0012-pdf-pages-as-image-shapes.md",
+        "0013-tldraw-chakra-theme-bridge.md",
+        "0014-chakra-over-tailwind.md"
+      ]
+    }
+  },
+  "removed": {
+    "HARNESS.md": "removed with the test harness in #43 — the spec-first scaffold the harness owned",
+    "docs/specs/": "removed with the test harness in #43 — testing is not required by the brief",
+    "docs/decisions/0005-sdd-and-tdd.md": "removed with the test harness in #43 — it recorded the spec-and-test rules that went with it",
+    "docs/decisions/0007-storybook-scope.md": "removed with the test harness in #43 — its per-library Storybook and story-per-component rules are still in force",
+    "apps/web/AGENTS.md, libs/shared/ui/AGENTS.md, libs/web/features/*/AGENTS.md": "per-project agent instructions removed with the test harness in #43; the root AGENTS.md is the instruction file now"
+  }
+}

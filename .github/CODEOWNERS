@@ -1,0 +1,17 @@
+# The owner's review is requested for the safeguards. The Guardrails check
+# fails the build if one of these is removed or weakened; this is the second
+# lock, and the one that survives a check being edited.
+
+/AGENTS.md                       @effinrich
+/CLAUDE.md                       @effinrich
+/lefthook.yml                    @effinrich
+/package.json                    @effinrich
+/.cursor/hooks.json              @effinrich
+/.claude/settings.json           @effinrich
+/.github/workflows/              @effinrich
+/tools/guardrails.mjs            @effinrich
+/tools/guardrails.manifest.json  @effinrich
+/tools/shell-guard.mjs           @effinrich
+/tools/stop-gate.mjs             @effinrich
+/tools/size-budget.mjs           @effinrich
+/docs/decisions/                 @effinrich
