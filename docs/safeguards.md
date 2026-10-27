@@ -59,6 +59,15 @@ fails as well as a deletion:
 in its own `Guardrails` job, so taking the check out of the gate is itself a
 failure. `.github/CODEOWNERS` puts the same paths behind the owner's review.
 
+Three of its rules came out of a compromised machine. Every tracked file is
+scanned for the shape of a token, and paths that hold credentials are refused
+outright, so a secret cannot be committed by accident. The gate has to keep
+deriving with `nx affected` rather than an enumerated target list, because a
+list is a list and lists get edited by whoever is editing them. And every
+project in the graph has to keep its tags, because a project without them is
+a project with no boundary — the project list is derived from the tree, so a
+project added later is covered the moment it is added.
+
 ## The ruleset
 
 `main` has carried a ruleset named `main` since 2026-10-02. It is the branch
@@ -103,6 +112,20 @@ request and no force push, which the change satisfied.
 It is also the only commit in this repository's history that has ever deleted
 an agent-surface file. One event, not a pattern — which is the point. It takes
 one.
+
+## Provenance
+
+The history says who wrote what. Commits an agent had a hand in carry a
+`Co-authored-by:` trailer naming it — Cursor, CommandCodeBot, Copilot — and 47
+of the 90 commits on `main` carry one.
+
+Thirteen do not: pull requests #63 through #75, merged on 2026-10-26 and
+2026-10-27. They were written with an agent's help at the owner's direction,
+and the convention was only written down afterwards. They are named here
+rather than in the history because rewriting thirteen published commits to add
+a trailer means a force push to `main` — the thing the ruleset now refuses.
+
+Going forward the trailer is required, and `AGENTS.md` says so.
 
 ## The rest of the list
 

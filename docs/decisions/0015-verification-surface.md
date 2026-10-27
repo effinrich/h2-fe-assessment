@@ -1,0 +1,60 @@
+# 0015 — The verification surface: the gate, the stories, the snapshots
+
+- Status: accepted
+- Date: 2026-10-26
+
+## Context
+
+The test harness went with PR #43, and the jsdom suite went with it: the
+feature specs, the route specs, the app spec, and the stories for the features
+and the screens. What was left is the gate, the stories in the design system,
+and Chromatic's snapshot check.
+
+This record answers the question the removal left open: what covers behaviour
+now, and what does not.
+
+## Decision
+
+**One verification surface, three parts. No separate unit-test suite.**
+
+- **The gate** — lint, format, typecheck, build, build-storybook, and the
+  guardrail check. It derives what to run from the project graph with
+  `nx affected`, so it covers what changed rather than what somebody
+  remembered to list.
+- **The stories** — the design system's stories are the component tests. Six
+  play functions across five stories exercise the interaction: button, colour
+  mode, modal, form, toaster. A play function is a test that also renders.
+- **The snapshots** — Chromatic compares every story against the accepted
+  baselines, so a visual change is a visible diff rather than a surprise, and
+  `UI Review` shows the comparison per story.
+
+The Storybook interaction tests and the snapshot tests cover the same ground a
+separate interaction suite would cover, so there is no second suite to keep in
+step with the first.
+
+**A check has to fail for the right reason before it is trusted.** The spec
+loop said it as a test that fails because it cannot import the module has
+proven nothing. It generalises to every check in this repository: a gate that
+fails because a tool is missing has proven nothing, and neither has a check
+that passes for the wrong reason.
+
+Two checks that passed for the wrong reason were written and fixed while this
+record was being made — a forbidden-path rule that only matched at the
+repository root, and a tag check that skipped a project with no tags. The rule
+is not inherited from the old harness; it is what caught them.
+
+## Consequences
+
+- Interaction coverage lives next to the component, in the story. Visual
+  coverage lives in Chromatic, against a baseline someone accepted.
+- **The features and the screens have no automated interaction coverage.** The
+  specs that covered them were removed with the harness and are not coming
+  back. What stands in for them is the type system, the boundary rules, and
+  the walkthrough, which a reviewer can watch. That is a known gap rather
+  than an oversight, and it is written down here so the next reader finds the
+  decision instead of the hole.
+- A new interaction in a feature is verified by a story or by hand, not by a
+  test file. That is the trade: less to maintain, and less caught.
+- Nothing in this decision is allowed to be deleted quietly. The gate's
+  targets, the boundary rule and the decision records are all in
+  `tools/guardrails.manifest.json`, so removing one fails the build.

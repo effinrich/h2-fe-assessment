@@ -6,13 +6,18 @@
 // check do. This runs inside `bun run gate` and in the Guardrails job, and
 // the manifest records what is protected and why.
 //
+// The tracked-file rules derive their inputs from `git ls-files` rather than
+// from a list in the manifest, so a new project or a new file is covered the
+// moment it is added instead of when someone remembers to add it.
+//
 // Node builtins only, and paths resolve from this file rather than the
 // working directory, so it runs the same from the repo root, a worktree or
 // CI.
 
+import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
-import { existsSync, readFileSync } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import { existsSync, readFileSync, statSync } from "node:fs"
+import { basename, dirname, extname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
@@ -20,6 +25,8 @@ const manifestPath = join(root, "tools/guardrails.manifest.json")
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
 
 const problems = []
+
+// --- protected files ----------------------------------------------------
 
 for (const [path, entry] of Object.entries(manifest.files ?? {})) {
   const full = join(root, path)
@@ -35,6 +42,8 @@ for (const [path, entry] of Object.entries(manifest.files ?? {})) {
   }
 }
 
+// --- invariants in files that legitimately change ------------------------
+
 for (const rule of manifest.assertions ?? []) {
   const full = join(root, rule.path)
   if (!existsSync(full)) {
@@ -47,6 +56,8 @@ for (const rule of manifest.assertions ?? []) {
   }
 }
 
+// --- protected records ---------------------------------------------------
+
 for (const [dir, rule] of Object.entries(manifest.directories ?? {})) {
   for (const name of rule.mustExist ?? []) {
     if (!existsSync(join(root, dir, name))) {
@@ -54,6 +65,118 @@ for (const [dir, rule] of Object.entries(manifest.directories ?? {})) {
     }
   }
 }
+
+// --- tracked files -------------------------------------------------------
+
+const tracked = execFileSync("git", ["ls-files", "-z"], { cwd: root, encoding: "utf8" })
+  .split("\0")
+  .filter(Boolean)
+
+function globToRegExp(pattern) {
+  const source = pattern
+    .split("**")
+    .map((part) => part.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^/]*"))
+    .join(".*")
+  return new RegExp(`^${source}$`)
+}
+
+const forbidden = (manifest.forbiddenPaths ?? []).map((pattern) => ({
+  pattern,
+  matcher: globToRegExp(pattern)
+}))
+
+for (const path of tracked) {
+  for (const rule of forbidden) {
+    // Matched against the whole path and against the file name, so a pattern
+    // like "*-original" means any depth rather than only the repository root.
+    if (rule.matcher.test(path) || rule.matcher.test(basename(path))) {
+      problems.push(`tracked file matches a forbidden path pattern: ${path} (${rule.pattern})`)
+    }
+  }
+}
+
+const BINARY_EXTENSIONS = new Set([
+  ".mp4",
+  ".mov",
+  ".webm",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".ico",
+  ".pdf",
+  ".mp3",
+  ".wav",
+  ".zip",
+  ".gz",
+  ".woff",
+  ".woff2",
+  ".ttf",
+  ".otf",
+  ".bin"
+])
+
+const secretPatterns = (manifest.secretPatterns ?? []).map((rule) => ({
+  name: rule.name,
+  matcher: new RegExp(rule.pattern)
+}))
+
+for (const path of tracked) {
+  if (secretPatterns.length === 0) break
+  if (BINARY_EXTENSIONS.has(extname(path).toLowerCase())) continue
+  const full = join(root, path)
+  if (!existsSync(full)) continue
+  if (statSync(full).size > 1024 * 1024) continue
+  const text = readFileSync(full, "utf8")
+  for (const rule of secretPatterns) {
+    if (rule.matcher.test(text)) {
+      problems.push(`tracked file contains something shaped like a secret: ${path} (${rule.name})`)
+    }
+  }
+}
+
+// --- every project keeps its tags ----------------------------------------
+//
+// The boundary rule matches on tags, so a project without them is a project
+// with no boundary. The list of projects is derived from the tree, not from
+// the manifest, so a project added later is covered immediately.
+
+const tagVocabulary = manifest.projectTags ?? {}
+const allowedTags = new Set(
+  Object.entries(tagVocabulary).flatMap(([key, values]) => values.map((value) => `${key}:${value}`))
+)
+
+for (const path of tracked) {
+  const isProjectFile = path.endsWith("project.json")
+  const isPackageFile = path.endsWith("package.json")
+  if (!isProjectFile && !isPackageFile) continue
+
+  let json
+  try {
+    json = JSON.parse(readFileSync(join(root, path), "utf8"))
+  } catch {
+    continue
+  }
+
+  // A project.json is always an Nx project. A package.json is one only when
+  // it carries an nx block, and the workspace root never is, even though it
+  // carries an nx block of its own.
+  if (isPackageFile && (json.nx === undefined || path === "package.json")) continue
+
+  const tags = isProjectFile ? json.tags : json.nx?.tags
+  if (!Array.isArray(tags) || tags.length === 0) {
+    problems.push(`project has no tags: ${path}`)
+    continue
+  }
+  for (const tag of tags) {
+    if (allowedTags.size > 0 && !allowedTags.has(tag)) {
+      problems.push(`project has an unknown tag "${tag}": ${path}`)
+    }
+  }
+}
+
+// --- report --------------------------------------------------------------
 
 const removed = Object.entries(manifest.removed ?? {})
 if (removed.length > 0) {
@@ -79,5 +202,6 @@ const directoryCount = Object.values(manifest.directories ?? {}).reduce(
   0
 )
 console.log(
-  `guardrails: ${fileCount} files, ${assertionCount.length} invariants, ${directoryCount} records — all present`
+  `guardrails: ${fileCount} files, ${assertionCount.length} invariants, ${directoryCount} records, ` +
+    `${tracked.length} tracked files scanned — all present`
 )

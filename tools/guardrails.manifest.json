@@ -20,7 +20,7 @@
       "sha256": "a48b21e3a30ad6de50b1a09d8062c2fddca45e5a28eed3757d0c43290a4b0342"
     },
     "tools/guardrails.mjs": {
-      "sha256": "7aa0f4a4880087ea7a7ee6c12eef10eab450f0473954bd31fc7b8464d5b33fe6"
+      "sha256": "ceb235ea33d4b525f3301a2a07e39caf6f4f8335d6f15a84afd4b7e94ce1d7e2"
     }
   },
   "assertions": [
@@ -28,6 +28,16 @@
       "path": "package.json",
       "contains": ["\"guardrails\": \"bun tools/guardrails.mjs\"", "bun run guardrails"],
       "why": "the gate has to run the check, or one line of package.json skips it"
+    },
+    {
+      "path": "package.json",
+      "contains": ["nx affected -t"],
+      "why": "the gate has to derive what to check from the project graph. An enumerated target list is a list, and lists get edited by whoever is editing them."
+    },
+    {
+      "path": ".oxlintrc.json",
+      "contains": ["@nx/enforce-module-boundaries"],
+      "why": "the tags are only worth keeping while something matches on them"
     },
     {
       "path": "AGENTS.md",
@@ -59,9 +69,64 @@
         "0011-feature-pattern.md",
         "0012-pdf-pages-as-image-shapes.md",
         "0013-tldraw-chakra-theme-bridge.md",
-        "0014-chakra-over-tailwind.md"
+        "0014-chakra-over-tailwind.md",
+        "0015-verification-surface.md"
       ]
     }
+  },
+  "forbiddenPaths": [
+    ".env",
+    ".env.*",
+    "*.env",
+    "*.env.*",
+    "*-original",
+    "*.original",
+    ".npmrc",
+    "*.pem",
+    "*.key",
+    "*.pfx",
+    "*.p12",
+    "id_rsa*",
+    "credentials.json",
+    "service-account*.json"
+  ],
+  "secretPatterns": [
+    {
+      "name": "GitHub token",
+      "pattern": "gh[pousr]_[A-Za-z0-9]{30,}"
+    },
+    {
+      "name": "GitHub fine-grained token",
+      "pattern": "github_pat_[A-Za-z0-9_]{40,}"
+    },
+    {
+      "name": "Chromatic project token",
+      "pattern": "chpt_[A-Za-z0-9]{20,}"
+    },
+    {
+      "name": "Everme agent token",
+      "pattern": "evt_[a-f0-9]{32}"
+    },
+    {
+      "name": "Nx Cloud access token",
+      "pattern": "NxCloud_[A-Za-z0-9]{20,}"
+    },
+    {
+      "name": "private key",
+      "pattern": "-----BEGIN [A-Z ]*PRIVATE KEY-----"
+    },
+    {
+      "name": "AWS access key id",
+      "pattern": "AKIA[0-9A-Z]{16}"
+    },
+    {
+      "name": "API key",
+      "pattern": "sk-[A-Za-z0-9]{32,}"
+    }
+  ],
+  "projectTags": {
+    "scope": ["shared", "web"],
+    "type": ["ui", "feature", "app"]
   },
   "removed": {
     "HARNESS.md": "removed with the test harness in #43 — the spec-first scaffold the harness owned",
