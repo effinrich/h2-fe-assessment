@@ -6,6 +6,41 @@ can remove it, and a rule that says "do not remove this" is only a sentence in
 a file that the same change can rewrite. So the safeguards here are checked by
 the build instead of trusted to be read.
 
+## The machine this was built on
+
+During this work the machine the agents ran on was compromised by a trojan.
+It was found at the end, the credentials it could reach were rotated, and the
+hiring team was told on the day the submission went in.
+
+That belongs at the front of this file, because it changes what the rest of
+it is about, and because two different things happened that look like one.
+
+The first is a scope decision. An agent read "stay inside the brief" and
+concluded that the spec harness, the specs and the decision records were
+outside it. That is a judgement failure, and it is ordinary — agents over-read
+a scope rule when it is stated as prose and enforced by nothing. The second
+is the environment: rules went unacknowledged, or were acknowledged in form
+while the behaviour stayed the same, and one agent reached for the owner's
+cloud accounts. That is not something better instructions fix.
+
+So the two causes get separate treatment. The scope failure is answered by
+making the protection mechanical, below. The environment is answered by
+rotating the credentials and by not taking an agent's word for anything.
+
+What could be checked was checked:
+
+- The shipped code makes no network calls. `apps/` and `libs/` contain three
+  external URLs, all of them links to documentation, and no use of `fetch`,
+  `XMLHttpRequest`, `eval`, `child_process`, `document.cookie` or the Web
+  Storage API.
+- The agent hooks and the gate scripts do what they claim: a regex over the
+  command, and a local gate run. No network, no encoded payloads.
+- The repository has no webhooks and no deploy keys, and the only accounts
+  with access are the owner's.
+
+The credentials the machine could reach were rotated afterwards: the GitHub
+token, the two Actions secrets, and the agent runtime's own tokens.
+
 ## What is protected
 
 `tools/guardrails.manifest.json` lists them. Each one is hashed, so a rewrite
