@@ -29,3 +29,18 @@ judgement. This is the cheapest credibility in the submission.
 ## Consequences
 
 - The submission is smaller than it could be, and says why at each omission.
+
+## Amendment (2026-10-26): the testing bullet
+
+This record said that the architecture skill governs structure while the test
+suite is the gate. The test suite went with the harness in #43, so the second
+half of that stopped being true. The gate is now the size budget, the
+guardrail check, and `nx affected` over lint, format, typecheck, build and
+build-storybook. There is no separate test suite.
+
+The brief does not mention testing at all — not as a requirement and not as a
+suggestion — so nothing here falls short of it. This is the same kind of
+recorded exclusion as the ones above, and it is recorded for the same reason:
+an unexplained absence reads as an oversight, and a recorded one reads as
+judgement. What verifies the features and the screens is the type system, the
+boundary rules and the walkthrough. See 0015.
