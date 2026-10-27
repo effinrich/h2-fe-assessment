@@ -10,12 +10,13 @@ Editor API from tldraw", and that creates a shape which looks like a pin. If
 the pin is on top of two overlapping shapes, the two are attached: moving one
 moves the other.
 
-tldraw ships a pin-bindings example, and the brief is explicit that the
-demos it comes with are "competitors' references, not our own design" — the
-submission is meant to be better than the reference rather than a copy of it.
-The example is also written for a bare canvas. This app is a PDF: the pages
-are locked image shapes, and a pin that dragged a document page across the
-canvas would be a bug rather than a feature.
+tldraw ships a
+[pin-bindings example](https://tldraw.dev/examples/pin-bindings), and the brief
+is explicit that the demos it comes with are "competitors' references, not our
+own design" — the submission is meant to be better than the reference rather
+than a copy of it. The example is also written for a bare canvas. This app is
+a PDF: the pages are locked image shapes, and a pin that dragged a document
+page across the canvas would be a bug rather than a feature.
 
 Two things had to be decided. What the pin attaches to, and what "attached"
 means once it has something to hold.
