@@ -1,0 +1,163 @@
+# The brief, and where each task landed
+
+H2's frontend coding exercise asked for four tasks in an app built around a
+tldraw-powered canvas, and for three things besides working code. This page
+restates the brief so a reviewer can score the submission against it, and
+points at the code and at the record for each task.
+
+The three demos that came with the brief are the competitors' references. The
+brief is explicit that they are "not our own design" and that the submission
+should be better than them, so each task below says where this one sits
+against them.
+
+## What the brief asked for
+
+**Product sense.** "How you fill the gaps is the core of the exercise." Looked
+at: ease of use, design consistency, user experience.
+
+**Engineering.** AI is allowed and is not counted as a plus. "State-of-the-art
+AI attempts on this exercise is our very baseline … it's all about your
+differences on top of that." Looked at: system design, code consistency,
+modern practices.
+
+**Teamwork.** "Any AI can deliver code, so we want to see your decisions,
+thoughts, and overall how you would communicate and collaborate with other
+team members, especially in an asynchronous and fast moving environment." The
+brief names the evidence it likes: a walkthrough recording, decision notes,
+session transcripts with AI agents.
+
+### The four tasks
+
+| #   | The brief asked for                                                                                           | Where it is                                                                   | The record                                                                                                                                                                                                                    |
+| --- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | A new repository — opinions on package management, code formatting, folder structure                          | `apps/`, `libs/`, `nx.json`, `package.json`, `lefthook.yml`, `.oxlintrc.json` | [0001](decisions/0001-workspace-and-package-manager.md), [0002](decisions/0002-framework.md), [0008](decisions/0008-lint-split.md), [0011](decisions/0011-feature-pattern.md), [0014](decisions/0014-chakra-over-tailwind.md) |
+| 2   | Display a PDF, with the tradeoffs and optimisations visible                                                   | `libs/web/features/pdf-viewer`, the open-document screen in `apps/web`        | [0012](decisions/0012-pdf-pages-as-image-shapes.md)                                                                                                                                                                           |
+| 3   | A pin tool: deep Editor API integration; a shape that looks like a pin; two shapes under one pin are attached | `libs/web/features/pin`                                                       | [0016](decisions/0016-pin-tool.md)                                                                                                                                                                                            |
+| 4   | A camera tool: a shape that crops part of the canvas, then exports that part as an image                      | `libs/web/features/camera`                                                    | [0017](decisions/0017-camera-tool.md)                                                                                                                                                                                         |
+
+## Task 1 — the repository
+
+The brief asks for opinions on three things, and for them to be visible.
+
+**Package management** is Bun in an Nx monorepo: one tool, one lockfile, and
+Nx over folders so a library is a project rather than a directory
+convention. That is 0001, and it decides the rest.
+
+**Formatting and lint** are oxfmt and oxlint, split so the fast check runs on
+everything and the slow one runs on what changed. The lint is type-aware,
+and the module boundaries are enforced inside it rather than by a script.
+
+**Folder structure** is one project per capability, tagged, with the tags
+enforced: `scope:shared` may import only `scope:shared`, so the design
+system can never reach into the application.
+
+None of that is a default. The brief's own framing is that the reflex is
+Tailwind and shadcn, and that the reflex is the thing to avoid — 0014 is the
+record of choosing Chakra v3 over it, and 0004 is the record of what it
+replaced.
+
+**Verified by** the gate. `bun run gate` runs the size budget, the guardrail
+check, and `nx affected` over lint, format, typecheck, build and
+build-storybook, so what runs is derived from the project graph rather than
+from a list somebody edits.
+
+## Task 2 — the document
+
+**The brief asks for the tradeoffs and optimisations to be visible, especially
+for performance.** 0012 is that visibility: three ways to put a PDF on a
+tldraw canvas, a table of what each one costs in memory, sharpness, export
+and bindings, and a decision.
+
+The decision is to rasterise. Each page is rendered once through pdfjs, at
+2x, and placed on the canvas as a locked image shape. An earlier draft
+promised a per-page DOM element instead; the amendment records why that was
+dropped — its headline guarantee, never being unmounted by culling, is the
+opposite of what a long document needs — and it records the cost the other
+way too: memory now grows with the page count rather than with the viewport,
+which is acceptable for documents of tens of pages and is not acceptable for
+long ones.
+
+**The product around it** is the part the reference demo does not have. The
+demo's start screen is two buttons. This one is a card that says what is
+going to happen — pages render on an infinite canvas, everything stays in
+your browser — with a drop-anywhere affordance, a keyboard hint row, and a
+toast when the file is not a PDF. Opening another document warns before
+discarding marks, and cancelling keeps the canvas.
+
+**Against the reference:** the demo renders the brief's own text as live type
+in the canvas and offers an "Export PDF" button. This one rasterises, which
+is cheaper to draw and costs the sharpness and the way back to a PDF — the
+trade is written down in 0012 rather than left to be noticed.
+
+**Verified by** the type system, the boundary rules, and the walkthrough.
+
+## Task 3 — the pin
+
+**The brief asks for deep integration with the Editor API, and for a shape
+that looks like a pin and attaches the shapes under it.** 0016 is the record.
+
+This is the most Editor API surface in the submission: a custom `ShapeUtil`
+for the pin, a custom `BindingUtil` carrying a normalised anchor, a
+relaxation solver that resolves the whole connected network rather than one
+pair at a time, a custom `StateNode` tool, and the global props maps that
+teach the editor the binding type.
+
+Two behaviours are decisions rather than features. Dragging a pin **unpins**
+it, and dropping it **binds every unlocked shape under its tip** — so the
+brief's case, two overlapping shapes that move together, is what you get,
+and a chain of five shapes through two pins resolves the same way. And pins
+do not attach to PDF pages, because the pages are locked and a pin that
+dragged the document around would be a bug.
+
+**Against the reference:** the demo for this task is tldraw's own pin example
+in a bare canvas. This is a different implementation, in the application,
+where the shapes it holds can be pages of a document.
+
+**Verified by** the walkthrough, which draws two overlapping shapes, pins
+them where they overlap, and moves one.
+
+## Task 4 — the camera
+
+**The brief asks for a tool that creates a shape, crops part of the canvas
+and exports that part as an image.** 0017 is the record, and it is also where
+the gap in this submission is written down.
+
+What exists is a screenshot tool: drag a box, release, and everything under
+it is exported, cropped to the box, as a PNG — `Ctrl` copies it instead of
+downloading it, `Alt` asks for SVG. The export is of the content under the
+box, not of a screen region, so the page and the marks on it come out with
+it.
+
+**The gap:** the crop is exported and nothing is left behind, where the brief
+asks for a shape. For this task the submission currently matches the
+reference — the demo that came with the brief is tldraw's own screenshot
+tool — and the brief is explicit that the demos are "not our own design" and
+that the submission should be better than them. 0017 sets out what the next
+change would be, and what it costs.
+
+## The three expectations
+
+**Product sense** is answered by the open-document screen, the design system
+in `libs/shared/ui`, the toast that refuses a file that is not a PDF, the
+warning before marks are discarded, the colour mode that follows the canvas,
+and the fact that the document never leaves the browser.
+
+**Engineering** is answered by the repository above, by the gate that derives
+its own targets, by the boundaries enforced in lint, and by the decision
+records — including the ones that record a decision _not_ to do something.
+
+**Teamwork** is answered by a narrated walkthrough of the product, by fifteen
+decision records, and by the commit history, which names the agent that had
+a hand in each commit. The brief also names session transcripts with AI
+agents as evidence it likes, and those are the one thing here that is
+missing: see the next section.
+
+## Where this is behind
+
+- **Task 4 does not create a shape.** The brief asks for one. 0017 says what
+  the next change is and what it costs.
+- **No session transcripts.** The brief names them among the evidence it
+  likes, next to the walkthrough and the decision notes, and the other two
+  are here. Transcripts of the sessions behind this work are not, because the
+  only record of them that existed carried local paths and session
+  identifiers out of the machine with it.

@@ -81,7 +81,9 @@
         "0012-pdf-pages-as-image-shapes.md",
         "0013-tldraw-chakra-theme-bridge.md",
         "0014-chakra-over-tailwind.md",
-        "0015-verification-surface.md"
+        "0015-verification-surface.md",
+        "0016-pin-tool.md",
+        "0017-camera-tool.md"
       ]
     }
   },

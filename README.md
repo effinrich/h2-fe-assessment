@@ -10,9 +10,10 @@ You have read access to this repository. Everything you need is here:
 
 1. Watch the [walkthrough video](docs/media.mp4) — ninety-eight seconds, narrated, 1920x1080. It plays in GitHub's own player.
 2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
-3. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
-4. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
-5. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
+3. Read [docs/brief.md](docs/brief.md) — the exercise restated, and where each of its four tasks landed, including the one that is still open.
+4. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
+5. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
+6. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
 
 If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) and downloads as an MP4.
 
@@ -58,6 +59,8 @@ flowchart TB
 | Chakra UI v3 over Tailwind                                           | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
 | What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
 | The verification surface: the gate, the stories, the snapshots       | [0015](docs/decisions/0015-verification-surface.md)          |
+| The pin: a custom shape, a custom binding, a constraint solver       | [0016](docs/decisions/0016-pin-tool.md)                      |
+| The camera: the region exported, and the crop shape still open       | [0017](docs/decisions/0017-camera-tool.md)                   |
 
 0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
 

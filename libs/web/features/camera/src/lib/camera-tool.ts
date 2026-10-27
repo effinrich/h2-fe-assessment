@@ -40,7 +40,8 @@ export class CameraDragging extends StateNode {
     this.update()
   }
 
-  // On release, export everything under the box as a PNG cropped to it; ctrl copies instead.
+  // On release, export everything under the box as an image cropped to it; ctrl copies
+  // instead of downloading, and alt asks for SVG rather than PNG.
   override onPointerUp() {
     const { editor } = this
     const box = this.box.get()
@@ -53,8 +54,9 @@ export class CameraDragging extends StateNode {
       .map((shape) => shape.id)
 
     if (ids.length) {
-      if (editor.inputs.getCtrlKey()) void copyAs(editor, ids, { format: "png", bounds: box })
-      else void exportAs(editor, ids, { format: "png", name: "Screenshot", bounds: box })
+      const format = editor.inputs.getAltKey() ? "svg" : "png"
+      if (editor.inputs.getCtrlKey()) void copyAs(editor, ids, { format, bounds: box })
+      else void exportAs(editor, ids, { format, name: "Screenshot", bounds: box })
     }
     editor.setCurrentTool("select")
   }
