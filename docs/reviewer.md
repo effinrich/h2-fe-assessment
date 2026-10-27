@@ -2,7 +2,7 @@
 
 A PDF annotation canvas. Ninety-eight seconds, from the repo root.
 
-Watch the [narrated walkthrough](media.mp4) — ninety-eight seconds, 1920x1080, and it plays in GitHub's own player. If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v2 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v2) in this repository and downloads as an MP4. This page is the same walkthrough in full, in text.
+Watch the [narrated walkthrough](media.mp4) — ninety-eight seconds, 1920x1080, and it plays in GitHub's own player. If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v3 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v3) in this repository and downloads as an MP4. This page is the same walkthrough in full, in text.
 
 Questions and findings belong in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions).
 
