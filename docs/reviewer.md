@@ -35,7 +35,7 @@ Draw two overlapping shapes. Press **P** and click where they overlap. Drag one:
 
 ## Screenshot
 
-Press **C** and drag a box. Releasing downloads everything under it as a PNG; hold **Ctrl** to copy it instead. This is tldraw's screenshot-tool example.
+Press **C** and drag a box. Releasing downloads everything under it as a PNG; hold **Ctrl** to copy it instead, and hold **Alt** for SVG. This is tldraw's screenshot-tool example.
 
 ## Color mode
 
