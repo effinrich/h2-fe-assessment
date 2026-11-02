@@ -2,13 +2,13 @@
 
 A PDF annotation canvas: open a document, mark it, pin shapes together, export a crop.
 
-A narrated walkthrough of the product, ninety-eight seconds, is in [docs/media.mp4](docs/media.mp4) and written out in [docs/reviewer.md](docs/reviewer.md).
+A narrated walkthrough of the product, a hundred and ten seconds, is in [docs/media.mp4](docs/media.mp4) and written out in [docs/reviewer.md](docs/reviewer.md).
 
 ## Reviewing this
 
 You have read access to this repository. Everything you need is here:
 
-1. Watch the [walkthrough video](docs/media.mp4) — ninety-eight seconds, narrated, 1920x1080. It plays in GitHub's own player.
+1. Watch the [walkthrough video](docs/media.mp4) — a hundred and ten seconds, narrated, 1920x1080. It plays in GitHub's own player.
 2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
 3. Read [docs/brief.md](docs/brief.md) — the exercise restated, where each of its four tasks landed, and what is still thin.
 4. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
@@ -16,7 +16,7 @@ You have read access to this repository. Everything you need is here:
 6. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
 7. Read [docs/transcripts/README.md](docs/transcripts/README.md) for the session transcripts: the work as it happened, sanitised.
 
-If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v3 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v3) and downloads as an MP4.
+If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v4 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v4) and downloads as an MP4.
 
 The "Get a license for production" button in the bottom right of the canvas is tldraw's own licensing prompt. This repository ships without a production license key, so the SDK shows that badge wherever it runs.
 
