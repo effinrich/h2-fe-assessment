@@ -163,20 +163,26 @@ its own targets, by the boundaries enforced in lint, and by the decision
 records — including the ones that record a decision _not_ to do something.
 
 **Teamwork** is answered by a narrated walkthrough of the product, by sixteen
-decision records, and by the commit history, which names the agent that had
-a hand in each commit. It is also answered by the record of what went wrong:
-0017 tells the camera from both ends — four agents building a frame and
-an export pipeline of their own, a directive that did not land, and the
-decision that followed — and [safeguards.md](safeguards.md) is the wider
-account of the same period and of what the process had to become to be
-trustworthy. The brief also names session transcripts with AI agents as
-evidence it likes, and those are the one thing here that is missing: see the
-next section.
+decision records, by the commit history, which names the agent that had a
+hand in each commit, and by the [session transcripts](transcripts/README.md) —
+the record of the work as it happened. It is also answered by the record of
+what went wrong: 0017 tells the camera from both ends — four agents building
+a frame and an export pipeline of their own, a directive that did not land,
+and the decision that followed — and [safeguards.md](safeguards.md) is the
+wider account of the same period and of what the process had to become to be
+trustworthy.
 
 ## Where this is behind
 
-- **No session transcripts.** The brief names them among the evidence it
-  likes, next to the walkthrough and the decision notes, and the other two
-  are here. Transcripts of the sessions behind this work are not, because the
-  only record of them that existed carried local paths and session
-  identifiers out of the machine with it.
+Nothing the brief asked for is missing now. The four tasks are answered
+above, and the evidence it names is here: the walkthrough, the decision
+records, the commit history and the session transcripts.
+
+What is left are the trade-offs the records name, and they are named rather
+than hidden. The canvas is rasterised, so a long document costs memory in
+proportion to its page count (0012). There is no test suite, which was a
+decision about the brief and not an oversight (0005 and 0007, removed with
+the harness in #43). And the collaboration went through a period in which a
+compromised machine and a set of agents that disagreed with each other cost
+real time: [safeguards.md](safeguards.md) has that account, and the
+transcripts have the raw material behind it.
