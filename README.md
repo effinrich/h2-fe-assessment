@@ -10,10 +10,11 @@ You have read access to this repository. Everything you need is here:
 
 1. Watch the [walkthrough video](docs/media.mp4) — ninety-eight seconds, narrated, 1920x1080. It plays in GitHub's own player.
 2. Read [docs/reviewer.md](docs/reviewer.md) — the walkthrough, written out.
-3. Read [docs/brief.md](docs/brief.md) — the exercise restated, and where each of its four tasks landed, including the one that is still open.
+3. Read [docs/brief.md](docs/brief.md) — the exercise restated, where each of its four tasks landed, and what is still thin.
 4. Run it: `bun install`, then `bun run start`, then open http://localhost:4200/.
 5. Ask questions or leave findings in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions). That is where I will look for them.
 6. Read [docs/safeguards.md](docs/safeguards.md) if you want to know what protects this repository's own agent instructions and hooks, and what that protection is for.
+7. Read [docs/transcripts/README.md](docs/transcripts/README.md) for the session transcripts: the work as it happened, sanitised.
 
 If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v3 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v3) and downloads as an MP4.
 
