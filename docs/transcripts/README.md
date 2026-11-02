@@ -38,12 +38,17 @@ What remains is what was asked, what was said, and which tools were used.
 
 ## The part that had to be removed
 
-The snapshots carry the full context of the session, and in three of them
-that context includes the contents of a file on this machine that holds
-credentials. The values are not in the transcript — they were replaced before
-it was written — but the snapshots themselves are not published, and the
-reason they are not is that the session record is not safe to copy off the
-machine as it stands.
+The snapshots carry the full context of the session, and one of them
+includes the contents of a file on this machine that holds credentials. The
+value is not in the transcript — it was replaced before the transcript was
+written — but the snapshots themselves are not published, and the reason
+they are not is that the session record is not safe to copy off the machine
+as it stands.
+
+Three of the snapshots in another session on this machine carry the same kind
+of thing, and more of it: two of them hold the storage encryption key and
+the CLI token salt as well as a password. That is why the check below runs
+against the live files rather than against a list of token shapes.
 
 This is the whole reason the brief's "no session transcripts" was ever true.
 It was never that the transcripts did not exist. It was that the only copy of
