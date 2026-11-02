@@ -41,7 +41,7 @@ export async function openPdf(data: ArrayBuffer, scale = 2): Promise<PdfDocument
     for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
       pages.push(await renderPage(await pdfDocument.getPage(pageNumber), scale))
     }
-    return { pages }
+    return { pages, scale }
   } finally {
     await loadingTask.destroy()
   }
@@ -116,7 +116,8 @@ export function mergeCanvasExtensions(
     ],
     inFrontOfTheCanvas: extensions.flatMap((extension) =>
       extension.InFrontOfTheCanvas ? [extension.InFrontOfTheCanvas] : []
-    )
+    ),
+    nonDocumentShapeTypes: extensions.flatMap((extension) => extension.nonDocumentShapeTypes ?? [])
   }
 }
 

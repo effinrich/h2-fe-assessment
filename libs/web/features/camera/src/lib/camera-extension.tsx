@@ -3,7 +3,7 @@ import type { TLUiOverrides } from "tldraw"
 import { Crop } from "lucide-react"
 
 import { CAMERA_TOOL_ID, CameraTool } from "./camera-tool"
-import { CropShapeUtil } from "./crop-shape-util"
+import { CROP_TYPE, CropShapeUtil } from "./crop-shape-util"
 import { CameraOverlay } from "./partials/camera-overlay"
 
 const LABEL_KEY = "tool.camera"
@@ -28,5 +28,7 @@ export const cameraExtension = {
   shapeUtils: [CropShapeUtil],
   tools: [CameraTool],
   overrides,
-  InFrontOfTheCanvas: CameraOverlay
+  InFrontOfTheCanvas: CameraOverlay,
+  // The crop is a frame for the canvas, not content of the document.
+  nonDocumentShapeTypes: [CROP_TYPE]
 }

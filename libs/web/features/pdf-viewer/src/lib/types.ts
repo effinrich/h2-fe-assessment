@@ -16,6 +16,8 @@ export interface PdfPage {
 
 export interface PdfDocument {
   pages: PdfPage[]
+  /** The device pixel ratio the pages were rasterised at. */
+  scale: number
 }
 
 export type FileToken = string
@@ -32,6 +34,8 @@ export interface CanvasExtension {
   tools?: readonly TLStateNodeConstructor[]
   overrides?: TLUiOverrides
   InFrontOfTheCanvas?: ComponentType
+  /** Shape types that are canvas furniture rather than document content, and so are not exported. */
+  nonDocumentShapeTypes?: readonly string[]
 }
 
 export interface MergedCanvasExtensions {
@@ -41,10 +45,13 @@ export interface MergedCanvasExtensions {
   tools: readonly TLStateNodeConstructor[]
   overrides: TLUiOverrides[]
   inFrontOfTheCanvas: readonly ComponentType[]
+  nonDocumentShapeTypes: readonly string[]
 }
 
 export interface PdfViewerScreenProps {
   filename?: string
+  /** The file the document was opened from; the export is built on its bytes. */
+  source?: File
   onMarksChange?: (hasMarks: boolean) => void
   document?: PdfDocument
   isLoading?: boolean

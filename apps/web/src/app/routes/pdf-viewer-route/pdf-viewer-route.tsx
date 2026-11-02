@@ -32,6 +32,7 @@ export default function PdfViewerRoute() {
     <>
       <PdfViewerScreen
         filename={file.name}
+        source={file}
         onMarksChange={setHasMarks}
         isLoading={result.isLoading}
         isError={result.isError}

@@ -88,3 +88,16 @@ removes the pending/raster asset swap, the per-page loading overlays, and
   documents would bring eviction back.
 - **Opening** waits for every page, behind the existing loading state.
 - Pins still skip page shapes, now because the pages are locked.
+
+## Amendment (2026-10-27): the way back to a PDF
+
+Rasterising costs the sharpness of the original and the way back to a PDF.
+The way back has since been paid for, in
+[0018](0018-pdf-export.md): the export is the source PDF with the marks on
+top, so the document inside the exported file is the user's own — text is
+text, and the pages are the pages they opened. The canvas is still
+rasterised; the sharpness cost above is the canvas's cost, not the file's.
+
+The export reads the source file at export time rather than holding it in
+memory, so the document is never held twice — once as the original and once
+as its pages.
