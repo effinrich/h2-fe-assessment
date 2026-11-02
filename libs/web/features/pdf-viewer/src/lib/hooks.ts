@@ -2,8 +2,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useCallback, useEffect, useState } from "react"
 import { react, type Editor } from "tldraw"
 
+import { toaster } from "@h2-fe/ui"
+
 import type { FileToken, PdfViewerScreenProps } from "./types"
 
+import { annotatedFilename, downloadFile, exportPdf } from "./export-pdf"
 import { activePageNumber, hasUserMarks, openPdf, pageBounds, placePages } from "./utils"
 
 const fileTokens = new WeakMap<File, string>()
@@ -99,4 +102,46 @@ export function usePageNavigation(
   )
 
   return { page, jumpToPage }
+}
+
+interface UsePdfExportOptions {
+  editor: Editor | null
+  document: PdfViewerScreenProps["document"]
+  source: PdfViewerScreenProps["source"]
+  nonDocumentShapeTypes: readonly string[]
+}
+
+/**
+ * The document with the user's marks on it, downloaded as a PDF.
+ *
+ * The export is built from the file the document was opened from, so the
+ * pages keep their own text, fonts and vectors; only the marks are drawn on
+ * top. Nothing is consumed to export: the marks stay where they are.
+ */
+export function usePdfExport({
+  editor,
+  document,
+  source,
+  nonDocumentShapeTypes
+}: UsePdfExportOptions) {
+  const [isExporting, setIsExporting] = useState(false)
+
+  const onExportPdf = useCallback(async () => {
+    if (!editor || !document || !source || isExporting) return
+    setIsExporting(true)
+    try {
+      const bytes = await exportPdf({ editor, document, source, nonDocumentShapeTypes })
+      downloadFile(bytes, annotatedFilename(source.name), "application/pdf")
+    } catch {
+      toaster.create({
+        title: "The PDF could not be exported.",
+        description: "Try again, or open the document again.",
+        type: "error"
+      })
+    } finally {
+      setIsExporting(false)
+    }
+  }, [editor, document, source, nonDocumentShapeTypes, isExporting])
+
+  return { onExportPdf, isExporting }
 }

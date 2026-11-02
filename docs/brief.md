@@ -86,8 +86,10 @@ discarding marks, and cancelling keeps the canvas.
 
 **Against the reference:** the demo renders the brief's own text as live type
 in the canvas and offers an "Export PDF" button. This one rasterises, which
-is cheaper to draw and costs the sharpness and the way back to a PDF — the
-trade is written down in 0012 rather than left to be noticed.
+is cheaper to draw, and the cost of that is written down in 0012 rather than
+left to be noticed. The way back to a PDF came afterwards, in 0018: the file
+that comes out is the source PDF with the marks on top, so the document in it
+is still text rather than a picture of text.
 
 **Verified by** the type system, the boundary rules, and the walkthrough.
 
@@ -135,6 +137,13 @@ canvas, cropped to the crop — as a PNG, or to the clipboard with `Ctrl`, or
 as SVG with `Alt`. The crop stays where it is afterwards, so it can be
 adjusted and exported again.
 
+**The document comes back too.** The brief's task 4 asks for the user's data
+back "in formats that are familiar and universal", and the camera answers
+that for a region of the canvas. The document itself answers it in 0018: the
+header has an Export PDF button, and what it writes is the source PDF with
+the marks on top — the document is still text, and the marks are a layer
+over it.
+
 **Against the reference:** the demo that came with the brief is tldraw's
 [screenshot tool](https://tldraw.dev/examples/screenshot-tool), and the brief
 is explicit that the demos are "not our own design" and that the submission
@@ -153,7 +162,7 @@ and the fact that the document never leaves the browser.
 its own targets, by the boundaries enforced in lint, and by the decision
 records — including the ones that record a decision _not_ to do something.
 
-**Teamwork** is answered by a narrated walkthrough of the product, by fifteen
+**Teamwork** is answered by a narrated walkthrough of the product, by sixteen
 decision records, and by the commit history, which names the agent that had
 a hand in each commit. It is also answered by the record of what went wrong:
 0017 tells the camera from both ends — four agents building a frame and

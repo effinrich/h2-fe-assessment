@@ -9,7 +9,7 @@ import { useColorMode } from "@h2-fe/ui"
 import type { CanvasExtension, PdfViewerScreenProps } from "./types"
 
 import { CANVAS_THEME_CLASS } from "./consts"
-import { useCanvasEditor, useMarksChange, usePageNavigation } from "./hooks"
+import { useCanvasEditor, useMarksChange, usePageNavigation, usePdfExport } from "./hooks"
 import { createCanvasComponents } from "./partials/canvas-components"
 import { ViewerCanvas, ViewerRoot } from "./partials/viewer-chrome"
 import { ViewerStatus } from "./partials/viewer-status"
@@ -21,6 +21,7 @@ const THEMES = { default: paperTheme(DEFAULT_THEME) }
 
 export function PdfViewerScreen({
   filename,
+  source,
   onMarksChange,
   document,
   isLoading,
@@ -36,6 +37,12 @@ export function PdfViewerScreen({
   const { editor, handleMount } = useCanvasEditor(colorMode)
   useMarksChange(editor, onMarksChange)
   const { page, jumpToPage } = usePageNavigation(editor, document)
+  const { onExportPdf, isExporting } = usePdfExport({
+    editor,
+    document,
+    source,
+    nonDocumentShapeTypes: merged.nonDocumentShapeTypes
+  })
 
   return (
     <ViewerRoot className={CANVAS_THEME_CLASS} data-canvas-theme="" data-color-mode={colorMode}>
@@ -43,6 +50,9 @@ export function PdfViewerScreen({
         filename={filename}
         onOpenAnother={onOpenAnother}
         onPageChange={jumpToPage}
+        onExportPdf={onExportPdf}
+        canExport={Boolean(editor && document && source) && !isLoading}
+        isExporting={isExporting}
         page={page}
         totalPages={document?.pages.length ?? 0}
       />

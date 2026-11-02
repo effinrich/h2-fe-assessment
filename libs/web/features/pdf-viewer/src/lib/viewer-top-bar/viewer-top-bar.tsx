@@ -1,4 +1,4 @@
-import { FolderOpen } from "lucide-react"
+import { FileDown, FolderOpen } from "lucide-react"
 
 import { Button, chakra, ColorModeButton, Text } from "@h2-fe/ui"
 
@@ -11,6 +11,9 @@ interface ViewerTopBarProps {
   totalPages: number
   onPageChange: (page: number) => void
   onOpenAnother: () => void
+  onExportPdf: () => void
+  canExport: boolean
+  isExporting: boolean
 }
 
 export function ViewerTopBar({
@@ -18,7 +21,10 @@ export function ViewerTopBar({
   page,
   totalPages,
   onPageChange,
-  onOpenAnother
+  onOpenAnother,
+  onExportPdf,
+  canExport,
+  isExporting
 }: ViewerTopBarProps) {
   return (
     <AppHeader
@@ -30,6 +36,16 @@ export function ViewerTopBar({
       end={
         <>
           <ColorModeButton />
+          <Button
+            aria-label="Export the document as a PDF"
+            disabled={!canExport}
+            onClick={onExportPdf}
+            size="sm"
+            variant="outline"
+          >
+            <FileDown />
+            <chakra.span hideBelow="md">{isExporting ? "Exporting…" : "Export PDF"}</chakra.span>
+          </Button>
           <Button
             aria-label="Open another document"
             onClick={onOpenAnother}
