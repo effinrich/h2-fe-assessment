@@ -1,8 +1,8 @@
 # Reviewer walkthrough
 
-A PDF annotation canvas. Ninety-eight seconds, from the repo root.
+A PDF annotation canvas. A hundred and ten seconds, from the repo root.
 
-Watch the [narrated walkthrough](media.mp4) — ninety-eight seconds, 1920x1080, and it plays in GitHub's own player. If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v3 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v3) in this repository and downloads as an MP4. This page is the same walkthrough in full, in text.
+Watch the [narrated walkthrough](media.mp4) — a hundred and ten seconds, 1920x1080, and it plays in GitHub's own player. If you would rather have the file, the same recording is attached to the [reviewer-walkthrough-v4 release](https://github.com/effinrich/h2-fe-assessment/releases/tag/reviewer-walkthrough-v4) in this repository and downloads as an MP4. This page is the same walkthrough in full, in text.
 
 Questions and findings belong in [Discussions](https://github.com/effinrich/h2-fe-assessment/discussions).
 
@@ -37,10 +37,10 @@ Draw two overlapping shapes. Press **P** and click where they overlap. Drag one:
 
 Press **C** and drag a box. The drag is left behind as a crop — corner brackets around a region, which you can move and resize from its corners. **Export PNG** writes out what is under the brackets: the page and your marks, cropped to the region. Hold **Ctrl** to copy it to the clipboard, or **Alt** to export SVG. The crop stays on the canvas, so you can adjust it and export again.
 
-## Export PDF
-
-**Export PDF** (top right) writes the document back out. The file is the PDF you opened, with your marks on top: one page per page, at the same size, and the text is still text — it can be selected and searched. Your marks are on the pages you drew them on; the crop frames are not, because they are furniture for the canvas rather than content of the document. Exporting does not consume anything: the marks stay on the canvas, so you can move one and export again.
-
 ## Color mode
 
 Toggle color mode. Chrome and the canvas follow it. The page and your marks keep their colors, but a crop taken in dark mode carries the dark background with it.
+
+## Export PDF
+
+**Export PDF** (top right) writes the document back out. The file is the PDF you opened, with your marks on top: one page per page, at the same size, and the text is still text — it can be selected and searched. Your marks are on the pages you drew them on; the crop frames are not, because they are furniture for the canvas rather than content of the document. Exporting does not consume anything: the marks stay on the canvas, so you can move one and export again.
