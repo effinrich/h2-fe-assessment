@@ -11,6 +11,7 @@ import {
 } from "tldraw"
 
 import { PIN_TYPE, type PinShape } from "./pin-shape-util"
+import { relax } from "./solver"
 
 declare module "tldraw" {
   export interface TLGlobalBindingPropsMap {
@@ -19,8 +20,6 @@ declare module "tldraw" {
 }
 
 type PinBinding = TLBinding<typeof PIN_TYPE>
-
-const SOLVER_ITERATIONS = 30
 
 /** Keeps every pin at the same spot on each shape it holds, so moving one pinned shape moves the rest. */
 export class PinBindingUtil extends BindingUtil<PinBinding> {
@@ -105,30 +104,4 @@ export class PinBindingUtil extends BindingUtil<PinBinding> {
     }
     return { initial, deltas }
   }
-}
-
-/** A small constraint solver: changed shapes stay put; everything else relaxes toward its target offsets. */
-function relax(
-  initial: Map<TLShapeId, VecModel>,
-  deltas: Map<TLShapeId, Map<TLShapeId, VecModel>>,
-  fixed: Set<TLShapeId>
-) {
-  const current = new Map(initial)
-  for (let i = 0; i < SOLVER_ITERATIONS; i++) {
-    const moves = new Map<TLShapeId, VecModel[]>()
-    for (const [aId, targets] of deltas) {
-      const a = current.get(aId)
-      if (fixed.has(aId) || !a) continue
-      for (const [bId, target] of targets) {
-        const b = current.get(bId)
-        if (!b) continue
-        moves.set(aId, [...(moves.get(aId) ?? []), Vec.Sub(target, Vec.Sub(a, b))])
-      }
-    }
-    for (const [id, adjustments] of moves) {
-      const position = current.get(id)
-      if (position) current.set(id, Vec.Average(adjustments).add(position))
-    }
-  }
-  return current
 }

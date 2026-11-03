@@ -44,3 +44,15 @@ recorded exclusion as the ones above, and it is recorded for the same reason:
 an unexplained absence reads as an oversight, and a recorded one reads as
 judgement. What verifies the features and the screens is the type system, the
 boundary rules and the walkthrough. See 0015.
+
+## Amendment (2026-11-03): the testing bullet, again
+
+There is a unit test loop now. It was added on the owner's instruction, not on
+the brief's — the exclusion above was a judgement about the brief, and a
+judgement is the owner's to change. ADR 0019 is the record of what changed and
+what is still not covered.
+
+The line that said "there is no separate test suite" was true on 2026-10-26
+and is not true now. What is still true is the exclusion around it: the
+editor, the canvas, the React tree and the browser-only paths are not
+covered, because a test of those needs a DOM.

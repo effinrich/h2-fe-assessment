@@ -159,8 +159,9 @@ warning before marks are discarded, the colour mode that follows the canvas,
 and the fact that the document never leaves the browser.
 
 **Engineering** is answered by the repository above, by the gate that derives
-its own targets, by the boundaries enforced in lint, and by the decision
-records — including the ones that record a decision _not_ to do something.
+its own targets, by the unit tests it runs, by the boundaries enforced in
+lint, and by the decision records — including the ones that record a decision
+_not_ to do something.
 
 **Teamwork** is answered by a narrated walkthrough of the product, by sixteen
 decision records, by the commit history, which names the agent that had a
@@ -180,9 +181,10 @@ records, the commit history and the session transcripts.
 
 What is left are the trade-offs the records name, and they are named rather
 than hidden. The canvas is rasterised, so a long document costs memory in
-proportion to its page count (0012). There is no test suite, which was a
-decision about the brief and not an oversight (0005 and 0007, removed with
-the harness in #43). And the collaboration went through a period in which a
-compromised machine and a set of agents that disagreed with each other cost
-real time: [safeguards.md](safeguards.md) has that account, and the
-transcripts have the raw material behind it.
+proportion to its page count (0012). There is a unit test loop over the logic
+that has no DOM in it (0019), and the editor, the canvas and the React tree
+are still not covered, because a test of those needs a DOM. And the
+collaboration went through a period in which a compromised machine and a set
+of agents that disagreed with each other cost real time:
+[safeguards.md](safeguards.md) has that account, and the transcripts have the
+raw material behind it.
