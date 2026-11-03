@@ -26,6 +26,12 @@
         "options": {
           "cwd": "libs/web/features/pdf-viewer"
         }
+      },
+      "test": {
+        "command": "bun test",
+        "options": {
+          "cwd": "libs/web/features/pdf-viewer"
+        }
       }
     }
   }

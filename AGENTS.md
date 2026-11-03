@@ -40,6 +40,9 @@ hash is the failure the check exists to catch.
 The harness (`HARNESS.md`, `docs/specs/`) and ADRs 0005 and 0007 went with
 the test harness in #43, because testing is not required by the brief. The
 manifest records that, so the next reader finds the reason instead of a gap.
+A unit test loop came back afterwards, on the owner's instruction rather than
+the brief's; ADR 0019 is the record, and the manifest now requires the gate to
+run `test` instead of forbidding it.
 
 ## Workspace
 
@@ -53,9 +56,10 @@ manifest records that, so the next reader finds the reason instead of a gap.
 - `lint` is oxlint (`--type-aware`), `format` is oxfmt. No ESLint. Projects
   extend the root `.oxlintrc.json`; never add a nested `.oxfmtrc.json`.
 - `bun run gate` = the size budget (`tools/size-budget.mjs`: source files and
-  non-blank lines in `apps/` and `libs/`), the guardrail check
+  non-blank lines in `apps/` and `libs/`, with the test files counted
+  separately against their own budget), the guardrail check
   (`tools/guardrails.mjs`), then
-  `nx affected -t lint,format,typecheck,build,build-storybook`. Over budget
+  `nx affected -t lint,format,typecheck,build,build-storybook,test`. Over budget
   means cut scope; raising a limit is the user's call.
   lefthook: pre-commit lints, formats and typechecks staged files; pre-push runs
   the gate. CI runs the gate too.
@@ -89,6 +93,11 @@ manifest records that, so the next reader finds the reason instead of a gap.
   `<thing>-shape-util.tsx`, `hooks.ts`, `utils.ts`, `types.ts`, `consts.ts`),
   with `partials/` for components that only serve one parent. No `classes/`
   folder.
+- Tests live beside the code they cover, as `*.test.ts`, and run on `bun test`
+  — the runner is built into bun, so nothing is installed to run one. A project
+  with tests has a `test` target and the gate runs it. A test needs no DOM:
+  what has no browser in it can be tested, and what has one stays with the
+  stories and the walkthrough (0019).
 - Functional only: function components, hooks and plain functions. The only
   classes are the tldraw subclasses its API requires (`ShapeUtil`,
   `BindingUtil`, `StateNode`), kept beside the feature that owns them.

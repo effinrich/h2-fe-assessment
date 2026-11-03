@@ -56,12 +56,13 @@ for (const rule of manifest.assertions ?? []) {
   }
 }
 
-// --- the gate does not run checks the brief does not require ----------------
+// --- the gate runs the checks the repository depends on --------------------
 //
-// The brief states precisely what is required, and it does not ask for a test
-// suite. The first agent's harness had to be removed in #43 for that reason.
-// Agents default to more verification rather than to the brief, so the
-// decision is enforced here rather than left as a sentence in a record.
+// The gate is the verification surface, so what it runs is a decision and not
+// a default. A target the repository depends on is required; a target it has
+// decided against is forbidden. Both are enforced here rather than left as a
+// sentence in a record, because an agent can rewrite the record in the same
+// commit that changes the gate.
 
 const gateRule = manifest.gateTargets
 if (gateRule) {
@@ -74,10 +75,17 @@ if (gateRule) {
       `the ${gateRule.script} script does not derive its targets from the project graph`
     )
   }
+  for (const target of gateRule.required ?? []) {
+    if (!targets.includes(target)) {
+      problems.push(
+        `the ${gateRule.script} script does not run "${target}" (${gateRule.why ?? ""})`.trim()
+      )
+    }
+  }
   for (const target of gateRule.forbidden ?? []) {
     if (targets.includes(target)) {
       problems.push(
-        `the ${gateRule.script} script runs "${target}", which the brief does not require (${gateRule.why ?? ""})`.trim()
+        `the ${gateRule.script} script runs "${target}", which the repository does not use (${gateRule.why ?? ""})`.trim()
       )
     }
   }

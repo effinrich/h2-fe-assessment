@@ -25,6 +25,12 @@
         "options": {
           "cwd": "libs/web/features/camera"
         }
+      },
+      "test": {
+        "command": "bun test",
+        "options": {
+          "cwd": "libs/web/features/camera"
+        }
       }
     }
   }

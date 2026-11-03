@@ -7,7 +7,8 @@ import { toaster } from "@h2-fe/ui"
 import type { FileToken, PdfViewerScreenProps } from "./types"
 
 import { annotatedFilename, downloadFile, exportPdf } from "./export-pdf"
-import { activePageNumber, hasUserMarks, openPdf, pageBounds, placePages } from "./utils"
+import { openPdf } from "./open-pdf"
+import { activePageNumber, hasUserMarks, pageBounds, placePages } from "./utils"
 
 const fileTokens = new WeakMap<File, string>()
 let nextFileToken = 0

@@ -45,26 +45,27 @@ flowchart TB
 
 ### Decisions
 
-| Decision                                                             | Record                                                       |
-| -------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Nx monorepo, libraries over folders, generators only                 | [0001](docs/decisions/0001-workspace-and-package-manager.md) |
-| Vite + React SPA; TanStack Query for loading the PDF                 | [0002](docs/decisions/0002-framework.md)                     |
-| tldraw as the canvas engine                                          | [0003](docs/decisions/0003-canvas-engine.md)                 |
-| Panda CSS with Ark UI, later replaced by Chakra UI v3                | [0004](docs/decisions/0004-styling-and-primitives.md)        |
-| Typed judgement for the gates a compiler cannot write (proposed)     | [0006](docs/decisions/0006-judgement-layer.md)               |
-| oxlint (type-aware) + oxfmt; boundaries enforced in lint             | [0008](docs/decisions/0008-lint-split.md)                    |
-| Nx dependency trims: a verification protocol and a ledger            | [0010](docs/decisions/0010-nx-dependency-trims.md)           |
-| Sibling feature libs; only the app composes them                     | [0011](docs/decisions/0011-feature-pattern.md)               |
-| PDF pages rasterised into locked image shapes                        | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)     |
-| tldraw and Chakra stay two styling systems, bridged by CSS variables | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
-| Chakra UI v3 over Tailwind                                           | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
-| What was left out, on purpose                                        | [0009](docs/decisions/0009-not-built.md)                     |
-| The verification surface: the gate, the stories, the snapshots       | [0015](docs/decisions/0015-verification-surface.md)          |
-| The pin: a custom shape, a custom binding, a constraint solver       | [0016](docs/decisions/0016-pin-tool.md)                      |
-| The camera: a crop shape, and the done state for it                  | [0017](docs/decisions/0017-camera-tool.md)                   |
-| The document comes back as a PDF, with the marks on it               | [0018](docs/decisions/0018-pdf-export.md)                    |
+| Decision                                                                  | Record                                                       |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Nx monorepo, libraries over folders, generators only                      | [0001](docs/decisions/0001-workspace-and-package-manager.md) |
+| Vite + React SPA; TanStack Query for loading the PDF                      | [0002](docs/decisions/0002-framework.md)                     |
+| tldraw as the canvas engine                                               | [0003](docs/decisions/0003-canvas-engine.md)                 |
+| Panda CSS with Ark UI, later replaced by Chakra UI v3                     | [0004](docs/decisions/0004-styling-and-primitives.md)        |
+| Typed judgement for the gates a compiler cannot write (proposed)          | [0006](docs/decisions/0006-judgement-layer.md)               |
+| oxlint (type-aware) + oxfmt; boundaries enforced in lint                  | [0008](docs/decisions/0008-lint-split.md)                    |
+| Nx dependency trims: a verification protocol and a ledger                 | [0010](docs/decisions/0010-nx-dependency-trims.md)           |
+| Sibling feature libs; only the app composes them                          | [0011](docs/decisions/0011-feature-pattern.md)               |
+| PDF pages rasterised into locked image shapes                             | [0012](docs/decisions/0012-pdf-pages-as-image-shapes.md)     |
+| tldraw and Chakra stay two styling systems, bridged by CSS variables      | [0013](docs/decisions/0013-tldraw-chakra-theme-bridge.md)    |
+| Chakra UI v3 over Tailwind                                                | [0014](docs/decisions/0014-chakra-over-tailwind.md)          |
+| What was left out, on purpose                                             | [0009](docs/decisions/0009-not-built.md)                     |
+| The verification surface: the gate, the tests, the stories, the snapshots | [0015](docs/decisions/0015-verification-surface.md)          |
+| The pin: a custom shape, a custom binding, a constraint solver            | [0016](docs/decisions/0016-pin-tool.md)                      |
+| The camera: a crop shape, and the done state for it                       | [0017](docs/decisions/0017-camera-tool.md)                   |
+| The document comes back as a PDF, with the marks on it                    | [0018](docs/decisions/0018-pdf-export.md)                    |
+| A unit test loop, and what it does not cover                              | [0019](docs/decisions/0019-unit-test-loop.md)                |
 
-0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force.
+0005 and 0007 were removed with the test harness in #43 — testing is not required by the brief. The numbers are left alone so the record reads as a history rather than a rewrite. The per-library Storybook and the story-per-component rule from 0007 are still in force. A unit test loop came back afterwards, on the owner's instruction rather than the brief's; that is 0019.
 
 ## Getting started
 
@@ -88,7 +89,8 @@ bun run storybook  # the design system, http://localhost:4400
 ## Check
 
 ```sh
-bun run gate       # size budget, guardrails, then nx affected -t lint,format,typecheck,build,build-storybook
+bun run gate       # size budget, guardrails, then nx affected -t lint,format,typecheck,build,build-storybook,test
+bun run test       # the unit tests on their own
 ```
 
 lefthook runs lint, format and typecheck on commit and the gate on push; CI runs the same gate. Every GitHub Action is pinned to a commit SHA.

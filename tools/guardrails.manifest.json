@@ -2,7 +2,7 @@
   "$comment": "The safeguards this repository depends on. `files` is hashed, so a change without a matching hash update fails the build; `directories` must exist; `assertions` are the invariants inside files that legitimately change; `gateTargets` keeps the gate from running checks the brief does not require. tools/guardrails.mjs checks this list inside `bun run gate` and in the Guardrails job; .github/CODEOWNERS asks for the owner's review on the same paths. Changing a hash here is a two-key edit: the file and this manifest. Removing a safeguard is the owner's call and needs an explicit instruction.",
   "files": {
     "AGENTS.md": {
-      "sha256": "146ed4dbe19faef2ff001fcfe5f0352c15565826625ec9b50b5f16de7661dfa7"
+      "sha256": "6ad6f41b96f20e4065bc19776d346522d0193b17e6eaefc3cf4f7c6e554c4d3a"
     },
     "CLAUDE.md": {
       "sha256": "674a2c5b70b33fef26bfbff4c5daa866918b060a2772cab154c0221c3b797171"
@@ -23,16 +23,17 @@
       "sha256": "832d34f7fe86ea6789f95f79d8a6976af0f79c8e07edc29b3ac8818e994bc4c7"
     },
     "tools/size-budget.mjs": {
-      "sha256": "a48b21e3a30ad6de50b1a09d8062c2fddca45e5a28eed3757d0c43290a4b0342"
+      "sha256": "eda76229acab28465443ba94c3f59173d5bac76a6195b228242a8ff369bf4b3d"
     },
     "tools/guardrails.mjs": {
-      "sha256": "f5c8464064693c89328c0513074a2fea7989569fd1ec13ec6fba131ad9b3106f"
+      "sha256": "05bee45589b24b3bde5680d0d9b0865314d43091f23a0c3e1d539709e5d482a0"
     }
   },
   "gateTargets": {
     "script": "gate",
-    "forbidden": ["test", "test-storybook"],
-    "why": "the brief states precisely what is required and does not ask for a test suite. The first agent's harness had to be removed in #43, and agents default to more verification than the brief asks for, so the decision is enforced by the build rather than by a sentence in a record."
+    "required": ["test"],
+    "forbidden": ["test-storybook"],
+    "why": "the gate is the verification surface, so what it runs is a decision and not a default. `test` is required: the unit test loop runs in the gate, and dropping the target would let the gate go green without running it. `test-storybook` is forbidden: a second Storybook would duplicate Chromatic's own check and bring back the setup that went in #43."
   },
   "assertions": [
     {
@@ -84,7 +85,8 @@
         "0015-verification-surface.md",
         "0016-pin-tool.md",
         "0017-camera-tool.md",
-        "0018-pdf-export.md"
+        "0018-pdf-export.md",
+        "0019-unit-test-loop.md"
       ]
     }
   },
@@ -144,7 +146,7 @@
   },
   "removed": {
     "HARNESS.md": "removed with the test harness in #43 — the spec-first scaffold the harness owned",
-    "docs/specs/": "removed with the test harness in #43 — testing is not required by the brief",
+    "docs/specs/": "removed with the test harness in #43 — the spec-and-test loop; a unit test loop came back under 0019, without the specs",
     "docs/decisions/0005-sdd-and-tdd.md": "removed with the test harness in #43 — it recorded the spec-and-test rules that went with it",
     "docs/decisions/0007-storybook-scope.md": "removed with the test harness in #43 — its per-library Storybook and story-per-component rules are still in force",
     "apps/web/AGENTS.md, libs/shared/ui/AGENTS.md, libs/web/features/*/AGENTS.md": "per-project agent instructions removed with the test harness in #43; the root AGENTS.md is the instruction file now"

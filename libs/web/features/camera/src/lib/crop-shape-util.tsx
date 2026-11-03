@@ -18,7 +18,7 @@ const BRACKET = 20
 const STROKE = 3
 
 /** The four corner brackets, as one path. */
-function brackets(w: number, h: number) {
+export function brackets(w: number, h: number) {
   const b = Math.min(BRACKET, w / 2, h / 2)
   return [
     `M 0 ${b} L 0 0 L ${b} 0`,

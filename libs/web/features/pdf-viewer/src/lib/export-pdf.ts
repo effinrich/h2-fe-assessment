@@ -84,7 +84,7 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
  * the PDF holds, and the visible box and the content box are the same box —
  * otherwise the marks would not land where they belong.
  */
-function pageMatchesCanvas(page: PDFPage, pointWidth: number, pointHeight: number): boolean {
+export function pageMatchesCanvas(page: PDFPage, pointWidth: number, pointHeight: number): boolean {
   if (page.getRotation().angle !== 0) return false
   const media = page.getMediaBox()
   const crop = page.getCropBox()

@@ -20,7 +20,8 @@
     "build-storybook": "nx run shared-ui:build-storybook",
     "budget": "bun tools/size-budget.mjs",
     "guardrails": "bun tools/guardrails.mjs",
-    "gate": "bun run budget && bun run guardrails && nx affected -t lint,format,typecheck,build,build-storybook"
+    "test": "bun test",
+    "gate": "bun run budget && bun run guardrails && nx affected -t lint,format,typecheck,build,build-storybook,test"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
@@ -51,6 +52,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
+    "bun-types": "1.4.2",
     "lefthook": "^2.1.16",
     "nx": "23.2.1",
     "oxfmt": "^0.71.0",
