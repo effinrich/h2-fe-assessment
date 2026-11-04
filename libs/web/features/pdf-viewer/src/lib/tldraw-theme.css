@@ -4,8 +4,8 @@
    Import after tldraw/tldraw.css. Do not wrap tldraw chrome in chakra(). */
 
 .h2-canvas-theme {
-  --app-accent: var(--chakra-colors-brand-solid);
-  --app-accent-contrast: var(--chakra-colors-brand-contrast);
+  --app-accent: var(--chakra-colors-ink-solid);
+  --app-accent-contrast: var(--chakra-colors-ink-contrast);
   --app-surface: var(--chakra-colors-bg-canvas);
   --app-panel: var(--chakra-colors-bg-panel);
   --app-muted-surface: var(--chakra-colors-bg-muted);
@@ -29,4 +29,12 @@
   --tl-color-selected-contrast: var(--app-accent-contrast);
   --tl-color-focus: var(--app-focus);
   --tl-color-primary: var(--app-accent);
+}
+
+/* The sheet. The page is a tldraw image shape, and without a shadow it is
+   a white rectangle drawn on a background rather than paper lying on a desk.
+   The shadow scales with the canvas zoom, so it is kept soft: the page should
+   lift off the surface, not float. */
+.h2-canvas-theme .tl-image {
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.13)) drop-shadow(0 5px 12px rgb(0 0 0 / 0.11));
 }

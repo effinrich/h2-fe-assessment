@@ -38,10 +38,11 @@ export function ViewerTopBar({
           <ColorModeButton />
           <Button
             aria-label="Export the document as a PDF"
+            colorPalette="ink"
             disabled={!canExport}
             onClick={onExportPdf}
             size="sm"
-            variant="outline"
+            variant="solid"
           >
             <FileDown />
             <chakra.span hideBelow="md">{isExporting ? "Exporting…" : "Export PDF"}</chakra.span>

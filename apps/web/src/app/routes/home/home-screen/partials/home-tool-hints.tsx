@@ -9,11 +9,13 @@ export function HomeToolHints() {
       aria-label="Tools on the canvas"
       as="ul"
       color="fg.muted"
+      alignItems="start"
       columnGap="6"
+      direction={{ base: "column", lg: "row" }}
       flexWrap="wrap"
-      justify="center"
+      justify="start"
       listStyle="none"
-      rowGap="2"
+      rowGap="3"
       textStyle="sm"
     >
       {TOOL_HINTS.map(({ key, label }) => (
