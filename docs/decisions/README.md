@@ -11,8 +11,8 @@ says which is which, so a reader does not have to infer it.
 
 A record states a decision this repository stands behind, with the reasoning
 behind it. The decisions are the owner's. The prose is usually an agent's: most
-of these records were drafted by a coding agent during the work and ratified by
-the owner afterwards.
+of these records were drafted by a coding agent and ratified by the owner
+afterwards.
 
 ## Who wrote what
 
@@ -68,9 +68,10 @@ in branches and in the working tree." The commit history says otherwise:
 neither is corrected away.
 
 **A record can be drafted by the thing it is about.** ADR 0017 was drafted
-during the work that made four agents build their own camera. That does not
-make it wrong, and it does not make it less authoritative about what the
-repository decided. It does mean that when a record and the commit history
+by MiniMax Code in `39c7710`, the commit that added the crop shape the record
+decides on: the record of that decision and the decision are one commit, made
+by the same agent. That does not make the record less authoritative about what
+the repository decided. It does mean that when a record and the commit history
 disagree, the history is what a reader can check.
 
 ## The preprint
