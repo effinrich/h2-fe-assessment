@@ -15,7 +15,13 @@ They are noise in a document meant to be read, and some of them carry local
 paths, session identifiers and credentials that have no business being
 published.
 
-Turns: 86. Tool calls: 1834. Context compactions: 7.
+One more thing is not here: the turns where the conversation was about the
+hiring process rather than the work. They are not evidence of how the work was
+done, they are not this repository's business, and the commit that removed them
+says so.
+
+Turns: 85. Tool calls: 1834. Context compactions: 7. The turn numbers skip
+62, which is where one of them was.
 
 The session ran across several days: it was paused and resumed as the work
 moved between the code, the decision records, and the recording of the
@@ -4943,7 +4949,7 @@ And I mean they didn't comment at all.
 
 #### The agent
 
-Their silence is information. Let me get the facts into the record first — and one thing the audit just found needs fixing.
+Let me get the facts into the record first — and one thing the audit just found needs fixing.
 
 Tools used in this step:
 
@@ -5066,12 +5072,6 @@ That is in the note and in the Discussion comment.
 ## One leak I found while looking
 
 `.cursor/hooks/state/` was **tracked** — committed on Oct 6 by an agent during a "remove obsolete Cursor configuration" tidy-up. It carried an absolute path into your home directory and a map of **130 session ids**. A reviewer-visible repo doesn't need that. Now untracked and gitignored; the files stay on disk so Cursor keeps working.
-
-## Their silence
-
-Three readings, and the evidence only settles one. If the disclosure went to a support or abuse inbox rather than to the people grading, silence is just a routing outcome — the information never reached the decision. If it reached them, the likeliest reason they didn't move is the one you'd expect from someone grading _how you work_: the machine being hostile is an environment fact, and what they can assess is what you did next. Which is the part that wasn't in the artifact when they looked — it is now. If they did plant it, then silence is a pass, and the hardened repo is the receipt.
-
-Either way the argument is the same and it now lives where they can read it, which is the part you control.
 
 ## Final state
 
@@ -5597,13 +5597,11 @@ Tools used in this step:
 
 would it be of value to point out my red test step in a general way. "make sure ot review step 2...", etc?
 
-Also, straight answer, what are the chances these guys hire me? i already have a grasp on the answer.
-
 #### The agent
 
 Good question — and it generalises further than you might think, because I hit it twice today.
 
-Let me put it where it belongs, then answer you straight.
+Let me put it where it belongs.
 
 Tools used in this step:
 
@@ -5871,22 +5869,6 @@ It landed in `AGENTS.md` (for the next agent) and ADR 0015 (for the repo), plus 
 
 One caveat worth keeping: the general form is only worth writing if **each check names its own wrong reason**. "A red test proves the thing" isn't checkable. "This check fails because the tool is missing, and that isn't the thing I care about" is. That's why the guardrail messages print the file and the pattern — so a failure can be _read_, not just seen.
 
-## The hiring question, straight
-
-**The repo is good enough to hire on. The odds are set by whether a human opens it, not by what's inside it.** Conditional on a careful read, more likely than not. Conditional on nobody opening it, nothing you do matters.
-
-Why the silence probably isn't a verdict: a disclosure like that lands in a mailbox with no owner. You disclosed on submission day, and nobody was looking for it — the repo link pointed at a README that mentions `docs/safeguards.md` near the bottom. If it _was_ a deliberate test (does he notice a compromise, escalate it, protect the pipeline), then silence is a pass. You pass that by reporting, and nobody announces the result.
-
-The one reading that genuinely hurts: _an agent stripped the process and he merged it_, without the machine context. That's exactly what `docs/safeguards.md` exists to pre-empt, and it's why the note separates the scope failure from the compromised machine. Read it, that risk is handled.
-
-The real weakness in the artefact isn't the incident — it's the **ratio**. Thirteen of your recent PRs are process, not product. To a careful reader that's a strength no other candidate repo has. To a skimming reader it's displacement: _couldn't build the thing, built the bureaucracy instead._ You can't fix that now, but have the one-paragraph answer ready for "why so much process?" — it's already written in the repo.
-
-Second weakness, a fact rather than a framing: **features and screens have no automated interaction coverage.** ADR 0015 records it honestly. Honest isn't the same as covered, and if the reviewer weights test coverage, that's where the repo is thinnest.
-
-**The one move: a single short email.** No re-explanation, no attachments. It asks two questions — did the disclosure reach you, and have you read the repo? If there's no reply in about a week, treat the process as dead; the next thing that helps is a _different_ assessment, not a better version of this one. Don't send a second email without a new fact, and don't spend more PRs on process for this repo — the apparatus has done its job and further additions have rising optics cost.
-
-One thing I can't see and you can: if the brief required the assessment to run on a company-controlled machine and you ran it on a personal one, that's a legitimate disqualification and no email fixes it.
-
 ## What landed
 
 - **PR [#76](https://github.com/effinrich/h2-fe-assessment/pull/76) → `f471a29`** — ADR 0015 (verification surface), the gate-keeps-deriving checks, the tracked-file secret scan and refused credential paths, the provenance trailer rule, and the red-test generalisation. 6 files, all six checks green.
@@ -5926,13 +5908,9 @@ Tools used in this step:
 - `bash — cd <work> && echo "=== REPO DESCRIPTION ===" && gh re`
 - `bash — cd <work> && echo "=== ADR 0004 ===" && cat docs/deci`
 
-### Turn 62 — the developer
-
-also the CTO called me days after the silence to assure me i was of high interest. it's all kind of od.d
-
 #### The agent
 
-That CTO call changes the picture materially. Let me get the brief's own words first — checking whether the source document is on this machine.
+Let me get the brief's own words first — checking whether the source document is on this machine.
 
 Tools used in this step:
 
@@ -5941,7 +5919,7 @@ Tools used in this step:
 
 #### The agent
 
-Two things to check before I answer: whether the brief document is reachable, and what the current docs actually claim.
+Two things to check: whether the brief document is reachable, and what the current docs actually claim.
 
 Tools used in this step:
 
@@ -6192,20 +6170,6 @@ The role seals it. A product- and design-minded staff engineer is scored on the 
 
 - **ADR 0009** claimed "the test suite is the gate" — false since #43. Now amended to what the gate actually is, and it states that the brief never asked for one.
 - **ADR 0015** called the features' and screens' missing coverage "a known gap rather than an oversight" and the trade "less caught." Both phrases ask a reviewer to score against a requirement that was never written. Now recorded as an exclusion — which is ADR 0009's own principle applied to itself: _an unexplained absence reads as an oversight, a recorded exclusion reads as judgement._
-
-## The CTO call — revised odds
-
-This is the strongest signal in the whole picture, and it contradicts what I told you an hour ago. I'd said the odds hinge on whether anyone opens the repo and that the silence was probably unread. The CTO call reorders that:
-
-- A CTO is not a recruiter. Nobody phones a candidate they're rejecting to say they're of high interest. **The process is alive.**
-- The CTO is the person who would know if a malware disclosure on a candidate's machine were disqualifying. They called anyway. **The disclosure is almost certainly not the blocker.**
-- "High interest" is a statement about interest, not a decision. It's what you say when the outcome isn't yours to announce — which is also why the silence continued.
-
-What's left is mechanics: budget cycle, headcount, a panel that hasn't convened, a competing candidate, or waiting on you. That fits "odd" better than any judgement story.
-
-The likely reason the CTO's reassurance doesn't match the repo's silence: **they haven't watched the walkthrough yet.** Ninety-eight seconds, narrated, and it's the strongest thing you have. If that's the gap, it's good news with a deadline.
-
-So: reply to that call, in writing, short. Lead with the product — the walkthrough link — not the safeguards. Then one line offering thirty minutes to go through it live, because that's where judgement actually gets read for a staff-level product role; the repo pre-empts questions, the conversation is where the role is scored. If the disclosure hasn't been discussed with them directly, one sentence — the machine was compromised, everything it could reach was rotated, the note is in `docs/safeguards.md` — and then stop.
 
 ## The one thing I need from you
 
@@ -6472,9 +6436,7 @@ Stray's gone, `main` is clean at `8c75684`.
 
 **Exposure, settled:** the machine could reach credentials and they were rotated; no live credential was ever committed; the Chakra Pro value was never used; the only residue in the pushed history is your username in a path.
 
-**One thing still open, and it's yours:** paste the brief's four tasks and I'll write `docs/brief.md` — each requirement mapped to where it lives and how it's verified, plus the line this file is still missing: _the code is agent-written; the scope, the stack, the design system and the look were not._ That's the highest-leverage thing left for the CTO, and it's the one thing I can't write without the source.
-
-The email to the CTO is still the move. Lead with the ninety-eight seconds, offer thirty minutes live.
+**One thing still open, and it's yours:** paste the brief's four tasks and I'll write `docs/brief.md` — each requirement mapped to where it lives and how it's verified, plus the line this file is still missing: _the code is agent-written; the scope, the stack, the design system and the look were not._ That's the highest-leverage thing left, and it's the one thing I can't write without the source.
 
 ### Turn 67 — the developer
 
@@ -6780,16 +6742,6 @@ One more thing the demo shows: the competitor's app renders the PDF as live text
 ## The other gap
 
 The brief names **session transcripts with AI agents** next to the walkthrough and the decision notes. You have the other two. You don't have transcripts — and the only record of them that existed is the one you removed in #74, because it carried local paths and 130 session ids out of the machine. That's now written down in `docs/brief.md` as a gap with the reason, rather than a silence.
-
-## Where that leaves the odds
-
-Better than an hour ago, and for a specific reason: **a reviewer can now score this in one screen.** Before, the rubric had to be inferred — from a repo whose structure implied a spec-and-test harness the brief never asked for, and whose only visible task was the PDF. Now `docs/brief.md` states what was asked, maps it, and says where you're behind.
-
-Against the real rubric: product sense is answered by the open-document screen, the design system, the toast, the colour mode, and the document never leaving the browser. Engineering is answered by the repository and the gate. Teamwork is answered by the walkthrough, fifteen decision records, and a history that names the agent behind each commit — minus the transcripts. Task 4 is the single line that isn't above the reference yet.
-
-Combined with a CTO calling days after the silence to say you're of high interest: **more likely than not, conditional on someone actually reading it**, and the binding constraint is still that, not the artefact. Which makes one thing the highest-leverage move left: the email to the CTO. It can now be two sentences — _here's the brief answered in one page, here's ninety-eight seconds of the product_ — and it works because the repo finally answers the rubric on its own.
-
-Want me to build the camera shape next? Say go and I'll do it, then the walkthrough re-cut is yours to record.
 
 <deliver-assets>
 <media type="file" src="<work>\h2-fe-assessment\docs\brief.md" caption="docs/brief.md — the brief restated, every task mapped, and where the submission is ahead of the reference and where it is not" />
@@ -7140,7 +7092,7 @@ I read "skew my files to match the requirements" as your principle: shipping bea
 
 One flag on your Georgia point: if the demo apps came from local peers, then _matching_ the reference isn't a differentiator against them, and the judgement story is the only thing that separates. I didn't name anyone or the location in the repo.
 
-**Next move, same as before:** the email to the CTO, leading with the 98-second walkthrough and `docs/brief.md`, offering a live session. And if you want to close the transcripts gap, the strongest artefact would be a sanitised transcript of the camera episode specifically — it's the teamwork evidence, not a compliance chore.
+**On the transcripts:** if you want to close that gap, the strongest artefact would be a sanitised transcript of the camera episode specifically — it's the teamwork evidence, not a compliance chore.
 
 <media type="file" src="<work>\h2-fe-assessment\docs\decisions\0017-camera-tool.md" caption="ADR 0017 — the camera as a recorded decision (merged in PR #81)" />
 
