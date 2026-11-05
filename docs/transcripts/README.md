@@ -8,7 +8,7 @@ exercise was worked, sanitised so that it can be published at all.
 
 - [2026-10-25-the-exercise.md](2026-10-25-the-exercise.md) — the session the
   exercise was built in, from the first decision about the camera to the PDF
-  export at the end. Eighty-six turns, eighteen hundred and thirty-four tool
+  export at the end. Eighty-five turns, eighteen hundred and thirty-four tool
   calls, and seven points where the context was compacted.
 
 The session began on other work and was paused and resumed across several
@@ -54,6 +54,19 @@ This is the whole reason the brief's "no session transcripts" was ever true.
 It was never that the transcripts did not exist. It was that the only copy of
 them carried local paths, session identifiers and, in places, secrets, and
 publishing that copy would have been publishing the machine.
+
+## The part that is not here
+
+The session also carried a conversation about the hiring process: whether the
+sponsor was hiring, what their silence meant, and what to send them next.
+That is not here either.
+
+It is not evidence of how the work was done, and how the work was done is
+what this repository is about. A document that works out a hiring process is
+a different document, pointed in a different direction, from the one this
+repository is trying to be.
+
+The commit that removed it says the same thing, and the diff is the record.
 
 ## Checking it
 
