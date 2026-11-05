@@ -1,11 +1,14 @@
-import { HStack, Kbd } from "@h2-fe/ui"
+import { HStack, Kbd, Stack } from "@h2-fe/ui"
 
 import { TOOL_HINTS } from "../consts"
 
-/** What the canvas is for, by shortcut. */
+/**
+ * What the canvas is for, by shortcut. A row when the copy beside it has
+ * room for one, a list when it does not.
+ */
 export function HomeToolHints() {
   return (
-    <HStack
+    <Stack
       aria-label="Tools on the canvas"
       as="ul"
       color="fg.muted"
@@ -24,6 +27,6 @@ export function HomeToolHints() {
           {label}
         </HStack>
       ))}
-    </HStack>
+    </Stack>
   )
 }
