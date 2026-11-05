@@ -50,9 +50,9 @@ const End = chakra("div", {
 const Mark = chakra("span", {
   base: {
     alignItems: "center",
-    bg: "brand.solid",
+    bg: "ink.solid",
     borderRadius: "md",
-    color: "brand.contrast",
+    color: "ink.contrast",
     display: "inline-flex",
     flexShrink: "0",
     h: "7",

@@ -7,7 +7,7 @@ type HomeOpenActionsProps = Pick<HomeScreenProps, "onFileChange" | "onUseExample
 /** Two of the three ways in: pick a file, or use the generated example. */
 export function HomeOpenActions({ onFileChange, onUseExample, isBusy }: HomeOpenActionsProps) {
   return (
-    <Stack direction={{ base: "column", sm: "row" }} gap="2" justify="center" w="full">
+    <Stack alignItems="start" direction={{ base: "column", sm: "row" }} gap="2" w="full">
       <FileUpload.Root
         accept="application/pdf"
         disabled={isBusy}
@@ -16,7 +16,12 @@ export function HomeOpenActions({ onFileChange, onUseExample, isBusy }: HomeOpen
       >
         <FileUpload.HiddenInput onChange={onFileChange} />
         <FileUpload.Trigger asChild>
-          <Button disabled={isBusy} variant="solid" w={{ base: "full", sm: "auto" }}>
+          <Button
+            colorPalette="ink"
+            disabled={isBusy}
+            variant="solid"
+            w={{ base: "full", sm: "auto" }}
+          >
             {isBusy ? "Opening" : "Open PDF"}
           </Button>
         </FileUpload.Trigger>
